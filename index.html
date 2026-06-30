@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sugentech Dev Tools</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#07100C;color:#9AB4C4;font-family:'Courier New',monospace;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;}
+.mark{width:10px;height:10px;background:#E60044;border-radius:1px;display:inline-block;margin-right:10px;vertical-align:middle;}
+h1{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#9AB4C4;margin-bottom:6px;}
+.sub{font-size:9px;color:#334A58;letter-spacing:.12em;margin-bottom:48px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:860px;width:100%;}
+.card{background:#0C1820;border:1px solid #172230;padding:20px 22px;text-decoration:none;color:inherit;transition:border-color .15s,transform .12s;display:block;}
+.card:hover{border-color:#E60044;transform:translateY(-2px);}
+.card-tag{font-size:7.5px;letter-spacing:.2em;text-transform:uppercase;color:#334A58;margin-bottom:8px;}
+.card-title{font-size:13px;letter-spacing:.08em;color:#C8D8E4;margin-bottom:5px;}
+.card-desc{font-size:9px;color:#4A6070;line-height:1.6;}
+.card-dot{width:4px;height:4px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;}
+footer{margin-top:48px;font-size:8px;color:#1E3040;letter-spacing:.1em;}
+</style>
+</head>
+<body>
+<div>
+  <h1><span class="mark"></span>Sugentech Dev Tools</h1>
+  <div class="sub">Internal Engineering Utilities · mungbws1031.github.io</div>
+  <div class="grid">
+    <a class="card" href="ai/pcb-designer/">
+      <div class="card-tag"><span class="card-dot" style="background:#1A85D8"></span>PCB · Hardware</div>
+      <div class="card-title">PCB Component Placer</div>
+      <div class="card-desc">소자 드래그 배치 · 자동 세트 추가 · 회로도 심벌 · 전원 레일 설정 · 보드 크기 설정</div>
+    </a>
+  </div>
+  <footer>© Sugentech · Internal Use</footer>
+</div>
+</body>
+</html>
