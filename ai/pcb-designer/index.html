@@ -5,11 +5,11 @@
 <title>PCB 보드 디자이너</title>
 <style>
 :root{
-  --bg:#0A0F1A;--pcb:#0D1520;--panel:#111826;--panel2:#141E2E;
-  --border:#1E2D42;--border2:#263650;--text:#B8CCE0;--dim:#4A6080;
-  --red:#E60044;--blue:#2090E8;--green:#18B060;--amber:#D08830;
-  --purple:#9040D8;--cyan:#12A8C0;--copper:#7A5030;
-  --shadow:0 4px 24px rgba(0,0,0,.5);
+  --bg:#E8EFF6;--pcb:#1C3D1C;--panel:#FFFFFF;--panel2:#F4F7FB;
+  --border:#D4DDE8;--border2:#BCC8D8;--text:#1A2940;--dim:#5A7090;
+  --red:#DC2050;--blue:#1878D0;--green:#168050;--amber:#C07820;
+  --purple:#7830C0;--cyan:#0898B0;--copper:#8A5F3C;
+  --shadow:0 2px 12px rgba(0,0,0,.10);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
@@ -18,18 +18,16 @@ body{
   font-size:13px;height:100vh;display:flex;flex-direction:column;
   overflow:hidden;user-select:none;-webkit-user-select:none;
 }
-
-/* ── HEADER ── */
 #hdr{
-  height:48px;display:flex;align-items:center;padding:0 18px;gap:16px;flex-shrink:0;
+  height:52px;display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;
   background:var(--panel);border-bottom:1px solid var(--border);
-  box-shadow:0 1px 12px rgba(0,0,0,.4);z-index:100;
+  box-shadow:0 1px 8px rgba(0,0,0,.08);z-index:100;
 }
 .hdr-logo{display:flex;align-items:center;gap:9px;}
 .hdr-dot{width:10px;height:10px;background:var(--red);border-radius:2px;}
-.hdr-name{font-size:14px;font-weight:600;color:#D0E4F4;letter-spacing:-.2px;}
+.hdr-name{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.3px;}
 .hdr-sub{font-size:11px;color:var(--dim);}
-.hdr-sep{width:1px;height:20px;background:var(--border2);margin:0 4px;}
+.hdr-sep{width:1px;height:22px;background:var(--border2);margin:0 2px;}
 .hdr-chip{
   display:flex;align-items:center;gap:5px;
   background:var(--panel2);border:1px solid var(--border);border-radius:20px;
@@ -37,109 +35,111 @@ body{
 }
 .hdr-chip b{color:var(--text);font-weight:600;}
 .hdr-chip-dot{width:5px;height:5px;border-radius:50%;}
-.spacer{flex:1;}
-.hdr-actions{display:flex;gap:8px;}
-.hdr-btn{
-  display:flex;align-items:center;gap:6px;
-  background:var(--panel2);border:1px solid var(--border2);color:var(--dim);
-  padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;
-  transition:all .15s;font-family:inherit;
+/* board size row in header */
+.hdr-size-group{display:flex;align-items:center;gap:5px;}
+.hdr-size-lbl{font-size:10px;color:var(--dim);letter-spacing:.05em;margin-right:2px;}
+.hdr-size-btn{
+  padding:3px 8px;border-radius:5px;border:1px solid var(--border2);
+  background:var(--panel2);color:var(--dim);font-size:10px;cursor:pointer;
+  transition:all .14s;font-family:inherit;font-weight:500;
 }
-.hdr-btn:hover{border-color:var(--blue);color:var(--blue);background:#152030;}
+.hdr-size-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.hdr-size-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(8,152,176,.09);}
+.spacer{flex:1;}
+.hdr-actions{display:flex;gap:7px;}
+.hdr-btn{
+  display:flex;align-items:center;gap:5px;
+  background:var(--panel2);border:1px solid var(--border2);color:var(--dim);
+  padding:6px 12px;border-radius:7px;font-size:12px;cursor:pointer;
+  transition:all .14s;font-family:inherit;
+}
+.hdr-btn:hover{border-color:var(--blue);color:var(--blue);background:#EEF4FF;}
 .hdr-btn.primary{border-color:var(--blue);color:var(--blue);}
-.hdr-btn.danger:hover{border-color:var(--red);color:var(--red);}
-
-/* ── LAYOUT ── */
+.hdr-btn.danger:hover{border-color:var(--red);color:var(--red);background:#FFF0F3;}
 #ws{flex:1;display:grid;grid-template-columns:200px 1fr 220px;min-height:0;}
-
-/* ── PALETTE ── */
 #pal{
   background:var(--panel);border-right:1px solid var(--border);
   display:flex;flex-direction:column;overflow:hidden;
 }
-#pal-header{
-  padding:12px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0;
-}
+#pal-header{padding:12px 12px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
 #pal-search{
   width:100%;background:var(--panel2);border:1px solid var(--border2);
-  color:var(--text);padding:7px 10px;border-radius:6px;font-size:12px;
+  color:var(--text);padding:7px 10px;border-radius:7px;font-size:12px;
   font-family:inherit;outline:none;transition:border-color .15s;
 }
 #pal-search:focus{border-color:var(--blue);}
 #pal-search::placeholder{color:var(--dim);}
-#pal-scroll{flex:1;overflow-y:auto;padding:10px 10px 16px;}
+#pal-scroll{flex:1;overflow-y:auto;padding:8px 10px 16px;}
 #pal-scroll::-webkit-scrollbar{width:3px;}
 #pal-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 .pal-cat-hd{
   font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
   color:var(--dim);padding:10px 4px 6px;
 }
-.pal-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px;}
+.pal-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:4px;}
 .pal-card{
   background:var(--panel2);border:1px solid var(--border);border-radius:8px;
-  padding:10px 8px 8px;cursor:pointer;transition:all .18s;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:9px 7px 7px;cursor:pointer;transition:all .17s;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
   position:relative;overflow:hidden;
 }
 .pal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:8px 8px 0 0;}
-.pal-card:hover{border-color:var(--text);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4);}
+.pal-card:hover{border-color:var(--dim);transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.10);}
 .pal-card:active{transform:translateY(0);}
-.pal-card-sym{display:block;opacity:.7;}
-.pal-card-name{font-size:11px;font-weight:600;color:var(--text);text-align:center;line-height:1.2;}
+.pal-card-sym{display:block;opacity:.8;}
+.pal-card-name{font-size:11px;font-weight:700;text-align:center;line-height:1.2;}
 .pal-card-sub{font-size:9px;color:var(--dim);text-align:center;line-height:1.3;}
 .pal-card-badge{
-  font-size:8px;color:var(--amber);background:rgba(208,136,48,.12);
-  border:1px solid rgba(208,136,48,.25);border-radius:10px;
+  font-size:8px;color:var(--amber);background:rgba(192,120,32,.10);
+  border:1px solid rgba(192,120,32,.25);border-radius:10px;
   padding:1px 5px;margin-top:1px;
 }
-
-/* ── BOARD ── */
+/* BOARD */
 #board-wrap{position:relative;overflow:auto;background:var(--bg);}
 #board-wrap::-webkit-scrollbar{width:6px;height:6px;}
 #board-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 #board{
   position:relative;
-  background-color:#0D1820;
+  background-color:#1C3D1C;
   background-image:
-    radial-gradient(circle,#192E40 1px,transparent 1px),
-    linear-gradient(rgba(25,46,64,.15) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(25,46,64,.15) 1px,transparent 1px);
+    radial-gradient(circle,#2A5A2A 1px,transparent 1px),
+    linear-gradient(rgba(42,90,42,.18) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(42,90,42,.18) 1px,transparent 1px);
   background-size:20px 20px,100px 100px,100px 100px;
-  border:1px solid #162030;
-  margin:12px;border-radius:4px;
-  box-shadow:0 0 0 1px #0A1218,var(--shadow);
+  border:1px solid #143214;
+  margin:14px;border-radius:5px;
+  box-shadow:0 0 0 1px #0A1A0A,var(--shadow);
 }
 #board::after{
-  content:attr(data-lbl);position:absolute;bottom:14px;right:18px;
-  font-size:10px;color:#18304A;letter-spacing:.08em;pointer-events:none;
+  content:attr(data-lbl);position:absolute;bottom:12px;right:16px;
+  font-size:10px;color:#3A6A3A;letter-spacing:.08em;pointer-events:none;
   font-family:'SF Mono','Courier New',monospace;
 }
-#board.over{background-color:#0F2030;}
+#board.over{background-color:#224822;}
 #board-hint{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   text-align:center;pointer-events:none;transition:opacity .3s;
 }
-.hint-icon{font-size:40px;opacity:.08;margin-bottom:14px;}
-.hint-t{font-size:13px;color:#1E3A50;font-weight:500;margin-bottom:4px;}
-.hint-s{font-size:11px;color:#162A38;}
+.hint-icon{font-size:38px;opacity:.12;margin-bottom:12px;}
+.hint-t{font-size:13px;color:#3A6A3A;font-weight:500;margin-bottom:4px;}
+.hint-s{font-size:11px;color:#2A4A2A;}
 #traces{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
-
-/* ── COMPONENT ── */
+/* COMPONENT */
 .comp{
   position:absolute;cursor:move;
-  background:var(--panel);border:1.5px solid var(--border2);border-radius:8px;
+  background:rgba(255,255,255,0.96);border:1.5px solid var(--border2);border-radius:10px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;padding:8px 8px 7px;
-  box-shadow:0 2px 12px rgba(0,0,0,.4);
+  gap:2px;padding:8px 8px 7px;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
   transition:box-shadow .15s,border-color .15s;z-index:2;
 }
-.comp:hover{box-shadow:0 4px 20px rgba(0,0,0,.6);}
-.comp.sel{z-index:10;box-shadow:0 0 0 2px var(--blue),0 4px 24px rgba(32,144,232,.3);}
-.comp-top-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:8px 8px 0 0;}
+.comp:hover{box-shadow:0 4px 18px rgba(0,0,0,.22);}
+.comp.sel{z-index:10;box-shadow:0 0 0 2px var(--blue),0 4px 20px rgba(24,120,208,.25);}
+.comp-top-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0;}
 .comp-sym{display:block;flex-shrink:0;}
-.comp-label{font-size:11px;font-weight:700;text-align:center;line-height:1;letter-spacing:.02em;}
-.comp-sub{font-size:8.5px;color:var(--dim);text-align:center;line-height:1.3;}
-.comp-volt-row{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-top:1px;}
+.comp-label{font-size:11px;font-weight:800;text-align:center;line-height:1;letter-spacing:.01em;}
+.comp-sub{font-size:8px;color:var(--dim);text-align:center;line-height:1.3;}
+.comp-volt-row{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;margin-top:1px;}
 .comp-vbadge{
   font-size:7.5px;font-weight:600;padding:1px 5px;border-radius:10px;
   border:1px solid;letter-spacing:.03em;
@@ -147,33 +147,32 @@ body{
 .comp-auto-tag{
   position:absolute;top:-8px;left:50%;transform:translateX(-50%);
   font-size:7px;font-weight:600;letter-spacing:.1em;
-  color:var(--amber);background:var(--panel);border:1px solid #5A4018;
-  padding:1px 6px;border-radius:10px;white-space:nowrap;
+  color:var(--amber);background:var(--panel);border:1px solid rgba(192,120,32,.4);
+  padding:1px 5px;border-radius:10px;white-space:nowrap;
 }
 .comp-del{
   position:absolute;top:-8px;right:-8px;width:18px;height:18px;
   background:var(--red);color:#fff;border:none;cursor:pointer;
   font-size:13px;line-height:1;display:none;align-items:center;justify-content:center;
-  border-radius:50%;z-index:20;box-shadow:0 2px 8px rgba(230,0,68,.4);
+  border-radius:50%;z-index:20;box-shadow:0 2px 6px rgba(220,32,80,.35);
 }
 .comp:hover .comp-del,.comp.sel .comp-del{display:flex;}
-.comp.auto-comp{border-style:dashed;border-color:#3A3018;background:#0C1218;}
+.comp.auto-comp{border-style:dashed;border-color:rgba(180,190,200,.6);background:rgba(248,250,254,.92);}
 .comp.auto-comp .comp-top-bar{opacity:.4;}
-.comp-pin{position:absolute;width:4px;height:4px;background:#1A3050;border-radius:50%;border:1px solid #2A4060;}
-
-/* ── PROPS ── */
+.comp-pin{position:absolute;width:4px;height:4px;background:#A0B4C8;border-radius:50%;border:1px solid #7090A8;}
+/* PROPS */
 #props{
   background:var(--panel);border-left:1px solid var(--border);
   display:flex;flex-direction:column;overflow:hidden;
 }
-#props-inner{flex:1;overflow-y:auto;padding:16px 14px;}
+#props-inner{flex:1;overflow-y:auto;padding:14px 13px;}
 #props-inner::-webkit-scrollbar{width:3px;}
 #props-inner::-webkit-scrollbar-thumb{background:var(--border2);}
 .props-empty{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   height:100%;gap:10px;color:var(--dim);font-size:12px;text-align:center;
 }
-.props-empty-icon{font-size:32px;opacity:.15;}
+.props-empty-icon{font-size:30px;opacity:.20;}
 .p-sect{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
   color:var(--dim);padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:8px;}
 .p-sect:first-child{padding-top:0;}
@@ -181,80 +180,78 @@ body{
 .p-key{font-size:10px;color:var(--dim);}
 .p-val{font-size:12px;font-weight:500;}
 .p-chip{display:inline-flex;align-items:center;gap:4px;background:var(--panel2);
-  border:1px solid var(--border2);border-radius:6px;padding:3px 8px;
-  font-size:10px;cursor:pointer;transition:border-color .15s;margin-bottom:3px;width:100%;}
-.p-chip:hover{border-color:var(--border2);}
+  border:1px solid var(--border);border-radius:6px;padding:4px 9px;
+  font-size:10px;cursor:pointer;transition:border-color .14s;margin-bottom:3px;width:100%;}
+.p-chip:hover{border-color:var(--blue);}
 .p-chip-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 .p-chip-info{flex:1;}
 .p-chip-name{font-size:11px;font-weight:500;}
 .p-chip-sub{font-size:9px;color:var(--dim);}
 .p-del{
-  width:100%;margin-top:12px;padding:8px;border-radius:6px;
-  background:rgba(230,0,68,.08);border:1px solid rgba(230,0,68,.3);color:var(--red);
-  font-size:12px;cursor:pointer;transition:all .15s;font-family:inherit;
+  width:100%;margin-top:12px;padding:8px;border-radius:7px;
+  background:rgba(220,32,80,.06);border:1px solid rgba(220,32,80,.25);color:var(--red);
+  font-size:12px;cursor:pointer;transition:all .14s;font-family:inherit;
 }
-.p-del:hover{background:rgba(230,0,68,.16);}
-
-/* ── SETTINGS OVERLAY ── */
+.p-del:hover{background:rgba(220,32,80,.12);}
+/* SETTINGS OVERLAY */
 #settings-overlay{
   position:fixed;inset:0;z-index:500;display:none;
-  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  background:rgba(20,30,50,.45);backdrop-filter:blur(5px);
   align-items:center;justify-content:center;
 }
 #settings-overlay.open{display:flex;}
 #settings-panel{
-  background:var(--panel);border:1px solid var(--border2);border-radius:12px;
-  padding:24px;width:520px;max-width:95vw;box-shadow:var(--shadow);
+  background:var(--panel);border:1px solid var(--border2);border-radius:14px;
+  padding:26px;width:520px;max-width:95vw;box-shadow:0 8px 40px rgba(0,0,0,.18);
 }
-.sp-title{font-size:15px;font-weight:600;color:#D0E4F4;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.sp-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
 .sp-sect{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
   color:var(--dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
 .sp-sect+.sp-sect{margin-top:20px;}
-.sp-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.sp-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
 .sp-preset{
-  padding:6px 12px;border-radius:6px;border:1px solid var(--border2);
+  padding:6px 12px;border-radius:7px;border:1px solid var(--border2);
   background:var(--panel2);color:var(--dim);font-size:11px;cursor:pointer;
-  transition:all .15s;font-family:inherit;
+  transition:all .14s;font-family:inherit;
 }
 .sp-preset:hover{border-color:var(--cyan);color:var(--cyan);}
-.sp-preset.active{border-color:var(--cyan);color:var(--cyan);background:rgba(18,168,192,.1);}
-.sp-custom{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.sp-preset.active{border-color:var(--cyan);color:var(--cyan);background:rgba(8,152,176,.08);}
+.sp-custom{display:flex;align-items:center;gap:6px;margin-top:6px;}
 .sp-inp{
   background:var(--panel2);border:1px solid var(--border2);color:var(--text);
-  width:60px;padding:6px 8px;border-radius:6px;font-family:inherit;font-size:12px;
-  text-align:center;outline:none;transition:border-color .15s;
+  width:62px;padding:6px 8px;border-radius:7px;font-family:inherit;font-size:12px;
+  text-align:center;outline:none;transition:border-color .14s;
 }
 .sp-inp:focus{border-color:var(--blue);}
 .sp-lbl{font-size:11px;color:var(--dim);}
 .sp-apply{
-  padding:6px 16px;border-radius:6px;border:1px solid var(--blue);
-  color:var(--blue);background:rgba(32,144,232,.1);font-size:12px;cursor:pointer;
-  transition:all .15s;font-family:inherit;
+  padding:6px 16px;border-radius:7px;border:1px solid var(--blue);
+  color:var(--blue);background:rgba(24,120,208,.08);font-size:12px;cursor:pointer;
+  transition:all .14s;font-family:inherit;
 }
-.sp-apply:hover{background:rgba(32,144,232,.2);}
+.sp-apply:hover{background:rgba(24,120,208,.16);}
 .sp-rails{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .sp-rail{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
 .sp-rail-name{font-size:10px;font-weight:700;letter-spacing:.08em;margin-bottom:6px;}
 .sp-rail-row{display:flex;align-items:center;gap:6px;}
 .sp-rail-inp{
-  flex:1;background:var(--bg);border:1px solid var(--border2);color:var(--text);
-  padding:5px 8px;border-radius:6px;font-family:inherit;font-size:12px;
-  text-align:center;outline:none;transition:border-color .15s;
+  flex:1;background:var(--panel);border:1px solid var(--border2);color:var(--text);
+  padding:5px 8px;border-radius:7px;font-family:inherit;font-size:12px;
+  text-align:center;outline:none;transition:border-color .14s;
 }
 .sp-rail-inp:focus{border-color:var(--amber);}
 .sp-close{
   margin-top:20px;width:100%;padding:9px;border-radius:8px;
   border:1px solid var(--border2);background:var(--panel2);color:var(--dim);
-  font-size:13px;cursor:pointer;transition:all .15s;font-family:inherit;
+  font-size:13px;cursor:pointer;transition:all .14s;font-family:inherit;
 }
 .sp-close:hover{border-color:var(--text);color:var(--text);}
-
-/* ── TOAST ── */
+/* TOAST */
 #toast-wrap{position:fixed;bottom:20px;right:240px;display:flex;flex-direction:column;gap:6px;pointer-events:none;z-index:300;}
 .toast{
-  background:var(--panel);border:1px solid var(--border2);border-radius:8px;
+  background:var(--panel);border:1px solid var(--border2);border-radius:9px;
   border-left:3px solid var(--amber);padding:10px 14px;
-  max-width:300px;box-shadow:var(--shadow);
+  max-width:300px;box-shadow:0 4px 20px rgba(0,0,0,.12);
 }
 .toast-hd{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;}
 .toast-row{font-size:10px;color:var(--dim);padding:1px 0;}
@@ -262,8 +259,6 @@ body{
 </style>
 </head>
 <body>
-
-<!-- HEADER -->
 <div id="hdr">
   <div class="hdr-logo">
     <div class="hdr-dot"></div>
@@ -272,12 +267,21 @@ body{
   </div>
   <div class="hdr-sep"></div>
   <div class="hdr-chip">
-    <div class="hdr-chip-dot" style="background:#2090E8"></div>
+    <div class="hdr-chip-dot" style="background:#1878D0"></div>
     소자 <b id="cnt-main">0</b>개
   </div>
   <div class="hdr-chip">
-    <div class="hdr-chip-dot" style="background:#D08830"></div>
+    <div class="hdr-chip-dot" style="background:#C07820"></div>
     자동 <b id="cnt-auto">0</b>개
+  </div>
+  <div class="hdr-sep"></div>
+  <div class="hdr-size-group">
+    <span class="hdr-size-lbl">보드</span>
+    <button class="hdr-size-btn" data-w="45" data-h="18">45×18</button>
+    <button class="hdr-size-btn" data-w="60" data-h="40">60×40</button>
+    <button class="hdr-size-btn active" data-w="72" data-h="47">72×47</button>
+    <button class="hdr-size-btn" data-w="85" data-h="55">85×55</button>
+    <button class="hdr-size-btn" data-w="100" data-h="80">100×80</button>
   </div>
   <div class="spacer"></div>
   <div class="hdr-actions">
@@ -287,18 +291,13 @@ body{
   </div>
 </div>
 
-<!-- WORKSPACE -->
 <div id="ws">
-
-  <!-- PALETTE -->
   <div id="pal">
     <div id="pal-header">
       <input id="pal-search" type="text" placeholder="🔍  소자 검색...">
     </div>
     <div id="pal-scroll"></div>
   </div>
-
-  <!-- BOARD -->
   <div id="board-wrap">
     <div id="board" data-lbl="PCB · 72×47mm">
       <div id="board-hint">
@@ -309,8 +308,6 @@ body{
       <svg id="traces" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
-
-  <!-- PROPS -->
   <div id="props">
     <div id="props-inner">
       <div class="props-empty" id="props-empty">
@@ -320,14 +317,11 @@ body{
       <div id="props-body" style="display:none"></div>
     </div>
   </div>
-
 </div>
 
-<!-- SETTINGS OVERLAY -->
 <div id="settings-overlay">
   <div id="settings-panel">
     <div class="sp-title">⚙ 설정</div>
-
     <div class="sp-sect">보드 크기</div>
     <div class="sp-row">
       <button class="sp-preset" data-w="85" data-h="55">명함 85×55</button>
@@ -344,46 +338,19 @@ body{
       <span class="sp-lbl">mm</span>
       <button class="sp-apply" id="size-apply-btn">적용</button>
     </div>
-
     <div class="sp-sect" style="margin-top:20px">전원 레일</div>
     <div class="sp-rails">
-      <div class="sp-rail">
-        <div class="sp-rail-name" style="color:#E60044">VBAT</div>
-        <div class="sp-rail-row">
-          <input class="sp-rail-inp" id="v-vbat" type="number" step="0.1" min="1" max="12" value="3.0">
-          <span class="sp-lbl">V</span>
-        </div>
-      </div>
-      <div class="sp-rail">
-        <div class="sp-rail-name" style="color:#2090E8">VCC</div>
-        <div class="sp-rail-row">
-          <input class="sp-rail-inp" id="v-vcc" type="number" step="0.1" min="1" max="12" value="3.3">
-          <span class="sp-lbl">V</span>
-        </div>
-      </div>
-      <div class="sp-rail">
-        <div class="sp-rail-name" style="color:#D08830">VANA</div>
-        <div class="sp-rail-row">
-          <input class="sp-rail-inp" id="v-vana" type="number" step="0.1" min="1" max="12" value="3.3">
-          <span class="sp-lbl">V</span>
-        </div>
-      </div>
-      <div class="sp-rail">
-        <div class="sp-rail-name" style="color:#9040D8">VCORE</div>
-        <div class="sp-rail-row">
-          <input class="sp-rail-inp" id="v-vcore" type="number" step="0.1" min="0.5" max="5" value="1.8">
-          <span class="sp-lbl">V</span>
-        </div>
-      </div>
-      <div class="sp-rail">
-        <div class="sp-rail-name" style="color:#18B060">VREF</div>
-        <div class="sp-rail-row">
-          <input class="sp-rail-inp" id="v-vref" type="number" step="0.1" min="0.5" max="5" value="2.5">
-          <span class="sp-lbl">V</span>
-        </div>
-      </div>
+      <div class="sp-rail"><div class="sp-rail-name" style="color:#DC2050">VBAT</div>
+        <div class="sp-rail-row"><input class="sp-rail-inp" id="v-vbat" type="number" step="0.1" min="1" max="12" value="3.0"><span class="sp-lbl">V</span></div></div>
+      <div class="sp-rail"><div class="sp-rail-name" style="color:#1878D0">VCC</div>
+        <div class="sp-rail-row"><input class="sp-rail-inp" id="v-vcc" type="number" step="0.1" min="1" max="12" value="3.3"><span class="sp-lbl">V</span></div></div>
+      <div class="sp-rail"><div class="sp-rail-name" style="color:#C07820">VANA</div>
+        <div class="sp-rail-row"><input class="sp-rail-inp" id="v-vana" type="number" step="0.1" min="1" max="12" value="3.3"><span class="sp-lbl">V</span></div></div>
+      <div class="sp-rail"><div class="sp-rail-name" style="color:#7830C0">VCORE</div>
+        <div class="sp-rail-row"><input class="sp-rail-inp" id="v-vcore" type="number" step="0.1" min="0.5" max="5" value="1.8"><span class="sp-lbl">V</span></div></div>
+      <div class="sp-rail"><div class="sp-rail-name" style="color:#168050">VREF</div>
+        <div class="sp-rail-row"><input class="sp-rail-inp" id="v-vref" type="number" step="0.1" min="0.5" max="5" value="2.5"><span class="sp-lbl">V</span></div></div>
     </div>
-
     <button class="sp-close" id="settings-close">닫기</button>
   </div>
 </div>
@@ -391,7 +358,7 @@ body{
 <div id="toast-wrap"></div>
 
 <script>
-/* ─── SYMBOLS ─── */
+/* ── SCHEMATIC SYMBOLS (palette) ── */
 const SYMS={
   RES:'<polyline points="2,13 6,13 7,6 9,20 11,6 13,20 15,6 17,20 19,13 22,13"/>',
   CAP:'<line x1="2" y1="13" x2="19" y2="13"/><line x1="19" y1="6" x2="19" y2="20"/><line x1="21" y1="6" x2="21" y2="20"/><line x1="21" y1="13" x2="38" y2="13"/>',
@@ -428,7 +395,170 @@ const SYMS={
   HEADER:'<circle cx="9" cy="8" r="2"/><circle cx="16" cy="8" r="2"/><circle cx="23" cy="8" r="2"/><circle cx="30" cy="8" r="2"/><circle cx="9" cy="18" r="2"/><circle cx="16" cy="18" r="2"/><circle cx="23" cy="18" r="2"/><circle cx="30" cy="18" r="2"/>',
 };
 
-/* ─── RAIL CONFIG ─── */
+/* ── CUTE BOARD ICONS (48×48 viewBox) ── */
+const ICONS={
+  RES:`<rect x="11" y="20" width="26" height="8" rx="3" fill="#C8923A" stroke="#8B6020" stroke-width="1"/>
+    <rect x="2" y="23" width="9" height="2" rx="1" fill="#909090"/><rect x="37" y="23" width="9" height="2" rx="1" fill="#909090"/>
+    <rect x="14" y="20" width="4" height="8" fill="#E04040"/><rect x="19" y="20" width="4" height="8" fill="#303030"/><rect x="24" y="20" width="4" height="8" fill="#C08030"/>`,
+  CAP:`<rect x="19" y="11" width="5" height="26" rx="1" fill="#4880C8" stroke="#2060A0" stroke-width="1"/>
+    <rect x="25" y="11" width="5" height="26" rx="1" fill="#4880C8" stroke="#2060A0" stroke-width="1"/>
+    <line x1="2" y1="24" x2="19" y2="24" stroke="#909090" stroke-width="2.5"/>
+    <line x1="30" y1="24" x2="46" y2="24" stroke="#909090" stroke-width="2.5"/>
+    <text x="8" y="16" font-size="9" fill="#4880C8" font-weight="bold">+</text>`,
+  IND:`<path d="M4,24 Q8,15 13,24 Q18,33 23,24 Q28,15 33,24 Q38,33 43,24" stroke="#30A060" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+  BATTERY:`<rect x="4" y="14" width="36" height="20" rx="4" fill="#4CAF50" stroke="#388E3C" stroke-width="1.5"/>
+    <rect x="40" y="19" width="5" height="10" rx="1.5" fill="#388E3C"/>
+    <text x="12" y="28" font-size="8" fill="white" font-weight="bold">BAT</text>
+    <text x="6" y="28" font-size="13" fill="white" font-weight="bold">−</text>
+    <text x="32" y="27" font-size="11" fill="white" font-weight="bold">+</text>`,
+  LDO:`<rect x="10" y="8" width="28" height="24" rx="3" fill="#5080C0" stroke="#3060A0" stroke-width="1.5"/>
+    <rect x="14" y="32" width="5" height="9" fill="#808080" rx="1"/><rect x="22" y="32" width="5" height="9" fill="#808080" rx="1"/><rect x="30" y="32" width="5" height="9" fill="#808080" rx="1"/>
+    <text x="24" y="23" font-size="8" fill="white" font-weight="bold" text-anchor="middle">LDO</text>`,
+  DCDC:`<rect x="5" y="10" width="38" height="28" rx="4" fill="#7040B0" stroke="#5020A0" stroke-width="1.5"/>
+    <path d="M11,24 Q14,18 17,24 Q20,30 23,24" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <polygon points="27,20 31,24 27,28" fill="white"/>
+    <line x1="23" y1="24" x2="27" y2="24" stroke="white" stroke-width="1.8"/>
+    <text x="36" y="28" font-size="7" fill="#DDD" text-anchor="middle">DC</text>`,
+  MOSFET_P:`<rect x="18" y="8" width="14" height="32" rx="3" fill="#9A3060" stroke="#701840" stroke-width="1.5"/>
+    <line x1="4" y1="24" x2="18" y2="24" stroke="#888" stroke-width="2"/>
+    <line x1="32" y1="16" x2="44" y2="8" stroke="#888" stroke-width="2"/>
+    <line x1="32" y1="32" x2="44" y2="40" stroke="#888" stroke-width="2"/>
+    <circle cx="16" cy="24" r="4" fill="#C05080" stroke="#701840" stroke-width="1"/>
+    <text x="25" y="27" font-size="8" fill="white" text-anchor="middle">P</text>`,
+  TVS:`<polygon points="8,14 8,34 28,24" fill="#D04080" stroke="#A02860" stroke-width="1.5" opacity="0.9"/>
+    <line x1="28" y1="12" x2="28" y2="36" stroke="#A02860" stroke-width="3"/>
+    <line x1="24" y1="12" x2="32" y2="12" stroke="#A02860" stroke-width="2.5"/>
+    <line x1="24" y1="36" x2="32" y2="36" stroke="#A02860" stroke-width="2.5"/>
+    <line x1="2" y1="24" x2="8" y2="24" stroke="#888" stroke-width="2.5"/>
+    <line x1="28" y1="24" x2="46" y2="24" stroke="#888" stroke-width="2.5"/>`,
+  MCU:`<rect x="8" y="8" width="32" height="32" rx="4" fill="#2A5898" stroke="#1A3878" stroke-width="1.5"/>
+    <rect x="3" y="12" width="5" height="3" rx="1" fill="#AAB4C0"/><rect x="3" y="17" width="5" height="3" rx="1" fill="#AAB4C0"/>
+    <rect x="3" y="22" width="5" height="3" rx="1" fill="#AAB4C0"/><rect x="3" y="27" width="5" height="3" rx="1" fill="#AAB4C0"/>
+    <rect x="40" y="12" width="5" height="3" rx="1" fill="#AAB4C0"/><rect x="40" y="17" width="5" height="3" rx="1" fill="#AAB4C0"/>
+    <rect x="40" y="22" width="5" height="3" rx="1" fill="#AAB4C0"/><rect x="40" y="27" width="5" height="3" rx="1" fill="#AAB4C0"/>
+    <rect x="12" y="3" width="3" height="5" rx="1" fill="#AAB4C0"/><rect x="17" y="3" width="3" height="5" rx="1" fill="#AAB4C0"/>
+    <rect x="22" y="3" width="3" height="5" rx="1" fill="#AAB4C0"/><rect x="27" y="3" width="3" height="5" rx="1" fill="#AAB4C0"/>
+    <rect x="32" y="3" width="3" height="5" rx="1" fill="#AAB4C0"/>
+    <rect x="12" y="40" width="3" height="5" rx="1" fill="#AAB4C0"/><rect x="17" y="40" width="3" height="5" rx="1" fill="#AAB4C0"/>
+    <rect x="22" y="40" width="3" height="5" rx="1" fill="#AAB4C0"/><rect x="27" y="40" width="3" height="5" rx="1" fill="#AAB4C0"/>
+    <rect x="32" y="40" width="3" height="5" rx="1" fill="#AAB4C0"/>
+    <circle cx="14" cy="14" r="2.5" fill="#6090D8"/>
+    <text x="24" y="28" font-size="8" fill="white" font-weight="bold" text-anchor="middle">MCU</text>`,
+  BLE:`<rect x="7" y="10" width="24" height="28" rx="4" fill="#6040C0" stroke="#4020A0" stroke-width="1.5"/>
+    <path d="M34,18 Q40,24 34,30" stroke="#8060E0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M37,15 Q45,24 37,33" stroke="#8060E0" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <text x="19" y="27" font-size="8" fill="white" font-weight="bold" text-anchor="middle">BLE</text>`,
+  XTAL:`<rect x="12" y="8" width="24" height="32" rx="5" fill="#B8B8B8" stroke="#888" stroke-width="2"/>
+    <rect x="12" y="19" width="24" height="10" fill="#D0D0D0" opacity="0.5"/>
+    <line x1="2" y1="19" x2="12" y2="19" stroke="#888" stroke-width="2.5"/>
+    <line x1="36" y1="19" x2="46" y2="19" stroke="#888" stroke-width="2.5"/>
+    <text x="24" y="28" font-size="7" fill="#404040" font-weight="bold" text-anchor="middle">XTAL</text>`,
+  FLASH:`<rect x="8" y="9" width="32" height="30" rx="3" fill="#2C2C2C" stroke="#111" stroke-width="1.5"/>
+    <rect x="3" y="13" width="5" height="3" rx="0.5" fill="#888"/><rect x="3" y="18" width="5" height="3" rx="0.5" fill="#888"/>
+    <rect x="3" y="23" width="5" height="3" rx="0.5" fill="#888"/><rect x="3" y="28" width="5" height="3" rx="0.5" fill="#888"/>
+    <rect x="40" y="13" width="5" height="3" rx="0.5" fill="#888"/><rect x="40" y="18" width="5" height="3" rx="0.5" fill="#888"/>
+    <rect x="40" y="23" width="5" height="3" rx="0.5" fill="#888"/><rect x="40" y="28" width="5" height="3" rx="0.5" fill="#888"/>
+    <text x="24" y="27" font-size="7.5" fill="#40D0FF" font-weight="bold" text-anchor="middle">FLASH</text>`,
+  EEPROM:`<rect x="8" y="9" width="32" height="30" rx="3" fill="#1A1A40" stroke="#080828" stroke-width="1.5"/>
+    <rect x="3" y="13" width="5" height="3" rx="0.5" fill="#888"/><rect x="3" y="18" width="5" height="3" rx="0.5" fill="#888"/>
+    <rect x="3" y="23" width="5" height="3" rx="0.5" fill="#888"/><rect x="3" y="28" width="5" height="3" rx="0.5" fill="#888"/>
+    <rect x="40" y="13" width="5" height="3" rx="0.5" fill="#888"/><rect x="40" y="18" width="5" height="3" rx="0.5" fill="#888"/>
+    <rect x="40" y="23" width="5" height="3" rx="0.5" fill="#888"/><rect x="40" y="28" width="5" height="3" rx="0.5" fill="#888"/>
+    <text x="24" y="27" font-size="7" fill="#8888FF" font-weight="bold" text-anchor="middle">EEPROM</text>`,
+  USB:`<rect x="12" y="3" width="24" height="36" rx="4" fill="#909090" stroke="#606060" stroke-width="1.5"/>
+    <rect x="14" y="34" width="20" height="7" rx="3" fill="#606060"/>
+    <rect x="15" y="9" width="8" height="6" rx="1.5" fill="#B0B0B0"/><rect x="25" y="9" width="8" height="6" rx="1.5" fill="#B0B0B0"/>
+    <rect x="15" y="19" width="18" height="4" rx="1.5" fill="#A0A0A0"/>
+    <text x="24" y="32" font-size="7" fill="white" font-weight="bold" text-anchor="middle">USB-C</text>`,
+  LED:`<polygon points="24,8 37,38 11,38" fill="#66BB6A" stroke="#43A047" stroke-width="1.5" opacity="0.85"/>
+    <ellipse cx="24" cy="38" rx="7" ry="3" fill="#43A047"/>
+    <line x1="31" y1="13" x2="40" y2="8" stroke="#A5D6A7" stroke-width="2" stroke-linecap="round"/>
+    <line x1="33" y1="21" x2="43" y2="18" stroke="#A5D6A7" stroke-width="2" stroke-linecap="round"/>`,
+  PD:`<polygon points="24,40 37,10 11,10" fill="#42A5F5" stroke="#1E88E5" stroke-width="1.5" opacity="0.85"/>
+    <ellipse cx="24" cy="10" rx="7" ry="3" fill="#1E88E5"/>
+    <line x1="31" y1="35" x2="40" y2="40" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+    <line x1="33" y1="27" x2="43" y2="30" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>`,
+  NTC:`<rect x="13" y="15" width="22" height="18" rx="4" fill="#EF5350" stroke="#C62828" stroke-width="1.5"/>
+    <line x1="24" y1="5" x2="24" y2="15" stroke="#C62828" stroke-width="2.5"/>
+    <polygon points="24,3 20,10 28,10" fill="#C62828"/>
+    <text x="24" y="28" font-size="8" fill="white" font-weight="bold" text-anchor="middle">NTC</text>`,
+  IMU:`<rect x="10" y="10" width="28" height="28" rx="4" fill="#26A69A" stroke="#00796B" stroke-width="1.5"/>
+    <line x1="24" y1="24" x2="24" y2="5" stroke="#80DEEA" stroke-width="2.5"/>
+    <polygon points="24,3 21,8 27,8" fill="#80DEEA"/>
+    <line x1="24" y1="24" x2="43" y2="24" stroke="#FFCC80" stroke-width="2.5"/>
+    <polygon points="45,24 40,21 40,27" fill="#FFCC80"/>
+    <line x1="24" y1="24" x2="13" y2="35" stroke="#C5E1A5" stroke-width="2"/>
+    <polygon points="11,37 11,31 17,37" fill="#C5E1A5"/>`,
+  BARO:`<circle cx="24" cy="26" r="18" fill="#29B6F6" stroke="#0288D1" stroke-width="1.5"/>
+    <path d="M9,26 A15,15 0 1 1 39,26" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2.5"/>
+    <line x1="24" y1="26" x2="17" y2="13" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="24" cy="26" r="3" fill="#EF5350"/>`,
+  OPAMP:`<polygon points="6,9 6,39 42,24" fill="#FFA726" stroke="#E65100" stroke-width="1.5" opacity="0.9"/>
+    <text x="16" y="22" font-size="11" fill="white" font-weight="bold">+</text>
+    <text x="16" y="35" font-size="11" fill="white" font-weight="bold">−</text>`,
+  INA:`<polygon points="6,9 6,39 42,24" fill="#FF7043" stroke="#BF360C" stroke-width="1.5" opacity="0.9"/>
+    <text x="15" y="28" font-size="9" fill="white" font-weight="bold">INA</text>`,
+  ADC:`<rect x="5" y="8" width="38" height="32" rx="4" fill="#1565C0" stroke="#0D47A1" stroke-width="1.5"/>
+    <path d="M11,30 L15,30 L15,18 L19,18 L19,30 L23,30" stroke="white" stroke-width="2" fill="none" stroke-linecap="square"/>
+    <polygon points="27,20 31,24 27,28" fill="white"/>
+    <line x1="23" y1="24" x2="27" y2="24" stroke="white" stroke-width="2"/>
+    <text x="37" y="20" font-size="7" fill="#82B1FF" text-anchor="middle">1</text>
+    <text x="37" y="28" font-size="7" fill="#82B1FF" text-anchor="middle">0</text>`,
+  DAC:`<rect x="5" y="8" width="38" height="32" rx="4" fill="#00695C" stroke="#004D40" stroke-width="1.5"/>
+    <text x="11" y="21" font-size="7" fill="#80CBC4" text-anchor="middle">1</text>
+    <text x="11" y="29" font-size="7" fill="#80CBC4" text-anchor="middle">0</text>
+    <polygon points="21,20 17,24 21,28" fill="white"/>
+    <line x1="17" y1="24" x2="21" y2="24" stroke="white" stroke-width="2"/>
+    <path d="M23,30 L27,30 L27,18 L31,18 L31,30 L35,30" stroke="white" stroke-width="2" fill="none" stroke-linecap="square"/>`,
+  MUX:`<polygon points="7,5 7,43 41,37 41,11" fill="#0277BD" stroke="#01579B" stroke-width="1.5" opacity="0.9"/>
+    <line x1="1" y1="13" x2="7" y2="13" stroke="#81D4FA" stroke-width="2"/><line x1="1" y1="20" x2="7" y2="20" stroke="#81D4FA" stroke-width="2"/>
+    <line x1="1" y1="27" x2="7" y2="27" stroke="#81D4FA" stroke-width="2"/><line x1="1" y1="34" x2="7" y2="34" stroke="#81D4FA" stroke-width="2"/>
+    <line x1="41" y1="24" x2="47" y2="24" stroke="#81D4FA" stroke-width="2.5"/>`,
+  ESD:`<rect x="5" y="10" width="38" height="28" rx="4" fill="#8E24AA" stroke="#6A1B9A" stroke-width="1.5"/>
+    <polygon points="14,16 14,24 22,20" fill="white" opacity="0.8"/>
+    <line x1="22" y1="15" x2="22" y2="25" stroke="white" stroke-width="2.5"/>
+    <polygon points="26,16 26,24 34,20" fill="white" opacity="0.8"/>
+    <line x1="34" y1="15" x2="34" y2="25" stroke="white" stroke-width="2.5"/>`,
+  FUSE:`<rect x="10" y="18" width="28" height="12" rx="5" fill="#CFD8DC" stroke="#90A4AE" stroke-width="1.5"/>
+    <line x1="2" y1="24" x2="10" y2="24" stroke="#888" stroke-width="2.5"/><line x1="38" y1="24" x2="46" y2="24" stroke="#888" stroke-width="2.5"/>
+    <line x1="20" y1="18" x2="20" y2="30" stroke="#888" stroke-width="1.5"/><line x1="28" y1="18" x2="28" y2="30" stroke="#888" stroke-width="1.5"/>
+    <text x="24" y="27" font-size="7" fill="#546E7A" font-weight="bold" text-anchor="middle">FUSE</text>`,
+  BEAD:`<rect x="8" y="17" width="32" height="14" rx="4" fill="#424242" stroke="#212121" stroke-width="1.5"/>
+    <line x1="2" y1="24" x2="8" y2="24" stroke="#888" stroke-width="2.5"/><line x1="40" y1="24" x2="46" y2="24" stroke="#888" stroke-width="2.5"/>
+    <rect x="13" y="17" width="3" height="14" fill="#616161"/><rect x="19" y="17" width="3" height="14" fill="#616161"/>
+    <rect x="25" y="17" width="3" height="14" fill="#616161"/><rect x="31" y="17" width="3" height="14" fill="#616161"/>`,
+  DEBUG:`<rect x="5" y="14" width="38" height="20" rx="3" fill="#546E7A" stroke="#37474F" stroke-width="1.5"/>
+    <circle cx="14" cy="24" r="3.5" fill="#66BB6A"/><circle cx="22" cy="24" r="3.5" fill="#66BB6A"/>
+    <circle cx="30" cy="24" r="3.5" fill="#EF5350"/><circle cx="38" cy="24" r="3.5" fill="#42A5F5"/>`,
+  UART:`<rect x="5" y="14" width="38" height="20" rx="3" fill="#263238" stroke="#101820" stroke-width="1.5"/>
+    <line x1="9" y1="21" x2="39" y2="21" stroke="#80CBC4" stroke-width="2"/>
+    <polygon points="39,18 39,24 35,21" fill="#80CBC4"/>
+    <line x1="39" y1="31" x2="9" y2="31" stroke="#EF9A9A" stroke-width="2"/>
+    <polygon points="9,28 9,34 13,31" fill="#EF9A9A"/>`,
+  SWITCH:`<rect x="11" y="22" width="26" height="16" rx="3" fill="#FF8F00" stroke="#E65100" stroke-width="1.5"/>
+    <rect x="14" y="10" width="20" height="16" rx="4" fill="#FFA726" stroke="#E65100" stroke-width="1.5"/>
+    <rect x="16" y="12" width="16" height="12" rx="3" fill="#FFCC80"/>`,
+  LED_IND:`<circle cx="24" cy="24" r="16" fill="#66BB6A" stroke="#43A047" stroke-width="1.5" opacity="0.75"/>
+    <circle cx="24" cy="24" r="9" fill="#C8E6C9" stroke="#81C784" stroke-width="1"/>
+    <circle cx="20" cy="20" r="3" fill="rgba(255,255,255,0.7)"/>
+    <line x1="24" y1="3" x2="24" y2="8" stroke="#888" stroke-width="2.5"/><line x1="24" y1="40" x2="24" y2="45" stroke="#888" stroke-width="2.5"/>`,
+  TP:`<circle cx="24" cy="24" r="14" fill="none" stroke="#9E9E9E" stroke-width="2"/>
+    <circle cx="24" cy="24" r="8" fill="#FFD54F" stroke="#FF8F00" stroke-width="1.5"/>
+    <circle cx="24" cy="24" r="2.5" fill="#212121"/>
+    <line x1="24" y1="2" x2="24" y2="10" stroke="#9E9E9E" stroke-width="2"/><line x1="24" y1="38" x2="24" y2="46" stroke="#9E9E9E" stroke-width="2"/>
+    <line x1="2" y1="24" x2="10" y2="24" stroke="#9E9E9E" stroke-width="2"/><line x1="38" y1="24" x2="46" y2="24" stroke="#9E9E9E" stroke-width="2"/>`,
+  HEADER:`<rect x="3" y="12" width="42" height="24" rx="3" fill="#1A1A1A" stroke="#080808" stroke-width="1.5"/>
+    <circle cx="12" cy="19" r="3.5" fill="#C8960A"/><circle cx="21" cy="19" r="3.5" fill="#C8960A"/>
+    <circle cx="30" cy="19" r="3.5" fill="#C8960A"/><circle cx="39" cy="19" r="3.5" fill="#C8960A"/>
+    <circle cx="12" cy="29" r="3.5" fill="#C8960A"/><circle cx="21" cy="29" r="3.5" fill="#C8960A"/>
+    <circle cx="30" cy="29" r="3.5" fill="#C8960A"/><circle cx="39" cy="29" r="3.5" fill="#C8960A"/>
+    <circle cx="12" cy="19" r="1.5" fill="#333"/><circle cx="21" cy="19" r="1.5" fill="#333"/>
+    <circle cx="30" cy="19" r="1.5" fill="#333"/><circle cx="39" cy="19" r="1.5" fill="#333"/>
+    <circle cx="12" cy="29" r="1.5" fill="#333"/><circle cx="21" cy="29" r="1.5" fill="#333"/>
+    <circle cx="30" cy="29" r="1.5" fill="#333"/><circle cx="39" cy="29" r="1.5" fill="#333"/>`,
+};
+
+/* ── RAIL CONFIG ── */
 const RAIL_MAP={
   BATTERY:'vbat',LDO:'vbat',DCDC:'vbat',MOSFET_P:'vbat',TVS:'vbat',
   MCU:'vcc',BLE:'vcc',XTAL:'vcc',FLASH:'vcc',EEPROM:'vcc',USB:'vcc',
@@ -439,50 +569,50 @@ const RAIL_MAP={
 };
 const OUT_RAIL={LDO:'vcc',DCDC:'vcc'};
 const RAIL_META={
-  vbat:{name:'VBAT',col:'#E60044',inp:'v-vbat'},
-  vcc: {name:'VCC', col:'#2090E8',inp:'v-vcc'},
-  vana:{name:'VANA',col:'#D08830',inp:'v-vana'},
-  vcore:{name:'VCORE',col:'#9040D8',inp:'v-vcore'},
-  vref:{name:'VREF', col:'#18B060',inp:'v-vref'},
+  vbat:{name:'VBAT',col:'#DC2050',inp:'v-vbat'},
+  vcc: {name:'VCC', col:'#1878D0',inp:'v-vcc'},
+  vana:{name:'VANA',col:'#C07820',inp:'v-vana'},
+  vcore:{name:'VCORE',col:'#7830C0',inp:'v-vcore'},
+  vref:{name:'VREF', col:'#168050',inp:'v-vref'},
 };
 const VOLTS={vbat:3.0,vcc:3.3,vana:3.3,vcore:1.8,vref:2.5};
 const fmtV=v=>parseFloat(v.toFixed(2))+'V';
 
-/* ─── DEFS ─── */
+/* ── DEFS ── */
 const DEFS={
-  BATTERY:{label:'BATT',  sub:'CR2032 · 3.0V',   cat:'전원',     col:'#E60044',w:82,h:58,companions:[{type:'CAP',label:'C_BAT',sub:'100µF',reason:'바이패스 캡',dx:0,dy:72}]},
-  LDO:    {label:'LDO',   sub:'3V3 / 1V8 Reg',   cat:'전원',     col:'#E60044',w:82,h:58,companions:[{type:'CAP',label:'C_IN',sub:'10µF',reason:'입력 안정화',dx:-96,dy:0},{type:'CAP',label:'C_OUT',sub:'10µF',reason:'출력 안정화',dx:96,dy:0}]},
-  DCDC:   {label:'DC-DC', sub:'Buck · 3V3·1V8',  cat:'전원',     col:'#E60044',w:88,h:60,companions:[{type:'IND',label:'L_SW',sub:'10µH',reason:'스위칭 인덕터',dx:0,dy:78},{type:'CAP',label:'C_IN',sub:'10µF',reason:'입력 캡',dx:-100,dy:0},{type:'CAP',label:'C_OUT',sub:'22µF',reason:'출력 캡',dx:100,dy:0}]},
-  MOSFET_P:{label:'PMOS', sub:'P-ch Load SW',    cat:'전원',     col:'#E60044',w:74,h:54,companions:[{type:'RES',label:'R_G',sub:'10kΩ',reason:'게이트 저항',dx:0,dy:-72},{type:'RES',label:'R_GS',sub:'100kΩ',reason:'GS 풀업',dx:90,dy:-72}]},
-  TVS:    {label:'TVS',   sub:'보호 다이오드',    cat:'전원',     col:'#E60044',w:68,h:48,companions:[]},
-  MCU:    {label:'MCU',   sub:'32-bit ARM Cortex',cat:'디지털',   col:'#2090E8',w:114,h:94,companions:[{type:'CAP',label:'C_V1',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-96},{type:'CAP',label:'C_V2',sub:'100nF',reason:'VCC 디커플링',dx:78,dy:-96},{type:'CAP',label:'C_VB',sub:'4.7µF',reason:'VCC 벌크',dx:-78,dy:-96},{type:'RES',label:'R_RST',sub:'10kΩ',reason:'리셋 풀업',dx:-120,dy:8},{type:'CAP',label:'C_RST',sub:'100nF',reason:'리셋 필터',dx:-120,dy:72}]},
-  BLE:    {label:'BLE',   sub:'5.0 · 2.4GHz nRF',cat:'디지털',   col:'#9040D8',w:98,h:64,companions:[{type:'CAP',label:'C_V1',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-80},{type:'CAP',label:'C_VB',sub:'10µF',reason:'VCC 벌크',dx:112,dy:-80}]},
-  XTAL:   {label:'XTAL',  sub:'32.768kHz / 16MHz',cat:'디지털',  col:'#2090E8',w:80,h:52,companions:[{type:'CAP',label:'C_X1',sub:'12pF',reason:'부하 캡 1',dx:0,dy:-70},{type:'CAP',label:'C_X2',sub:'12pF',reason:'부하 캡 2',dx:84,dy:-70}]},
-  FLASH:  {label:'FLASH', sub:'SPI NOR · 4MB',   cat:'디지털',   col:'#2090E8',w:82,h:56,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-76},{type:'RES',label:'R_CS',sub:'10kΩ',reason:'/CS 풀업',dx:96,dy:0}]},
-  EEPROM: {label:'EEPROM',sub:'I2C · 256Kbit',   cat:'디지털',   col:'#2090E8',w:82,h:56,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-76},{type:'RES',label:'R_SCL',sub:'4.7kΩ',reason:'SCL 풀업',dx:96,dy:-40}]},
-  USB:    {label:'USB-C', sub:'인터페이스 · PD',  cat:'디지털',   col:'#2090E8',w:82,h:58,companions:[{type:'CAP',label:'C_VBUS',sub:'4.7µF',reason:'VBUS 벌크',dx:0,dy:-78},{type:'RES',label:'R_CC1',sub:'5.1kΩ',reason:'CC1 풀다운',dx:100,dy:-40},{type:'ESD',label:'ESD_USB',sub:'USB 보호',reason:'ESD 보호',dx:-96,dy:0}]},
-  LED:    {label:'LED',   sub:'Emitter 850/660nm',cat:'센서',     col:'#18B060',w:74,h:52,companions:[{type:'RES',label:'R_LED',sub:'100Ω',reason:'전류 제한',dx:-92,dy:0}]},
-  PD:     {label:'PD',    sub:'Photodiode Si',    cat:'센서',     col:'#18B060',w:74,h:52,companions:[{type:'OPAMP',label:'TIA',sub:'Trans-Z Amp',reason:'TIA 구성',dx:102,dy:0},{type:'RES',label:'R_F',sub:'1MΩ',reason:'TIA 피드백',dx:102,dy:-74},{type:'CAP',label:'C_F',sub:'1pF',reason:'피드백 안정화',dx:102,dy:74}]},
-  NTC:    {label:'NTC',   sub:'서미스터 · 10kΩ', cat:'센서',     col:'#18B060',w:68,h:48,companions:[{type:'RES',label:'R_DIV',sub:'10kΩ',reason:'전압 분배',dx:0,dy:-70}]},
-  IMU:    {label:'IMU',   sub:'6축 가속도·자이로',cat:'센서',     col:'#18B060',w:84,h:58,companions:[{type:'CAP',label:'C_VDD',sub:'100nF',reason:'VDD 디커플링',dx:0,dy:-78}]},
-  BARO:   {label:'BARO',  sub:'기압·고도 센서',  cat:'센서',     col:'#18B060',w:84,h:58,companions:[{type:'CAP',label:'C_VDD',sub:'100nF',reason:'VDD 디커플링',dx:0,dy:-78}]},
-  OPAMP:  {label:'OP-AMP',sub:'증폭 · 비교기',   cat:'아날로그', col:'#D08830',w:88,h:64,companions:[{type:'CAP',label:'C_V+',sub:'100nF',reason:'V+ 바이패스',dx:0,dy:-82},{type:'CAP',label:'C_V-',sub:'100nF',reason:'V- 바이패스',dx:0,dy:82}]},
-  INA:    {label:'INA',   sub:'계측 증폭기',      cat:'아날로그', col:'#D08830',w:88,h:64,companions:[{type:'CAP',label:'C_V+',sub:'100nF',reason:'V+ 바이패스',dx:0,dy:-82},{type:'RES',label:'R_GAIN',sub:'1kΩ',reason:'이득 설정',dx:104,dy:0}]},
-  ADC:    {label:'ADC',   sub:'16-bit SAR',       cat:'아날로그', col:'#12A8C0',w:82,h:58,companions:[{type:'CAP',label:'C_REF',sub:'100nF',reason:'VREF 바이패스',dx:0,dy:-78}]},
-  DAC:    {label:'DAC',   sub:'12-bit · I2C/SPI', cat:'아날로그', col:'#12A8C0',w:82,h:58,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-78}]},
-  MUX:    {label:'MUX',   sub:'8:1 아날로그 MUX', cat:'아날로그', col:'#12A8C0',w:82,h:58,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-78}]},
-  ESD:    {label:'ESD',   sub:'보호 어레이',       cat:'보호',     col:'#C040A0',w:72,h:48,companions:[]},
-  FUSE:   {label:'FUSE',  sub:'폴리 퓨즈 · eFuse',cat:'보호',    col:'#C040A0',w:72,h:48,companions:[]},
-  BEAD:   {label:'FB',    sub:'페라이트 비드',     cat:'보호',     col:'#C040A0',w:68,h:42,companions:[]},
-  DEBUG:  {label:'DEBUG', sub:'SWD/JTAG · 10핀', cat:'인터페이스',col:'#6080A0',w:74,h:52,companions:[{type:'RES',label:'R_SWDIO',sub:'100Ω',reason:'SWDIO 직렬',dx:0,dy:-70}]},
-  UART:   {label:'UART',  sub:'RS232/485 · 레벨',cat:'인터페이스',col:'#6080A0',w:74,h:52,companions:[]},
-  SWITCH: {label:'SW',    sub:'Tact 버튼',         cat:'입력',     col:'#C09030',w:70,h:52,companions:[{type:'RES',label:'R_PU',sub:'10kΩ',reason:'풀업 저항',dx:0,dy:-74},{type:'CAP',label:'C_DB',sub:'100nF',reason:'디바운스',dx:90,dy:0}]},
-  LED_IND:{label:'LED_IND',sub:'표시 LED · 녹/적',cat:'입력',    col:'#C09030',w:74,h:52,companions:[{type:'RES',label:'R_LED',sub:'330Ω',reason:'전류 제한',dx:-92,dy:0}]},
-  TP:     {label:'TP',    sub:'테스트 포인트',     cat:'입력',     col:'#6080A0',w:58,h:40,companions:[]},
-  HEADER: {label:'HDR',   sub:'핀 헤더 2×4',       cat:'입력',     col:'#6080A0',w:70,h:48,companions:[]},
-  RES:    {label:'R',     sub:'저항',               cat:'패시브',   col:'#7090A0',w:60,h:40,companions:[]},
-  CAP:    {label:'C',     sub:'캐패시터',           cat:'패시브',   col:'#5090A0',w:56,h:40,companions:[]},
-  IND:    {label:'L',     sub:'인덕터',             cat:'패시브',   col:'#5098A0',w:60,h:40,companions:[]},
+  BATTERY:{label:'BATT',  sub:'CR2032 · 3.0V',   cat:'전원',     col:'#DC2050',w:82,h:68,companions:[{type:'CAP',label:'C_BAT',sub:'100µF',reason:'바이패스 캡',dx:0,dy:80}]},
+  LDO:    {label:'LDO',   sub:'3V3 / 1V8 Reg',   cat:'전원',     col:'#DC2050',w:82,h:68,companions:[{type:'CAP',label:'C_IN',sub:'10µF',reason:'입력 안정화',dx:-96,dy:0},{type:'CAP',label:'C_OUT',sub:'10µF',reason:'출력 안정화',dx:96,dy:0}]},
+  DCDC:   {label:'DC-DC', sub:'Buck · 3V3·1V8',  cat:'전원',     col:'#DC2050',w:88,h:70,companions:[{type:'IND',label:'L_SW',sub:'10µH',reason:'스위칭 인덕터',dx:0,dy:88},{type:'CAP',label:'C_IN',sub:'10µF',reason:'입력 캡',dx:-100,dy:0},{type:'CAP',label:'C_OUT',sub:'22µF',reason:'출력 캡',dx:100,dy:0}]},
+  MOSFET_P:{label:'PMOS', sub:'P-ch Load SW',    cat:'전원',     col:'#DC2050',w:74,h:62,companions:[{type:'RES',label:'R_G',sub:'10kΩ',reason:'게이트 저항',dx:0,dy:-80},{type:'RES',label:'R_GS',sub:'100kΩ',reason:'GS 풀업',dx:90,dy:-80}]},
+  TVS:    {label:'TVS',   sub:'보호 다이오드',    cat:'전원',     col:'#DC2050',w:68,h:58,companions:[]},
+  MCU:    {label:'MCU',   sub:'32-bit ARM Cortex',cat:'디지털',   col:'#1878D0',w:114,h:106,companions:[{type:'CAP',label:'C_V1',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-108},{type:'CAP',label:'C_V2',sub:'100nF',reason:'VCC 디커플링',dx:78,dy:-108},{type:'CAP',label:'C_VB',sub:'4.7µF',reason:'VCC 벌크',dx:-78,dy:-108},{type:'RES',label:'R_RST',sub:'10kΩ',reason:'리셋 풀업',dx:-120,dy:8},{type:'CAP',label:'C_RST',sub:'100nF',reason:'리셋 필터',dx:-120,dy:80}]},
+  BLE:    {label:'BLE',   sub:'5.0 · 2.4GHz nRF',cat:'디지털',   col:'#7830C0',w:98,h:76,companions:[{type:'CAP',label:'C_V1',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-90},{type:'CAP',label:'C_VB',sub:'10µF',reason:'VCC 벌크',dx:112,dy:-90}]},
+  XTAL:   {label:'XTAL',  sub:'32.768kHz / 16MHz',cat:'디지털',  col:'#1878D0',w:80,h:62,companions:[{type:'CAP',label:'C_X1',sub:'12pF',reason:'부하 캡 1',dx:0,dy:-80},{type:'CAP',label:'C_X2',sub:'12pF',reason:'부하 캡 2',dx:84,dy:-80}]},
+  FLASH:  {label:'FLASH', sub:'SPI NOR · 4MB',   cat:'디지털',   col:'#1878D0',w:82,h:66,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-84},{type:'RES',label:'R_CS',sub:'10kΩ',reason:'/CS 풀업',dx:96,dy:0}]},
+  EEPROM: {label:'EEPROM',sub:'I2C · 256Kbit',   cat:'디지털',   col:'#1878D0',w:82,h:66,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-84},{type:'RES',label:'R_SCL',sub:'4.7kΩ',reason:'SCL 풀업',dx:96,dy:-40}]},
+  USB:    {label:'USB-C', sub:'인터페이스 · PD',  cat:'디지털',   col:'#1878D0',w:82,h:68,companions:[{type:'CAP',label:'C_VBUS',sub:'4.7µF',reason:'VBUS 벌크',dx:0,dy:-88},{type:'RES',label:'R_CC1',sub:'5.1kΩ',reason:'CC1 풀다운',dx:100,dy:-40},{type:'ESD',label:'ESD_USB',sub:'USB 보호',reason:'ESD 보호',dx:-96,dy:0}]},
+  LED:    {label:'LED',   sub:'Emitter 850/660nm',cat:'센서',     col:'#168050',w:74,h:62,companions:[{type:'RES',label:'R_LED',sub:'100Ω',reason:'전류 제한',dx:-92,dy:0}]},
+  PD:     {label:'PD',    sub:'Photodiode Si',    cat:'센서',     col:'#168050',w:74,h:62,companions:[{type:'OPAMP',label:'TIA',sub:'Trans-Z Amp',reason:'TIA 구성',dx:102,dy:0},{type:'RES',label:'R_F',sub:'1MΩ',reason:'TIA 피드백',dx:102,dy:-84},{type:'CAP',label:'C_F',sub:'1pF',reason:'피드백 안정화',dx:102,dy:84}]},
+  NTC:    {label:'NTC',   sub:'서미스터 · 10kΩ', cat:'센서',     col:'#168050',w:68,h:58,companions:[{type:'RES',label:'R_DIV',sub:'10kΩ',reason:'전압 분배',dx:0,dy:-78}]},
+  IMU:    {label:'IMU',   sub:'6축 가속도·자이로',cat:'센서',     col:'#168050',w:84,h:68,companions:[{type:'CAP',label:'C_VDD',sub:'100nF',reason:'VDD 디커플링',dx:0,dy:-86}]},
+  BARO:   {label:'BARO',  sub:'기압·고도 센서',  cat:'센서',     col:'#168050',w:84,h:68,companions:[{type:'CAP',label:'C_VDD',sub:'100nF',reason:'VDD 디커플링',dx:0,dy:-86}]},
+  OPAMP:  {label:'OP-AMP',sub:'증폭 · 비교기',   cat:'아날로그', col:'#C07820',w:88,h:74,companions:[{type:'CAP',label:'C_V+',sub:'100nF',reason:'V+ 바이패스',dx:0,dy:-92},{type:'CAP',label:'C_V-',sub:'100nF',reason:'V- 바이패스',dx:0,dy:92}]},
+  INA:    {label:'INA',   sub:'계측 증폭기',      cat:'아날로그', col:'#C07820',w:88,h:74,companions:[{type:'CAP',label:'C_V+',sub:'100nF',reason:'V+ 바이패스',dx:0,dy:-92},{type:'RES',label:'R_GAIN',sub:'1kΩ',reason:'이득 설정',dx:104,dy:0}]},
+  ADC:    {label:'ADC',   sub:'16-bit SAR',       cat:'아날로그', col:'#0898B0',w:82,h:68,companions:[{type:'CAP',label:'C_REF',sub:'100nF',reason:'VREF 바이패스',dx:0,dy:-86}]},
+  DAC:    {label:'DAC',   sub:'12-bit · I2C/SPI', cat:'아날로그', col:'#0898B0',w:82,h:68,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-86}]},
+  MUX:    {label:'MUX',   sub:'8:1 아날로그 MUX', cat:'아날로그', col:'#0898B0',w:82,h:68,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-86}]},
+  ESD:    {label:'ESD',   sub:'보호 어레이',       cat:'보호',     col:'#8E24AA',w:72,h:58,companions:[]},
+  FUSE:   {label:'FUSE',  sub:'폴리 퓨즈 · eFuse',cat:'보호',    col:'#8E24AA',w:72,h:58,companions:[]},
+  BEAD:   {label:'FB',    sub:'페라이트 비드',     cat:'보호',     col:'#8E24AA',w:68,h:52,companions:[]},
+  DEBUG:  {label:'DEBUG', sub:'SWD/JTAG · 10핀', cat:'인터페이스',col:'#546E7A',w:74,h:62,companions:[{type:'RES',label:'R_SWDIO',sub:'100Ω',reason:'SWDIO 직렬',dx:0,dy:-80}]},
+  UART:   {label:'UART',  sub:'RS232/485 · 레벨',cat:'인터페이스',col:'#546E7A',w:74,h:62,companions:[]},
+  SWITCH: {label:'SW',    sub:'Tact 버튼',         cat:'입력',     col:'#FF8F00',w:70,h:62,companions:[{type:'RES',label:'R_PU',sub:'10kΩ',reason:'풀업 저항',dx:0,dy:-82},{type:'CAP',label:'C_DB',sub:'100nF',reason:'디바운스',dx:90,dy:0}]},
+  LED_IND:{label:'LED_IND',sub:'표시 LED · 녹/적',cat:'입력',    col:'#FF8F00',w:74,h:62,companions:[{type:'RES',label:'R_LED',sub:'330Ω',reason:'전류 제한',dx:-92,dy:0}]},
+  TP:     {label:'TP',    sub:'테스트 포인트',     cat:'입력',     col:'#546E7A',w:58,h:52,companions:[]},
+  HEADER: {label:'HDR',   sub:'핀 헤더 2×4',       cat:'입력',     col:'#546E7A',w:70,h:58,companions:[]},
+  RES:    {label:'R',     sub:'저항',               cat:'패시브',   col:'#6D8796',w:62,h:50,companions:[]},
+  CAP:    {label:'C',     sub:'캐패시터',           cat:'패시브',   col:'#4880C8',w:58,h:50,companions:[]},
+  IND:    {label:'L',     sub:'인덕터',             cat:'패시브',   col:'#30A060',w:62,h:50,companions:[]},
 };
 
 const CAT_ORDER=['전원','디지털','센서','아날로그','보호','인터페이스','입력','패시브'];
@@ -493,7 +623,7 @@ const genId=()=>'c'+(++uid);
 const snap=v=>Math.round(v/GRID)*GRID;
 const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
 
-/* ─── BOARD SIZE ─── */
+/* ── BOARD SIZE ── */
 const boardEl=document.getElementById('board');
 function setBoard(wmm,hmm){
   BOARD_W=wmm*20;BOARD_H=hmm*20;
@@ -507,8 +637,8 @@ function setBoard(wmm,hmm){
   refreshTraces();cursorCol=0;cursorRow=0;
 }
 
-/* ─── CURSOR ─── */
-const SLOT_W=300,SLOT_H=360,ORIGIN_X=200,ORIGIN_Y=220;
+/* ── CURSOR ── */
+const SLOT_W=300,SLOT_H=380,ORIGIN_X=200,ORIGIN_Y=240;
 let cursorCol=0,cursorRow=0;
 function maxCols(){return Math.max(1,Math.floor((BOARD_W-ORIGIN_X-60)/SLOT_W));}
 function nextPos(def){
@@ -522,12 +652,16 @@ function nextPos(def){
   return{x:snap(ox),y:snap(oy)};
 }
 
-/* ─── PALETTE BUILD ─── */
-function symSvg(type,col,w=44,h=26){
+/* ── PALETTE ── */
+function symSvg(type,col){
   const inner=SYMS[type]||SYMS.RES;
-  return `<svg class="pal-card-sym" width="${w}" height="${h}" viewBox="0 0 44 26"
-    style="stroke:${col};stroke-width:1.4;fill:none;color:${col}">
-    ${inner}</svg>`;
+  return `<svg class="pal-card-sym" width="44" height="26" viewBox="0 0 44 26"
+    style="stroke:${col};stroke-width:1.4;fill:none;color:${col}">${inner}</svg>`;
+}
+function iconSvg(type,size=48){
+  const inner=ICONS[type]||ICONS.RES;
+  return `<svg class="comp-sym" width="${size}" height="${size}" viewBox="0 0 48 48"
+    xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
 }
 
 const palScroll=document.getElementById('pal-scroll');
@@ -542,17 +676,11 @@ function buildPalette(filter=''){
       !filter||d.label.toLowerCase().includes(filter)||d.sub.toLowerCase().includes(filter)||t.toLowerCase().includes(filter));
     if(!items.length) continue;
     const hd=document.createElement('div');
-    hd.className='pal-cat-hd';hd.textContent=cat;
-    palScroll.appendChild(hd);
-    const grid=document.createElement('div');
-    grid.className='pal-grid';
+    hd.className='pal-cat-hd';hd.textContent=cat;palScroll.appendChild(hd);
+    const grid=document.createElement('div');grid.className='pal-grid';
     for(const{t,d} of items){
       const card=document.createElement('div');
-      card.className='pal-card';
-      card.draggable=true;
-      card.dataset.type=t;
-      card.style.setProperty('--card-col',d.col);
-      card.style.cssText+=`--c:${d.col}`;
+      card.className='pal-card';card.draggable=true;card.dataset.type=t;
       card.innerHTML=`
         <style>.pal-card[data-type="${t}"]::before{background:${d.col}}</style>
         ${symSvg(t,d.col)}
@@ -562,10 +690,8 @@ function buildPalette(filter=''){
       `;
       card.addEventListener('click',e=>{
         if(e.defaultPrevented) return;
-        const pos=nextPos(d);
-        const id=place(t,pos.x,pos.y,false,null,'');
-        const bw=document.getElementById('board-wrap');
-        const comp=comps.get(id);
+        const pos=nextPos(d);const id=place(t,pos.x,pos.y,false,null,'');
+        const bw=document.getElementById('board-wrap');const comp=comps.get(id);
         if(comp) setTimeout(()=>bw.scrollTo({left:Math.max(0,comp.x-100),top:Math.max(0,comp.y-120),behavior:'smooth'}),80);
       });
       card.addEventListener('dragstart',e=>{e.dataTransfer.setData('type',t);e.dataTransfer.effectAllowed='copy';});
@@ -575,10 +701,9 @@ function buildPalette(filter=''){
   }
 }
 buildPalette();
-
 document.getElementById('pal-search').addEventListener('input',e=>buildPalette(e.target.value.toLowerCase().trim()));
 
-/* ─── BOARD EVENTS ─── */
+/* ── BOARD EVENTS ── */
 boardEl.addEventListener('dragover',e=>{e.preventDefault();boardEl.classList.add('over');});
 boardEl.addEventListener('dragleave',e=>{if(!boardEl.contains(e.relatedTarget))boardEl.classList.remove('over');});
 boardEl.addEventListener('drop',e=>{
@@ -590,19 +715,19 @@ boardEl.addEventListener('drop',e=>{
   place(t,x,y,false,null,'');
 });
 
-/* ─── VOLTAGE BADGE ─── */
+/* ── VOLTAGE BADGE ── */
 function voltBadge(type){
   const rid=RAIL_MAP[type]||'vcc',rm=RAIL_META[rid];
   const v=fmtV(VOLTS[rid]||0);
-  let html=`<span class="comp-vbadge" style="color:${rm.col};border-color:${rm.col}44;background:${rm.col}12">${rm.name} ${v}</span>`;
+  let html=`<span class="comp-vbadge" style="color:${rm.col};border-color:${rm.col}55;background:${rm.col}14">${rm.name} ${v}</span>`;
   if(OUT_RAIL[type]){
     const oid=OUT_RAIL[type],orm=RAIL_META[oid];
-    html+=`<span class="comp-vbadge" style="color:${orm.col};border-color:${orm.col}44;background:${orm.col}12">${orm.name} ${fmtV(VOLTS[oid])}</span>`;
+    html+=`<span class="comp-vbadge" style="color:${orm.col};border-color:${orm.col}55;background:${orm.col}14">${orm.name} ${fmtV(VOLTS[oid])}</span>`;
   }
   return html;
 }
 
-/* ─── PLACE / BUILD ─── */
+/* ── PLACE / BUILD ── */
 function place(type,x,y,isAuto=false,parentId=null,reason=''){
   const def=DEFS[type];if(!def) return null;
   const id=genId();
@@ -617,14 +742,11 @@ function buildEl(c){
   const el=document.createElement('div');
   el.className='comp'+(c.isAuto?' auto-comp':'');
   el.id='c-'+c.id;
-  el.style.cssText=`left:${c.x}px;top:${c.y}px;width:${c.w}px;min-height:${c.h}px;border-color:${c.isAuto?c.col+'33':c.col+'60'};`;
+  el.style.cssText=`left:${c.x}px;top:${c.y}px;width:${c.w}px;min-height:${c.h}px;border-color:${c.isAuto?c.col+'44':c.col+'88'};`;
   el.innerHTML=`
     <div class="comp-top-bar" style="background:${c.col};opacity:${c.isAuto?.4:1}"></div>
     ${c.isAuto?'<div class="comp-auto-tag">AUTO</div>':''}
-    <svg class="comp-sym" width="44" height="26" viewBox="0 0 44 26"
-      style="stroke:${c.col};stroke-width:1.3;fill:none;color:${c.col};opacity:${c.isAuto?.5:.8}">
-      ${SYMS[c.type]||SYMS.RES}
-    </svg>
+    ${iconSvg(c.type,42)}
     <div class="comp-label" style="color:${c.col}">${c.label}</div>
     <div class="comp-sub">${c.sub}</div>
     <div class="comp-volt-row">${voltBadge(c.type)}</div>
@@ -640,9 +762,10 @@ function buildEl(c){
   });
   el.querySelector('.comp-del').addEventListener('click',e=>{e.stopPropagation();del(c.id);});
   boardEl.appendChild(el);
-  el.style.opacity='0';el.style.transform='scale(.88) translateY(6px)';
-  el.style.transition='opacity .2s,transform .2s';
-  requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='scale(1) translateY(0)';setTimeout(()=>el.style.transition='box-shadow .15s,border-color .15s',240);});
+  el.style.opacity='0';el.style.transform='scale(.86) translateY(8px)';
+  el.style.transition='opacity .22s,transform .22s';
+  requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='scale(1) translateY(0)';
+    setTimeout(()=>el.style.transition='box-shadow .15s,border-color .15s',250);});
 }
 
 function autoAdd(parentId,px,py,companions){
@@ -652,20 +775,18 @@ function autoAdd(parentId,px,py,companions){
     const d=DEFS[c.type];if(!d) continue;
     const cx=clamp(snap(px+c.dx),20,BOARD_W-d.w-20);
     const cy=clamp(snap(py+c.dy),20,BOARD_H-d.h-20);
-    const cid=place(c.type,cx,cy,true,parentId,c.reason);
-    if(!cid) continue;
+    const cid=place(c.type,cx,cy,true,parentId,c.reason);if(!cid) continue;
     const cc=comps.get(cid);
     if(cc){cc.label=c.label;cc.sub=c.sub;
       const el=document.getElementById('c-'+cid);
       if(el){el.querySelector('.comp-label').textContent=c.label;el.querySelector('.comp-sub').textContent=c.sub;}
-      drawTrace(parentId,cid);
-    }
+      drawTrace(parentId,cid);}
     added.push({label:c.label,sub:c.sub,reason:c.reason});
   }
   toast(parent.label,added);updateBom();
 }
 
-/* ─── DRAG ─── */
+/* ── DRAG ── */
 function dragComp(e0,c,el){
   const sx=e0.clientX,sy=e0.clientY,ox=c.x,oy=c.y;
   const mv=e=>{c.x=clamp(snap(ox+e.clientX-sx),0,BOARD_W-c.w);c.y=clamp(snap(oy+e.clientY-sy),0,BOARD_H-c.h);el.style.left=c.x+'px';el.style.top=c.y+'px';refreshTraces();};
@@ -673,17 +794,16 @@ function dragComp(e0,c,el){
   document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
 }
 
-/* ─── SELECT ─── */
+/* ── SELECT ── */
 function select(id){
   if(selId){const pe=document.getElementById('c-'+selId);if(pe)pe.classList.remove('sel');}
-  selId=id;
-  const el=document.getElementById('c-'+id);if(el)el.classList.add('sel');
+  selId=id;const el=document.getElementById('c-'+id);if(el)el.classList.add('sel');
   renderProps(id);
 }
 boardEl.addEventListener('mousedown',e=>{if(e.target===boardEl||e.target.closest('#traces'))deselect();});
 function deselect(){if(selId){const pe=document.getElementById('c-'+selId);if(pe)pe.classList.remove('sel');}selId=null;renderProps(null);}
 
-/* ─── DELETE ─── */
+/* ── DELETE ── */
 function del(id){
   const c=comps.get(id);if(!c) return;
   for(const kid of [...c.kids]){removeTraces(kid);const ke=document.getElementById('c-'+kid);if(ke)ke.remove();comps.delete(kid);}
@@ -693,15 +813,15 @@ function del(id){
   updateBom();updateHint();
 }
 
-/* ─── TRACES ─── */
+/* ── TRACES ── */
 const tracesSvg=document.getElementById('traces');
 const traceMap=new Map();
 const ctr=c=>({x:c.x+c.w/2,y:c.y+c.h/2});
 function drawTrace(fid,tid){
   const key=`${fid}~${tid}`;if(traceMap.has(key)) return;
   const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('stroke','#7A5030');path.setAttribute('stroke-width','1.5');
-  path.setAttribute('fill','none');path.setAttribute('stroke-dasharray','5,5');path.setAttribute('opacity','.45');
+  path.setAttribute('stroke','#5A8A5A');path.setAttribute('stroke-width','1.5');
+  path.setAttribute('fill','none');path.setAttribute('stroke-dasharray','5,4');path.setAttribute('opacity','.5');
   tracesSvg.appendChild(path);traceMap.set(key,path);updTrace(fid,tid);
 }
 function updTrace(fid,tid){
@@ -713,7 +833,7 @@ function updTrace(fid,tid){
 function refreshTraces(){for(const[key] of traceMap){const[f,t]=key.split('~');updTrace(f,t);}}
 function removeTraces(id){for(const[key,path] of traceMap){if(key.startsWith(id+'~')||key.endsWith('~'+id)){path.remove();traceMap.delete(key);}}}
 
-/* ─── PROPS ─── */
+/* ── PROPS ── */
 function renderProps(id){
   const empty=document.getElementById('props-empty'),body=document.getElementById('props-body');
   if(!id){empty.style.display='flex';body.style.display='none';body.innerHTML='';return;}
@@ -723,13 +843,11 @@ function renderProps(id){
   let kidsHtml='',parentHtml='';
   if(c.kids.length){
     kidsHtml=`<div class="p-sect">자동 세트 소자</div>`;
-    for(const kid of c.kids){
-      const k=comps.get(kid);if(!k) continue;
+    for(const kid of c.kids){const k=comps.get(kid);if(!k) continue;
       kidsHtml+=`<div class="p-chip" onclick="select('${kid}')">
         <div class="p-chip-dot" style="background:${k.col}"></div>
         <div class="p-chip-info"><div class="p-chip-name">${k.label} <span style="color:var(--dim);font-size:9px">${k.sub}</span></div>
-        <div class="p-chip-sub">${k.reason}</div></div></div>`;
-    }
+        <div class="p-chip-sub">${k.reason}</div></div></div>`;}
   }
   if(c.parentId){const p=comps.get(c.parentId);if(p)parentHtml=`<div class="p-sect">부모 소자</div>
     <div class="p-chip" onclick="select('${p.id}')"><div class="p-chip-dot" style="background:${p.col}"></div>
@@ -742,11 +860,10 @@ function renderProps(id){
     <div class="p-row"><span class="p-key">레일</span><span class="p-val" style="color:${rm.col}">${rm.name} ${fmtV(VOLTS[rid])}</span></div>
     ${c.isAuto?'<div class="p-row"><span class="p-key">구분</span><span class="p-val" style="color:var(--amber)">AUTO 자동배치</span></div>':''}
     ${kidsHtml}${parentHtml}
-    <button class="p-del" onclick="del('${id}')">× 삭제 (세트 포함)</button>
-  `;
+    <button class="p-del" onclick="del('${id}')">× 삭제 (세트 포함)</button>`;
 }
 
-/* ─── TOAST ─── */
+/* ── TOAST ── */
 const toastWrap=document.getElementById('toast-wrap');
 function toast(parentLabel,added){
   if(!added.length) return;
@@ -758,11 +875,11 @@ function toast(parentLabel,added){
   setTimeout(()=>{div.style.cssText='transition:opacity .3s,transform .3s;opacity:0;transform:translateX(12px)';setTimeout(()=>div.remove(),350);},3500);
 }
 
-/* ─── BOM / HINT ─── */
+/* ── BOM / HINT ── */
 function updateBom(){let m=0,a=0;for(const[,c] of comps){if(c.isAuto)a++;else m++;}document.getElementById('cnt-main').textContent=m+a;document.getElementById('cnt-auto').textContent=a;}
 function updateHint(){document.getElementById('board-hint').style.opacity=comps.size?'0':'1';}
 
-/* ─── VOLTAGE UPDATE ─── */
+/* ── VOLTAGE UPDATE ── */
 function applyVoltage(railId,v){
   VOLTS[railId]=v;
   for(const[,c] of comps){
@@ -777,30 +894,39 @@ for(const[railId,rm] of Object.entries(RAIL_META)){
   inp.addEventListener('change',commit);inp.addEventListener('keydown',e=>{if(e.key==='Enter')commit();});
 }
 
-/* ─── SETTINGS ─── */
+/* ── SETTINGS ── */
 const overlay=document.getElementById('settings-overlay');
 document.getElementById('settings-btn').addEventListener('click',()=>overlay.classList.add('open'));
 document.getElementById('settings-close').addEventListener('click',()=>overlay.classList.remove('open'));
 overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open');});
 
+function syncSizeButtons(w,h){
+  document.querySelectorAll('.sp-preset,.hdr-size-btn').forEach(b=>{
+    b.classList.toggle('active',+b.dataset.w===w&&+b.dataset.h===h);
+  });
+}
 document.querySelectorAll('.sp-preset').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    document.querySelectorAll('.sp-preset').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
     const w=+btn.dataset.w,h=+btn.dataset.h;
     document.getElementById('inp-w').value=w;document.getElementById('inp-h').value=h;
-    setBoard(w,h);
+    setBoard(w,h);syncSizeButtons(w,h);
+  });
+});
+document.querySelectorAll('.hdr-size-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const w=+btn.dataset.w,h=+btn.dataset.h;
+    document.getElementById('inp-w').value=w;document.getElementById('inp-h').value=h;
+    setBoard(w,h);syncSizeButtons(w,h);
   });
 });
 document.getElementById('size-apply-btn').addEventListener('click',()=>{
   const w=Math.max(20,Math.min(400,+document.getElementById('inp-w').value||72));
   const h=Math.max(20,Math.min(400,+document.getElementById('inp-h').value||47));
   document.getElementById('inp-w').value=w;document.getElementById('inp-h').value=h;
-  document.querySelectorAll('.sp-preset').forEach(b=>b.classList.remove('active'));
-  setBoard(w,h);
+  setBoard(w,h);syncSizeButtons(w,h);
 });
 
-/* ─── SORT / CLEAR / KEYBOARD ─── */
+/* ── SORT / CLEAR / KEYBOARD ── */
 document.getElementById('sort-btn').addEventListener('click',()=>{
   const parents=[...comps.values()].filter(c=>!c.isAuto);
   cursorCol=0;cursorRow=0;
