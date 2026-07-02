@@ -127,19 +127,23 @@ body{
 /* COMPONENT */
 .comp{
   position:absolute;cursor:move;
-  background:rgba(255,255,255,0.96);border:1.5px solid var(--border2);border-radius:10px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2px;padding:8px 8px 7px;
-  box-shadow:0 2px 10px rgba(0,0,0,.15);
+  background:rgba(255,255,255,0.97);border:1.5px solid var(--border2);border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:0;padding:10px 10px 8px;
+  box-shadow:0 2px 12px rgba(0,0,0,.13);
   transition:box-shadow .15s,border-color .15s;z-index:2;
 }
-.comp:hover{box-shadow:0 4px 18px rgba(0,0,0,.22);}
-.comp.sel{z-index:10;box-shadow:0 0 0 2px var(--blue),0 4px 20px rgba(24,120,208,.25);}
-.comp-top-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0;}
-.comp-sym{display:block;flex-shrink:0;}
-.comp-label{font-size:11px;font-weight:800;text-align:center;line-height:1;letter-spacing:.01em;}
-.comp-sub{font-size:8px;color:var(--dim);text-align:center;line-height:1.3;}
-.comp-volt-row{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;margin-top:1px;}
+.comp:hover{box-shadow:0 5px 22px rgba(0,0,0,.20);}
+.comp.sel{z-index:10;box-shadow:0 0 0 2px var(--blue),0 4px 22px rgba(24,120,208,.22);}
+.comp-top-bar{position:absolute;top:0;left:0;right:0;height:4px;border-radius:12px 12px 0 0;}
+.comp-sym{display:block;flex-shrink:0;margin-bottom:5px;}
+.comp-label{font-size:13px;font-weight:800;text-align:center;line-height:1;letter-spacing:-.2px;margin-bottom:2px;}
+.comp-sub{font-size:8.5px;color:var(--dim);text-align:center;line-height:1.3;margin-bottom:3px;}
+.comp-desc{font-size:9px;color:var(--text);text-align:center;line-height:1.4;font-weight:500;margin-bottom:2px;}
+.comp-spec{font-size:8px;color:var(--dim);text-align:center;line-height:1.3;
+  background:var(--panel2);border:1px solid var(--border);border-radius:5px;
+  padding:1px 6px;margin-bottom:4px;white-space:nowrap;}
+.comp-volt-row{display:flex;gap:3px;flex-wrap:wrap;justify-content:center;margin-top:2px;}
 .comp-vbadge{
   font-size:7.5px;font-weight:600;padding:1px 5px;border-radius:10px;
   border:1px solid;letter-spacing:.03em;
@@ -580,39 +584,39 @@ const fmtV=v=>parseFloat(v.toFixed(2))+'V';
 
 /* ── DEFS ── */
 const DEFS={
-  BATTERY:{label:'BATT',  sub:'CR2032 · 3.0V',   cat:'전원',     col:'#DC2050',w:82,h:68,companions:[{type:'CAP',label:'C_BAT',sub:'100µF',reason:'바이패스 캡',dx:0,dy:80}]},
-  LDO:    {label:'LDO',   sub:'3V3 / 1V8 Reg',   cat:'전원',     col:'#DC2050',w:82,h:68,companions:[{type:'CAP',label:'C_IN',sub:'10µF',reason:'입력 안정화',dx:-96,dy:0},{type:'CAP',label:'C_OUT',sub:'10µF',reason:'출력 안정화',dx:96,dy:0}]},
-  DCDC:   {label:'DC-DC', sub:'Buck · 3V3·1V8',  cat:'전원',     col:'#DC2050',w:88,h:70,companions:[{type:'IND',label:'L_SW',sub:'10µH',reason:'스위칭 인덕터',dx:0,dy:88},{type:'CAP',label:'C_IN',sub:'10µF',reason:'입력 캡',dx:-100,dy:0},{type:'CAP',label:'C_OUT',sub:'22µF',reason:'출력 캡',dx:100,dy:0}]},
-  MOSFET_P:{label:'PMOS', sub:'P-ch Load SW',    cat:'전원',     col:'#DC2050',w:74,h:62,companions:[{type:'RES',label:'R_G',sub:'10kΩ',reason:'게이트 저항',dx:0,dy:-80},{type:'RES',label:'R_GS',sub:'100kΩ',reason:'GS 풀업',dx:90,dy:-80}]},
-  TVS:    {label:'TVS',   sub:'보호 다이오드',    cat:'전원',     col:'#DC2050',w:68,h:58,companions:[]},
-  MCU:    {label:'MCU',   sub:'32-bit ARM Cortex',cat:'디지털',   col:'#1878D0',w:114,h:106,companions:[{type:'CAP',label:'C_V1',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-108},{type:'CAP',label:'C_V2',sub:'100nF',reason:'VCC 디커플링',dx:78,dy:-108},{type:'CAP',label:'C_VB',sub:'4.7µF',reason:'VCC 벌크',dx:-78,dy:-108},{type:'RES',label:'R_RST',sub:'10kΩ',reason:'리셋 풀업',dx:-120,dy:8},{type:'CAP',label:'C_RST',sub:'100nF',reason:'리셋 필터',dx:-120,dy:80}]},
-  BLE:    {label:'BLE',   sub:'5.0 · 2.4GHz nRF',cat:'디지털',   col:'#7830C0',w:98,h:76,companions:[{type:'CAP',label:'C_V1',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-90},{type:'CAP',label:'C_VB',sub:'10µF',reason:'VCC 벌크',dx:112,dy:-90}]},
-  XTAL:   {label:'XTAL',  sub:'32.768kHz / 16MHz',cat:'디지털',  col:'#1878D0',w:80,h:62,companions:[{type:'CAP',label:'C_X1',sub:'12pF',reason:'부하 캡 1',dx:0,dy:-80},{type:'CAP',label:'C_X2',sub:'12pF',reason:'부하 캡 2',dx:84,dy:-80}]},
-  FLASH:  {label:'FLASH', sub:'SPI NOR · 4MB',   cat:'디지털',   col:'#1878D0',w:82,h:66,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-84},{type:'RES',label:'R_CS',sub:'10kΩ',reason:'/CS 풀업',dx:96,dy:0}]},
-  EEPROM: {label:'EEPROM',sub:'I2C · 256Kbit',   cat:'디지털',   col:'#1878D0',w:82,h:66,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-84},{type:'RES',label:'R_SCL',sub:'4.7kΩ',reason:'SCL 풀업',dx:96,dy:-40}]},
-  USB:    {label:'USB-C', sub:'인터페이스 · PD',  cat:'디지털',   col:'#1878D0',w:82,h:68,companions:[{type:'CAP',label:'C_VBUS',sub:'4.7µF',reason:'VBUS 벌크',dx:0,dy:-88},{type:'RES',label:'R_CC1',sub:'5.1kΩ',reason:'CC1 풀다운',dx:100,dy:-40},{type:'ESD',label:'ESD_USB',sub:'USB 보호',reason:'ESD 보호',dx:-96,dy:0}]},
-  LED:    {label:'LED',   sub:'Emitter 850/660nm',cat:'센서',     col:'#168050',w:74,h:62,companions:[{type:'RES',label:'R_LED',sub:'100Ω',reason:'전류 제한',dx:-92,dy:0}]},
-  PD:     {label:'PD',    sub:'Photodiode Si',    cat:'센서',     col:'#168050',w:74,h:62,companions:[{type:'OPAMP',label:'TIA',sub:'Trans-Z Amp',reason:'TIA 구성',dx:102,dy:0},{type:'RES',label:'R_F',sub:'1MΩ',reason:'TIA 피드백',dx:102,dy:-84},{type:'CAP',label:'C_F',sub:'1pF',reason:'피드백 안정화',dx:102,dy:84}]},
-  NTC:    {label:'NTC',   sub:'서미스터 · 10kΩ', cat:'센서',     col:'#168050',w:68,h:58,companions:[{type:'RES',label:'R_DIV',sub:'10kΩ',reason:'전압 분배',dx:0,dy:-78}]},
-  IMU:    {label:'IMU',   sub:'6축 가속도·자이로',cat:'센서',     col:'#168050',w:84,h:68,companions:[{type:'CAP',label:'C_VDD',sub:'100nF',reason:'VDD 디커플링',dx:0,dy:-86}]},
-  BARO:   {label:'BARO',  sub:'기압·고도 센서',  cat:'센서',     col:'#168050',w:84,h:68,companions:[{type:'CAP',label:'C_VDD',sub:'100nF',reason:'VDD 디커플링',dx:0,dy:-86}]},
-  OPAMP:  {label:'OP-AMP',sub:'증폭 · 비교기',   cat:'아날로그', col:'#C07820',w:88,h:74,companions:[{type:'CAP',label:'C_V+',sub:'100nF',reason:'V+ 바이패스',dx:0,dy:-92},{type:'CAP',label:'C_V-',sub:'100nF',reason:'V- 바이패스',dx:0,dy:92}]},
-  INA:    {label:'INA',   sub:'계측 증폭기',      cat:'아날로그', col:'#C07820',w:88,h:74,companions:[{type:'CAP',label:'C_V+',sub:'100nF',reason:'V+ 바이패스',dx:0,dy:-92},{type:'RES',label:'R_GAIN',sub:'1kΩ',reason:'이득 설정',dx:104,dy:0}]},
-  ADC:    {label:'ADC',   sub:'16-bit SAR',       cat:'아날로그', col:'#0898B0',w:82,h:68,companions:[{type:'CAP',label:'C_REF',sub:'100nF',reason:'VREF 바이패스',dx:0,dy:-86}]},
-  DAC:    {label:'DAC',   sub:'12-bit · I2C/SPI', cat:'아날로그', col:'#0898B0',w:82,h:68,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-86}]},
-  MUX:    {label:'MUX',   sub:'8:1 아날로그 MUX', cat:'아날로그', col:'#0898B0',w:82,h:68,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-86}]},
-  ESD:    {label:'ESD',   sub:'보호 어레이',       cat:'보호',     col:'#8E24AA',w:72,h:58,companions:[]},
-  FUSE:   {label:'FUSE',  sub:'폴리 퓨즈 · eFuse',cat:'보호',    col:'#8E24AA',w:72,h:58,companions:[]},
-  BEAD:   {label:'FB',    sub:'페라이트 비드',     cat:'보호',     col:'#8E24AA',w:68,h:52,companions:[]},
-  DEBUG:  {label:'DEBUG', sub:'SWD/JTAG · 10핀', cat:'인터페이스',col:'#546E7A',w:74,h:62,companions:[{type:'RES',label:'R_SWDIO',sub:'100Ω',reason:'SWDIO 직렬',dx:0,dy:-80}]},
-  UART:   {label:'UART',  sub:'RS232/485 · 레벨',cat:'인터페이스',col:'#546E7A',w:74,h:62,companions:[]},
-  SWITCH: {label:'SW',    sub:'Tact 버튼',         cat:'입력',     col:'#FF8F00',w:70,h:62,companions:[{type:'RES',label:'R_PU',sub:'10kΩ',reason:'풀업 저항',dx:0,dy:-82},{type:'CAP',label:'C_DB',sub:'100nF',reason:'디바운스',dx:90,dy:0}]},
-  LED_IND:{label:'LED_IND',sub:'표시 LED · 녹/적',cat:'입력',    col:'#FF8F00',w:74,h:62,companions:[{type:'RES',label:'R_LED',sub:'330Ω',reason:'전류 제한',dx:-92,dy:0}]},
-  TP:     {label:'TP',    sub:'테스트 포인트',     cat:'입력',     col:'#546E7A',w:58,h:52,companions:[]},
-  HEADER: {label:'HDR',   sub:'핀 헤더 2×4',       cat:'입력',     col:'#546E7A',w:70,h:58,companions:[]},
-  RES:    {label:'R',     sub:'저항',               cat:'패시브',   col:'#6D8796',w:62,h:50,companions:[]},
-  CAP:    {label:'C',     sub:'캐패시터',           cat:'패시브',   col:'#4880C8',w:58,h:50,companions:[]},
-  IND:    {label:'L',     sub:'인덕터',             cat:'패시브',   col:'#30A060',w:62,h:50,companions:[]},
+  BATTERY:{label:'BATT',  sub:'CR2032 · 3.0V',   desc:'코인 배터리 전원 공급',    spec:'3.0V · 220mAh · 직결',   cat:'전원',     col:'#DC2050',w:110,h:148,companions:[{type:'CAP',label:'C_BAT',sub:'100µF',reason:'바이패스 캡',dx:0,dy:168}]},
+  LDO:    {label:'LDO',   sub:'3V3 / 1V8 Reg',   desc:'선형 전압 레귤레이터',     spec:'저소음 · 안정적 출력',    cat:'전원',     col:'#DC2050',w:110,h:148,companions:[{type:'CAP',label:'C_IN',sub:'10µF',reason:'입력 안정화',dx:-124,dy:0},{type:'CAP',label:'C_OUT',sub:'10µF',reason:'출력 안정화',dx:124,dy:0}]},
+  DCDC:   {label:'DC-DC', sub:'Buck Converter',   desc:'스위칭 전원 변환기',       spec:'고효율 · 대전류 지원',    cat:'전원',     col:'#DC2050',w:114,h:148,companions:[{type:'IND',label:'L_SW',sub:'10µH',reason:'스위칭 인덕터',dx:0,dy:168},{type:'CAP',label:'C_IN',sub:'10µF',reason:'입력 캡',dx:-128,dy:0},{type:'CAP',label:'C_OUT',sub:'22µF',reason:'출력 캡',dx:128,dy:0}]},
+  MOSFET_P:{label:'PMOS', sub:'P-ch Load Switch', desc:'P채널 파워 스위치',        spec:'부하 전원 ON/OFF 제어',   cat:'전원',     col:'#DC2050',w:106,h:140,companions:[{type:'RES',label:'R_G',sub:'10kΩ',reason:'게이트 저항',dx:0,dy:-158},{type:'RES',label:'R_GS',sub:'100kΩ',reason:'GS 풀업',dx:118,dy:-158}]},
+  TVS:    {label:'TVS',   sub:'Transient Voltage', desc:'과전압 서지 보호',         spec:'ESD · 번개 · 서지 흡수',  cat:'전원',     col:'#DC2050',w:106,h:140,companions:[]},
+  MCU:    {label:'MCU',   sub:'32-bit ARM Cortex', desc:'마이크로컨트롤러 (MCU)',   spec:'SPI · I2C · UART · GPIO', cat:'디지털',   col:'#1878D0',w:140,h:160,companions:[{type:'CAP',label:'C_V1',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-178},{type:'CAP',label:'C_V2',sub:'100nF',reason:'VCC 디커플링',dx:108,dy:-178},{type:'CAP',label:'C_VB',sub:'4.7µF',reason:'VCC 벌크',dx:-108,dy:-178},{type:'RES',label:'R_RST',sub:'10kΩ',reason:'리셋 풀업',dx:-150,dy:8},{type:'CAP',label:'C_RST',sub:'100nF',reason:'리셋 필터',dx:-150,dy:108}]},
+  BLE:    {label:'BLE',   sub:'Bluetooth 5.0 nRF', desc:'블루투스 저전력 통신',    spec:'2.4GHz · BLE5 · nRF52',  cat:'디지털',   col:'#7830C0',w:124,h:150,companions:[{type:'CAP',label:'C_V1',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-168},{type:'CAP',label:'C_VB',sub:'10µF',reason:'VCC 벌크',dx:140,dy:-168}]},
+  XTAL:   {label:'XTAL',  sub:'32.768kHz / 16MHz', desc:'수정 발진자 (클록 기준)',  spec:'주파수 안정 · 저전력',    cat:'디지털',   col:'#1878D0',w:110,h:142,companions:[{type:'CAP',label:'C_X1',sub:'12pF',reason:'부하 캡 1',dx:0,dy:-160},{type:'CAP',label:'C_X2',sub:'12pF',reason:'부하 캡 2',dx:114,dy:-160}]},
+  FLASH:  {label:'FLASH', sub:'SPI NOR · 4MB',     desc:'SPI NOR 플래시 메모리',   spec:'4MB · 펌웨어/데이터 저장', cat:'디지털',   col:'#1878D0',w:112,h:144,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-162},{type:'RES',label:'R_CS',sub:'10kΩ',reason:'/CS 풀업',dx:126,dy:0}]},
+  EEPROM: {label:'EEPROM',sub:'I2C · 256Kbit',     desc:'비휘발성 설정값 저장',    spec:'256Kbit · I2C · 저전압',  cat:'디지털',   col:'#1878D0',w:112,h:144,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-162},{type:'RES',label:'R_SCL',sub:'4.7kΩ',reason:'SCL 풀업',dx:126,dy:-40}]},
+  USB:    {label:'USB-C', sub:'Interface · PD',    desc:'USB-C 데이터+충전 인터페이스',spec:'PD · 5V~20V · 최대 100W',cat:'디지털',  col:'#1878D0',w:116,h:148,companions:[{type:'CAP',label:'C_VBUS',sub:'4.7µF',reason:'VBUS 벌크',dx:0,dy:-166},{type:'RES',label:'R_CC1',sub:'5.1kΩ',reason:'CC1 풀다운',dx:130,dy:-40},{type:'ESD',label:'ESD_USB',sub:'USB 보호',reason:'ESD 보호',dx:-126,dy:0}]},
+  LED:    {label:'LED',   sub:'Emitter 850/660nm', desc:'근적외선 발광 LED',        spec:'850nm / 660nm · PPG용',   cat:'센서',     col:'#168050',w:108,h:142,companions:[{type:'RES',label:'R_LED',sub:'100Ω',reason:'전류 제한',dx:-122,dy:0}]},
+  PD:     {label:'PD',    sub:'Photodiode · Si',   desc:'광신호 수광 포토다이오드', spec:'광전류 → TIA 증폭',       cat:'센서',     col:'#168050',w:108,h:142,companions:[{type:'OPAMP',label:'TIA',sub:'Trans-Z Amp',reason:'TIA 구성',dx:132,dy:0},{type:'RES',label:'R_F',sub:'1MΩ',reason:'TIA 피드백',dx:132,dy:-160},{type:'CAP',label:'C_F',sub:'1pF',reason:'피드백 안정화',dx:132,dy:160}]},
+  NTC:    {label:'NTC',   sub:'Thermistor · 10kΩ', desc:'온도 감지 서미스터',       spec:'NTC 10kΩ · 전압분배 방식', cat:'센서',     col:'#168050',w:106,h:140,companions:[{type:'RES',label:'R_DIV',sub:'10kΩ',reason:'전압 분배',dx:0,dy:-158}]},
+  IMU:    {label:'IMU',   sub:'6-Axis Accel+Gyro', desc:'6축 관성 측정 유닛',       spec:'가속도3축 + 자이로3축',    cat:'센서',     col:'#168050',w:112,h:144,companions:[{type:'CAP',label:'C_VDD',sub:'100nF',reason:'VDD 디커플링',dx:0,dy:-162}]},
+  BARO:   {label:'BARO',  sub:'Pressure · Altitude',desc:'기압 / 고도 센서',        spec:'hPa · 고도 ±1m 정밀도',   cat:'센서',     col:'#168050',w:112,h:144,companions:[{type:'CAP',label:'C_VDD',sub:'100nF',reason:'VDD 디커플링',dx:0,dy:-162}]},
+  OPAMP:  {label:'OP-AMP',sub:'Amplifier · Comp',  desc:'연산 증폭기',              spec:'아날로그 신호 증폭·비교',  cat:'아날로그', col:'#C07820',w:114,h:148,companions:[{type:'CAP',label:'C_V+',sub:'100nF',reason:'V+ 바이패스',dx:0,dy:-166},{type:'CAP',label:'C_V-',sub:'100nF',reason:'V- 바이패스',dx:0,dy:166}]},
+  INA:    {label:'INA',   sub:'Instrumentation Amp',desc:'계측 증폭기',             spec:'고정밀 차동 신호 측정',    cat:'아날로그', col:'#C07820',w:116,h:148,companions:[{type:'CAP',label:'C_V+',sub:'100nF',reason:'V+ 바이패스',dx:0,dy:-166},{type:'RES',label:'R_GAIN',sub:'1kΩ',reason:'이득 설정',dx:132,dy:0}]},
+  ADC:    {label:'ADC',   sub:'16-bit SAR ADC',    desc:'아날로그→디지털 변환',     spec:'16-bit · 저노이즈 기준',  cat:'아날로그', col:'#0898B0',w:112,h:144,companions:[{type:'CAP',label:'C_REF',sub:'100nF',reason:'VREF 바이패스',dx:0,dy:-162}]},
+  DAC:    {label:'DAC',   sub:'12-bit DAC',        desc:'디지털→아날로그 변환',     spec:'12-bit · I2C/SPI 제어',   cat:'아날로그', col:'#0898B0',w:112,h:144,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-162}]},
+  MUX:    {label:'MUX',   sub:'8:1 Analog MUX',    desc:'아날로그 멀티플렉서',      spec:'8채널 → 1채널 선택',      cat:'아날로그', col:'#0898B0',w:112,h:144,companions:[{type:'CAP',label:'C_VCC',sub:'100nF',reason:'VCC 디커플링',dx:0,dy:-162}]},
+  ESD:    {label:'ESD',   sub:'Protection Array',  desc:'정전기(ESD) 보호 어레이',  spec:'다채널 TVS · 초고속 응답', cat:'보호',     col:'#8E24AA',w:108,h:140,companions:[]},
+  FUSE:   {label:'FUSE',  sub:'Poly Fuse · eFuse', desc:'과전류 자동 차단 퓨즈',    spec:'리셋 가능 · 자가 복구',    cat:'보호',     col:'#8E24AA',w:108,h:140,companions:[]},
+  BEAD:   {label:'FB',    sub:'Ferrite Bead',      desc:'페라이트 비드 필터',        spec:'고주파 노이즈 EMI 차단',   cat:'보호',     col:'#8E24AA',w:106,h:136,companions:[]},
+  DEBUG:  {label:'DEBUG', sub:'SWD / JTAG 10-pin', desc:'디버그·프로그래밍 포트',   spec:'SWD · JTAG · 펌웨어 굽기',cat:'인터페이스',col:'#546E7A',w:110,h:142,companions:[{type:'RES',label:'R_SWDIO',sub:'100Ω',reason:'SWDIO 직렬',dx:0,dy:-160}]},
+  UART:   {label:'UART',  sub:'RS232 / RS485',     desc:'시리얼 통신 레벨 변환',    spec:'TTL↔RS232 · 최대 1Mbps', cat:'인터페이스',col:'#546E7A',w:110,h:142,companions:[]},
+  SWITCH: {label:'SW',    sub:'Tactile Button',    desc:'촉각 버튼 스위치',          spec:'리셋 · 모드 · 사용자 입력',cat:'입력',     col:'#FF8F00',w:106,h:142,companions:[{type:'RES',label:'R_PU',sub:'10kΩ',reason:'풀업 저항',dx:0,dy:-160},{type:'CAP',label:'C_DB',sub:'100nF',reason:'디바운스',dx:120,dy:0}]},
+  LED_IND:{label:'LED',   sub:'Indicator LED',     desc:'상태 표시용 LED',           spec:'녹색/적색 · 전류 제한 필요',cat:'입력',    col:'#FF8F00',w:108,h:142,companions:[{type:'RES',label:'R_LED',sub:'330Ω',reason:'전류 제한',dx:-122,dy:0}]},
+  TP:     {label:'TP',    sub:'Test Point',        desc:'신호 측정 테스트 포인트',   spec:'프로브 접점 · 검사 목적',  cat:'입력',     col:'#546E7A',w:100,h:132,companions:[]},
+  HEADER: {label:'HDR',   sub:'Pin Header 2×4',    desc:'핀 헤더 커넥터',            spec:'2.54mm 피치 · 확장 포트',  cat:'입력',     col:'#546E7A',w:108,h:140,companions:[]},
+  RES:    {label:'R',     sub:'Resistor',          desc:'저항 (전류 제한/분배)',      spec:'풀업·풀다운·전류 제한',    cat:'패시브',   col:'#6D8796',w:104,h:132,companions:[]},
+  CAP:    {label:'C',     sub:'Capacitor',         desc:'캐패시터 (바이패스/디커플링)',spec:'디커플링 · 바이패스 · 평활',cat:'패시브',  col:'#4880C8',w:104,h:132,companions:[]},
+  IND:    {label:'L',     sub:'Inductor',          desc:'인덕터 (전류 저장/필터)',    spec:'EMI 필터 · 전원 평활용',   cat:'패시브',   col:'#30A060',w:104,h:132,companions:[]},
 };
 
 const CAT_ORDER=['전원','디지털','센서','아날로그','보호','인터페이스','입력','패시브'];
@@ -685,7 +689,7 @@ function buildPalette(filter=''){
         <style>.pal-card[data-type="${t}"]::before{background:${d.col}}</style>
         ${symSvg(t,d.col)}
         <div class="pal-card-name" style="color:${d.col}">${d.label}</div>
-        <div class="pal-card-sub">${d.sub.length>20?d.sub.slice(0,19)+'…':d.sub}</div>
+        <div class="pal-card-sub">${d.desc||d.sub}</div>
         ${d.companions.length?`<div class="pal-card-badge">+${d.companions.length} 자동</div>`:''}
       `;
       card.addEventListener('click',e=>{
@@ -743,12 +747,15 @@ function buildEl(c){
   el.className='comp'+(c.isAuto?' auto-comp':'');
   el.id='c-'+c.id;
   el.style.cssText=`left:${c.x}px;top:${c.y}px;width:${c.w}px;min-height:${c.h}px;border-color:${c.isAuto?c.col+'44':c.col+'88'};`;
+  const def2=DEFS[c.type]||{};
   el.innerHTML=`
     <div class="comp-top-bar" style="background:${c.col};opacity:${c.isAuto?.4:1}"></div>
     ${c.isAuto?'<div class="comp-auto-tag">AUTO</div>':''}
-    ${iconSvg(c.type,42)}
+    ${iconSvg(c.type,54)}
     <div class="comp-label" style="color:${c.col}">${c.label}</div>
     <div class="comp-sub">${c.sub}</div>
+    ${def2.desc?`<div class="comp-desc">${def2.desc}</div>`:''}
+    ${def2.spec?`<div class="comp-spec">${def2.spec}</div>`:''}
     <div class="comp-volt-row">${voltBadge(c.type)}</div>
     <button class="comp-del">×</button>
   `;
