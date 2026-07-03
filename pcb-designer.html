@@ -56,7 +56,7 @@ body{
 .hdr-btn:hover{border-color:var(--blue);color:var(--blue);background:#EEF4FF;}
 .hdr-btn.primary{border-color:var(--blue);color:var(--blue);}
 .hdr-btn.danger:hover{border-color:var(--red);color:var(--red);background:#FFF0F3;}
-#ws{flex:1;display:grid;grid-template-columns:200px 1fr 220px;min-height:0;}
+#ws{flex:1;display:grid;grid-template-columns:200px 1fr 300px;min-height:0;}
 #pal{
   background:var(--panel);border-right:1px solid var(--border);
   display:flex;flex-direction:column;overflow:hidden;
@@ -188,11 +188,6 @@ body{
 #props-inner{flex:1;overflow-y:auto;padding:14px 13px;}
 #props-inner::-webkit-scrollbar{width:3px;}
 #props-inner::-webkit-scrollbar-thumb{background:var(--border2);}
-.props-empty{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:100%;gap:10px;color:var(--dim);font-size:12px;text-align:center;
-}
-.props-empty-icon{font-size:30px;opacity:.20;}
 .p-sect{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
   color:var(--dim);padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:8px;}
 .p-sect:first-child{padding-top:0;}
@@ -213,6 +208,28 @@ body{
   font-size:12px;cursor:pointer;transition:all .14s;font-family:inherit;
 }
 .p-del:hover{background:rgba(220,32,80,.12);}
+/* DESIGN GUIDE (우측 패널 상시 표시) */
+.pg-sect{font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--blue);
+  margin:14px 0 7px;display:flex;align-items:center;gap:5px;}
+.pg-sect:first-child{margin-top:0;}
+.pg-steps{list-style:none;counter-reset:step;padding:0;margin:0 0 4px;}
+.pg-steps li{counter-increment:step;position:relative;padding:3px 0 3px 22px;font-size:11px;line-height:1.5;color:var(--text);}
+.pg-steps li::before{content:counter(step);position:absolute;left:0;top:3px;
+  width:16px;height:16px;border-radius:50%;background:var(--blue);color:#fff;
+  font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.pg-tips{padding:0;margin:0;list-style:none;}
+.pg-tips li{font-size:11px;line-height:1.55;color:var(--text);padding:3px 0 3px 16px;position:relative;}
+.pg-tips li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;font-size:10px;}
+.pg-formula{
+  background:var(--panel2);border:1px solid var(--border);border-radius:7px;
+  padding:7px 10px;margin:5px 0;
+}
+.pg-formula .fname{font-size:10px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.pg-formula .feq{font-family:'SF Mono','Courier New',monospace;font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.02em;}
+.pg-formula .fnote{font-size:9.5px;color:var(--dim);margin-top:2px;line-height:1.4;}
+.pg-comp-box{background:rgba(24,120,208,.06);border:1px solid rgba(24,120,208,.2);
+  border-radius:8px;padding:10px 11px;margin-bottom:4px;}
+.pg-comp-box .pg-sect{margin-top:0;}
 /* SETTINGS OVERLAY */
 #settings-overlay{
   position:fixed;inset:0;z-index:500;display:none;
@@ -387,9 +404,43 @@ body{
   </div>
   <div id="props">
     <div id="props-inner">
-      <div class="props-empty" id="props-empty">
-        <div class="props-empty-icon">◎</div>
-        <div>소자를 클릭하면<br>속성이 표시됩니다</div>
+      <div id="props-empty">
+        <div class="pg-sect">🧭 보드 설계 순서</div>
+        <ol class="pg-steps">
+          <li><b>전원부</b> 먼저 — 배터리/USB → 레귤레이터(LDO·DC-DC)</li>
+          <li><b>MCU(두뇌)</b> 배치 — 디커플링 캡은 핀 바로 옆</li>
+          <li><b>클록/메모리</b> — XTAL, FLASH, EEPROM</li>
+          <li><b>센서·아날로그부</b> — LED/PD, INA, ADC</li>
+          <li><b>인터페이스</b> — USB, 디버그, 스위치, LED</li>
+          <li><b>배선 확인</b> — 전원선(빨강)·신호선(파랑) 순서로 점검</li>
+        </ol>
+        <div class="pg-sect">💡 설계 팁</div>
+        <ul class="pg-tips">
+          <li>디커플링 캡은 <b>칩 전원핀에서 최대한 가깝게</b> 배치 — 배선이 길면 효과 급감</li>
+          <li>아날로그(센서)와 디지털(MCU 클록) 회로는 <b>거리를 두고 분리</b> — 노이즈 간섭 방지</li>
+          <li>전류가 큰 경로(레귤레이터 출력 등)는 <b>배선을 짧고 굵게</b></li>
+          <li>배터리 직후엔 <b>역전압 보호(TVS/퓨즈)</b>를 넣는 게 안전</li>
+          <li>미사용 MCU 핀은 풀업/풀다운으로 <b>플로팅 방지</b></li>
+        </ul>
+        <div class="pg-sect">📐 자주 쓰는 회로 공식</div>
+        <div class="pg-formula"><div class="fname">옴의 법칙 (전류·전압·저항)</div>
+          <div class="feq">V = I × R</div>
+          <div class="fnote">전압(V) = 전류(I) × 저항(R). 모든 회로 계산의 기본.</div></div>
+        <div class="pg-formula"><div class="fname">LED 전류제한 저항</div>
+          <div class="feq">R = (Vcc − Vf) / If</div>
+          <div class="fnote">Vf=LED 순방향 전압(적:~1.8V), If=목표 전류(보통 5~20mA)</div></div>
+        <div class="pg-formula"><div class="fname">전압 분배 (풀업/NTC 등)</div>
+          <div class="feq">Vout = Vin × R2 / (R1 + R2)</div>
+          <div class="fnote">두 저항으로 원하는 중간 전압을 만들 때 사용</div></div>
+        <div class="pg-formula"><div class="fname">디커플링 캡 임피던스</div>
+          <div class="feq">Xc = 1 / (2π × f × C)</div>
+          <div class="fnote">주파수(f)가 높을수록 캡 임피던스는 낮아져 노이즈를 잘 흡수</div></div>
+        <div class="pg-formula"><div class="fname">RC 시정수 (충·방전 속도)</div>
+          <div class="feq">τ = R × C</div>
+          <div class="fnote">τ 시간 뒤 63.2% 충전. 디바운스·필터 설계에 사용</div></div>
+        <div class="pg-formula"><div class="fname">소비 전력</div>
+          <div class="feq">P = V × I</div>
+          <div class="fnote">배터리 수명 예측: 수명(h) ≈ 배터리 용량(mAh) / 전류(mA)</div></div>
       </div>
       <div id="props-body" style="display:none"></div>
     </div>
@@ -1006,11 +1057,46 @@ function updTrace(fid,tid){
 function refreshTraces(){for(const[key] of traceMap){const[f,t]=key.split('~');updTrace(f,t);}}
 function removeTraces(id){for(const[key,path] of traceMap){if(key.startsWith(id+'~')||key.endsWith('~'+id)){path.remove();traceMap.delete(key);}}}
 
-/* ── PROPS ── */
+/* ── PER-COMPONENT DESIGN NOTES (회로 이론식) ── */
+const DESIGN_NOTES={
+  RES:{tip:'전류 제한·풀업/풀다운·분배에 사용. 전력 정격(W)도 확인하세요.',f:'V = I × R',fn:'저항값(Ω) 선택 시 P=I²R로 소비전력도 계산 — 정격 초과시 발열/소손'},
+  CAP:{tip:'디커플링 캡은 칩 전원핀 바로 옆, 배선은 최대한 짧게.',f:'Xc = 1 / (2π f C)',fn:'주파수가 높을수록 임피던스↓ → 고주파 노이즈를 접지로 흘려보냄'},
+  IND:{tip:'DC-DC 스위칭 인덕터는 정격 전류(saturation current)를 여유있게.',f:'V = L × (di/dt)',fn:'전류 변화가 빠를수록 유도전압↑ — 스너버/플라이백 다이오드 고려'},
+  BATTERY:{tip:'배터리 직후 TVS/퓨즈로 보호. 내부저항 때문에 대전류시 전압강하 발생.',f:'수명(h) ≈ 용량(mAh) / 소모전류(mA)',fn:'CR2032 220mAh 기준, 평균 5mA 소모시 약 44시간'},
+  LDO:{tip:'입출력 캡 필수. 드롭아웃 전압(Vin-Vout) 확보 안하면 레귤레이션 실패.',f:'Pdiss = (Vin − Vout) × Iload',fn:'전력손실이 클수록 발열↑ — 낙차 크면 DC-DC 검토'},
+  DCDC:{tip:'스위칭 인덕터·출력캡 값이 리플/효율을 좌우.',f:'Vout = D × Vin (Buck)',fn:'D=듀티비(0~1). 리플전류 ΔI=(Vin−Vout)·D/(L·f)'},
+  MOSFET_P:{tip:'게이트 저항으로 스위칭 속도 제어, 풀업으로 오프상태 확정.',f:'Pon = I² × Rds(on)',fn:'Rds(on) 낮을수록 발열↓ — 대전류 스위칭에 유리'},
+  TVS:{tip:'서지·ESD 첫 방어선. 브레이크다운 전압은 동작전압보다 살짝 높게 선정.',f:'Vclamp < 보호대상 내압',fn:'응답속도가 빨라야 순간 서지를 잘 흡수'},
+  MCU:{tip:'전원핀마다 100nF 디커플링 캡, 리셋핀은 풀업+필터캡.',f:'전력 P = f × C × V²',fn:'클록 주파수(f)를 낮추면 소비전력도 비례해 감소'},
+  BLE:{tip:'안테나 근처엔 금속/그라운드 플레인을 피해야 감도 유지.',f:'수신감도(dBm) = 10log₁₀(P/1mW)',fn:'거리 2배 → 자유공간에서 신호세기 약 6dB 감소'},
+  XTAL:{tip:'부하캡(CL) 값은 발진자 스펙시트 기준으로 선정.',f:'CL = (C1×C2)/(C1+C2) + Cstray',fn:'부하캡이 안맞으면 발진 주파수가 어긋남'},
+  LED:{tip:'전류제한 저항 없이 직결 금지 — 즉시 소손.',f:'R = (Vcc − Vf) / If',fn:'예: Vcc=3.3V, Vf=1.8V, If=10mA → R=150Ω'},
+  PD:{tip:'포토다이오드는 역바이어스+TIA로 미세 광전류를 전압으로 변환.',f:'Vout = −Ip × Rf',fn:'Ip=광전류(보통 nA~µA), Rf=피드백저항 — 클수록 이득↑, 대역폭↓'},
+  NTC:{tip:'분배저항(R_DIV)이 NTC와 같은 크기일 때 중간온도 감도가 최대.',f:'Vout = Vin × R_NTC/(R_NTC+R_DIV)',fn:'온도-저항은 지수적: R(T)=R₀·e^(β(1/T−1/T₀))'},
+  IMU:{tip:'디커플링 캡 필수, 진동/충격 축 방향을 기구설계와 맞출 것.',f:'가속도 a = Δv/Δt',fn:'자이로는 각속도(°/s) 적분 → 각도, 드리프트 누적 주의'},
+  BARO:{tip:'통기구멍 막히지 않게 배치, 온도보상 필수.',f:'h ≈ 44330×(1−(P/P₀)^0.1903)',fn:'기압(P)으로 고도(h) 추정하는 국제표준대기식'},
+  OPAMP:{tip:'V+/V− 양쪽 다 바이패스 캡 필요 (단전원이면 V− 생략 가능).',f:'Vout = Av × (V+ − V−)',fn:'Av=개루프 이득(보통 매우 큼) → 피드백으로 이득 결정'},
+  INA:{tip:'게인 저항(R_GAIN) 하나로 증폭률 조절 — 정밀 저항 사용.',f:'Av = 1 + (50kΩ / R_GAIN)',fn:'차동 신호(작은 전압차)를 정밀 증폭할 때 사용 (칩마다 계수 다름)'},
+  ADC:{tip:'VREF 안정성이 정확도를 좌우 — 저노이즈 기준전압 사용.',f:'분해능 = Vref / 2ⁿ',fn:'예: Vref=3.3V, n=16bit → 1LSB=50µV'},
+  DAC:{tip:'출력 후 저역통과 필터로 계단파형을 부드럽게.',f:'Vout = (D / 2ⁿ) × Vref',fn:'D=디지털 입력값, n=비트수'},
+  MUX:{tip:'채널 전환 시 스위칭 노이즈 — 안정화 딜레이 필요.',f:'Ron(스위치 저항)이 신호경로에 직렬 삽입',fn:'고임피던스 신호일수록 Ron 낮은 소자 선택'},
+  ESD:{tip:'커넥터/외부노출 신호선 각각에 배치, 신호선에 최대한 가깝게.',f:'클램핑 전압 < IC 내압',fn:'용량(pF)이 크면 고속신호 왜곡 — 데이터라인은 저용량 선택'},
+  FUSE:{tip:'정격전류는 정상동작전류의 1.5~2배로 여유있게.',f:'I²t = 트립 에너지',fn:'과전류 지속시간이 짧아도 I² 비례로 빨리 끊어짐'},
+  BEAD:{tip:'전원 라인의 고주파 노이즈만 선택적으로 차단.',f:'Z(f) = R + jωL',fn:'주파수 높을수록 임피던스↑ (저주파 DC는 그대로 통과)'},
+  SWITCH:{tip:'디바운스 캡+풀업으로 채터링(순간 다중신호) 방지.',f:'디바운스 시간 τ=R×C',fn:'보통 τ를 수 ms로 설정해 기계적 튐 무시'},
+  LED_IND:{tip:'상태표시용은 저전류(2~5mA)로도 충분히 밝음 — 소비전력 절약.',f:'R = (Vcc − Vf) / If',fn:'배터리 기기는 If를 낮춰 대기전력 최소화'},
+  FLASH:{tip:'/CS 풀업 필수 — 부팅시 부정확한 칩 선택 방지.',f:'저장용량 = 페이지수 × 페이지크기',fn:'SPI 클록속도가 데이터 전송률(bps) 결정'},
+  EEPROM:{tip:'I2C 라인(SDA/SCL) 풀업 저항 필수 (보통 4.7kΩ).',f:'fSCL_max ≈ 1/(R×C_bus)',fn:'버스 커패시턴스가 크면 최대 통신속도 저하'},
+  USB:{tip:'VBUS엔 벌크캡, CC라인엔 풀다운 저항으로 전력협상.',f:'P = V × I (PD 프로파일별)',fn:'5V/3A=15W, 20V/5A=100W 등 PD 규격'},
+  DEBUG:{tip:'SWDIO 직렬저항으로 신호 반사·EMI 감소.',f:'특성임피던스 매칭 Z₀',fn:'긴 배선일수록 반사 방지용 저항 중요'},
+  UART:{tip:'TX-RX 크로스 연결 확인, 보레이트 오차 ±2% 이내 유지.',f:'비트시간 = 1/보레이트',fn:'115200bps → 1비트=8.68µs'},
+  TP:{tip:'측정 프로브가 닿기 쉬운 위치, 다른 부품과 간섭 없게.',f:'—',fn:'생산·디버깅 단계에서 신호 확인용, 회로 동작엔 영향 없음'},
+  HEADER:{tip:'커넥터 극성 표시(1번핀) 명확히, 실수 삽입 방지.',f:'—',fn:'확장보드 연결용 — 핀맵 문서화 필수'},
+};
 function renderProps(id){
   const empty=document.getElementById('props-empty'),body=document.getElementById('props-body');
-  if(!id){empty.style.display='flex';body.style.display='none';body.innerHTML='';return;}
-  const c=comps.get(id);if(!c){empty.style.display='flex';body.style.display='none';return;}
+  if(!id){empty.style.display='block';body.style.display='none';return;}
+  const c=comps.get(id);if(!c){empty.style.display='block';body.style.display='none';return;}
   empty.style.display='none';body.style.display='block';
   const rid=RAIL_MAP[c.type]||'vcc',rm=RAIL_META[rid];
   let kidsHtml='',parentHtml='';
@@ -1026,6 +1112,16 @@ function renderProps(id){
     <div class="p-chip" onclick="select('${p.id}')"><div class="p-chip-dot" style="background:${p.col}"></div>
     <div class="p-chip-info"><div class="p-chip-name">${p.label}</div><div class="p-chip-sub">${c.reason}</div></div></div>`;}
   const dd=DEFS[c.type]||{};
+  const dn=DESIGN_NOTES[c.type];
+  const noteHtml=dn?`
+    <div class="pg-comp-box">
+      <div class="pg-sect">📐 ${c.label} 설계 이론</div>
+      <ul class="pg-tips" style="margin-bottom:6px"><li>${dn.tip}</li></ul>
+      ${dn.f&&dn.f!=='—'?`<div class="pg-formula">
+        <div class="feq">${dn.f}</div>
+        <div class="fnote">${dn.fn}</div>
+      </div>`:`<div class="fnote" style="padding:2px 2px">${dn.fn}</div>`}
+    </div>`:'';
   body.innerHTML=`
     <div class="p-sect">선택 소자</div>
     <div style="text-align:center;padding:6px 0 10px">${iconSvg(c.type,56)}</div>
@@ -1037,6 +1133,7 @@ function renderProps(id){
     <div class="p-row"><span class="p-key">레일</span><span class="p-val" style="color:${rm.col}">${rm.name} ${fmtV(VOLTS[rid])}</span></div>
     ${c.isAuto?'<div class="p-row"><span class="p-key">구분</span><span class="p-val" style="color:var(--amber)">AUTO 자동배치</span></div>':''}
     ${kidsHtml}${parentHtml}
+    ${noteHtml}
     <button class="p-del" onclick="del('${id}')">× 삭제 (세트 포함)</button>`;
 }
 
