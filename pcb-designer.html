@@ -708,6 +708,8 @@ const KITS={
   logger:{name:'📊 데이터 로거',desc:'센서값을 플래시에 저장하고 USB로 내보내는 기록계',board:[85,55],parts:['USB','LDO','MCU','EEPROM','FLASH','NTC','LED_IND']},
   ble:{name:'📡 무선 리모컨',desc:'버튼 입력을 블루투스로 보내는 무선 송신기',board:[60,40],parts:['BATTERY','LDO','MCU','BLE','SWITCH','LED_IND']},
   analog:{name:'📈 신호 분석기',desc:'미세한 아날로그 신호를 증폭·변환해 측정하는 계측 보드',board:[100,80],parts:['USB','LDO','MCU','INA','ADC','MUX','TP']},
+  hormone:{name:'🧪 호르몬 분석기',desc:'LED로 진단 스트립을 비추고 PD로 반사광을 읽어 호르몬 농도를 측정하는 LFA 분석 보드',board:[100,80],parts:['USB','LDO','MCU','LED','PD','ADC','FLASH','LED_IND']},
+  optical:{name:'🔦 광학 센싱기',desc:'LED 발광 → 물체 반사 → PD 수광으로 감지하는 범용 광학 센서 보드',board:[85,55],parts:['BATTERY','LDO','MCU','LED','PD','ADC','BLE']},
 };
 
 const CAT_ORDER=['전원','디지털','센서','아날로그','보호','인터페이스','입력','패시브'];
