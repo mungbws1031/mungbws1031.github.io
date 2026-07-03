@@ -250,6 +250,31 @@ body{
   font-size:13px;cursor:pointer;transition:all .14s;font-family:inherit;
 }
 .sp-close:hover{border-color:var(--text);color:var(--text);}
+/* KIT OVERLAY */
+#kit-overlay{
+  position:fixed;inset:0;z-index:500;display:none;
+  background:rgba(20,30,50,.45);backdrop-filter:blur(5px);
+  align-items:center;justify-content:center;
+}
+#kit-overlay.open{display:flex;}
+#kit-panel{
+  background:var(--panel);border:1px solid var(--border2);border-radius:14px;
+  padding:26px;width:620px;max-width:95vw;box-shadow:0 8px 40px rgba(0,0,0,.18);
+}
+.kit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.kit-card{
+  background:var(--panel2);border:1.5px solid var(--border);border-radius:12px;
+  padding:14px 16px;cursor:pointer;transition:all .15s;
+}
+.kit-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 6px 18px rgba(24,120,208,.15);}
+.kit-name{font-size:14px;font-weight:800;margin-bottom:5px;}
+.kit-desc{font-size:11px;color:var(--dim);line-height:1.55;margin-bottom:8px;}
+.kit-parts{display:flex;gap:3px;flex-wrap:wrap;}
+.kit-part{
+  font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;
+  border:1px solid;letter-spacing:.02em;
+}
+.kit-meta{font-size:9px;color:var(--dim);margin-top:7px;}
 /* GUIDE BUBBLE */
 #guide{
   position:fixed;left:214px;bottom:18px;z-index:400;
@@ -320,7 +345,8 @@ body{
   </div>
   <div class="spacer"></div>
   <div class="hdr-actions">
-    <button class="hdr-btn primary" id="settings-btn">⚙ 설정</button>
+    <button class="hdr-btn primary" id="kit-btn">📦 보드 세트</button>
+    <button class="hdr-btn" id="settings-btn">⚙ 설정</button>
     <button class="hdr-btn" id="sort-btn">⊞ 재정렬</button>
     <button class="hdr-btn danger" id="clear-btn">↺ 초기화</button>
   </div>
@@ -387,6 +413,15 @@ body{
         <div class="sp-rail-row"><input class="sp-rail-inp" id="v-vref" type="number" step="0.1" min="0.5" max="5" value="2.5"><span class="sp-lbl">V</span></div></div>
     </div>
     <button class="sp-close" id="settings-close">닫기</button>
+  </div>
+</div>
+
+<!-- KIT OVERLAY -->
+<div id="kit-overlay">
+  <div id="kit-panel">
+    <div class="sp-title">📦 만들고 싶은 보드를 골라보세요</div>
+    <div class="kit-grid" id="kit-grid"></div>
+    <button class="sp-close" id="kit-close">직접 만들기 (닫기)</button>
   </div>
 </div>
 
@@ -661,6 +696,20 @@ const DEFS={
   IND:    {label:'L',     sub:'Inductor',          desc:'인덕터 (전류 저장/필터)',    spec:'EMI 필터 · 전원 평활용',   cat:'패시브',   col:'#30A060',w:104,h:132,companions:[]},
 };
 
+/* compact board cards: icon+label+badge only (desc/spec live in props panel) */
+for(const d of Object.values(DEFS)){d.w=Math.max(70,Math.round(d.w*0.72));d.h=88;}
+DEFS.MCU.w=104;DEFS.MCU.h=96;
+
+/* ── BOARD KITS (세트 템플릿) ── */
+const KITS={
+  ppg:{name:'💓 심박 측정기',desc:'LED로 빛을 쏘고 반사광으로 맥박을 재는 PPG 측정 보드',board:[100,80],parts:['BATTERY','LDO','MCU','BLE','LED','PD','NTC']},
+  temp:{name:'🌡️ 온도 측정기',desc:'서미스터로 온도를 재고 LED로 표시하는 기본 측정 보드',board:[72,47],parts:['BATTERY','LDO','MCU','NTC','LED_IND','SWITCH']},
+  env:{name:'🌫️ 환경 분석기',desc:'기압·움직임을 기록하는 데이터 수집 분석 보드',board:[100,80],parts:['USB','LDO','MCU','BARO','IMU','FLASH','DEBUG']},
+  logger:{name:'📊 데이터 로거',desc:'센서값을 플래시에 저장하고 USB로 내보내는 기록계',board:[85,55],parts:['USB','LDO','MCU','EEPROM','FLASH','NTC','LED_IND']},
+  ble:{name:'📡 무선 리모컨',desc:'버튼 입력을 블루투스로 보내는 무선 송신기',board:[60,40],parts:['BATTERY','LDO','MCU','BLE','SWITCH','LED_IND']},
+  analog:{name:'📈 신호 분석기',desc:'미세한 아날로그 신호를 증폭·변환해 측정하는 계측 보드',board:[100,80],parts:['USB','LDO','MCU','INA','ADC','MUX','TP']},
+};
+
 const CAT_ORDER=['전원','디지털','센서','아날로그','보호','인터페이스','입력','패시브'];
 const GRID=20;
 let BOARD_W=1440,BOARD_H=940;
@@ -789,15 +838,11 @@ function buildEl(c){
   el.className='comp'+(c.isAuto?' auto-comp':'');
   el.id='c-'+c.id;
   el.style.cssText=`left:${c.x}px;top:${c.y}px;width:${c.w}px;min-height:${c.h}px;border-color:${c.isAuto?c.col+'44':c.col+'88'};`;
-  const def2=DEFS[c.type]||{};
   el.innerHTML=`
     <div class="comp-top-bar" style="background:${c.col};opacity:${c.isAuto?.4:1}"></div>
     ${c.isAuto?'<div class="comp-auto-tag">AUTO</div>':''}
-    ${iconSvg(c.type,54)}
+    ${iconSvg(c.type,38)}
     <div class="comp-label" style="color:${c.col}">${c.label}</div>
-    <div class="comp-sub">${c.sub}</div>
-    ${def2.desc?`<div class="comp-desc">${def2.desc}</div>`:''}
-    ${def2.spec?`<div class="comp-spec">${def2.spec}</div>`:''}
     <div class="comp-volt-row">${voltBadge(c.type)}</div>
     <button class="comp-del">×</button>
   `;
@@ -901,8 +946,12 @@ function renderProps(id){
   if(c.parentId){const p=comps.get(c.parentId);if(p)parentHtml=`<div class="p-sect">부모 소자</div>
     <div class="p-chip" onclick="select('${p.id}')"><div class="p-chip-dot" style="background:${p.col}"></div>
     <div class="p-chip-info"><div class="p-chip-name">${p.label}</div><div class="p-chip-sub">${c.reason}</div></div></div>`;}
+  const dd=DEFS[c.type]||{};
   body.innerHTML=`
     <div class="p-sect">선택 소자</div>
+    <div style="text-align:center;padding:6px 0 10px">${iconSvg(c.type,56)}</div>
+    ${dd.desc?`<div style="font-size:12px;font-weight:600;text-align:center;margin-bottom:4px">${dd.desc}</div>`:''}
+    ${dd.spec?`<div style="font-size:10px;color:var(--dim);text-align:center;margin-bottom:10px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:4px 8px">${dd.spec}</div>`:''}
     <div class="p-row"><span class="p-key">이름</span><span class="p-val" style="color:${c.col}">${c.label}</span></div>
     <div class="p-row"><span class="p-key">사양</span><span class="p-val" style="font-size:11px">${c.sub}</span></div>
     <div class="p-row"><span class="p-key">위치</span><span class="p-val" style="font-size:11px">${Math.round(c.x/20)}mm, ${Math.round(c.y/20)}mm</span></div>
@@ -1048,8 +1097,49 @@ document.addEventListener('mouseup',()=>{if(selId&&guideSeen.firstSelect) showGu
 document.getElementById('settings-btn').addEventListener('click',()=>showGuide('voltage',15000));
 document.getElementById('clear-btn').addEventListener('click',()=>{if(guideSeen.firstPlace) showGuide('clear',12000);});
 
-/* welcome on load */
+/* ── KIT PICKER ── */
+const kitOverlay=document.getElementById('kit-overlay');
+const kitGrid=document.getElementById('kit-grid');
+for(const[kid,k] of Object.entries(KITS)){
+  const card=document.createElement('div');
+  card.className='kit-card';
+  card.innerHTML=`
+    <div class="kit-name">${k.name}</div>
+    <div class="kit-desc">${k.desc}</div>
+    <div class="kit-parts">${k.parts.map(p=>{const d=DEFS[p];
+      return `<span class="kit-part" style="color:${d.col};border-color:${d.col}55;background:${d.col}12">${d.label}</span>`;}).join('')}</div>
+    <div class="kit-meta">보드 ${k.board[0]}×${k.board[1]}mm · 부품 ${k.parts.length}종 + 보조부품 자동</div>`;
+  card.addEventListener('click',()=>loadKit(kid));
+  kitGrid.appendChild(card);
+}
+function loadKit(kid){
+  const k=KITS[kid];if(!k) return;
+  // clear board
+  for(const[,c] of comps){const e=document.getElementById('c-'+c.id);if(e)e.remove();}
+  comps.clear();traceMap.clear();tracesSvg.innerHTML='';selId=null;renderProps(null);
+  setBoard(k.board[0],k.board[1]);
+  document.getElementById('inp-w').value=k.board[0];document.getElementById('inp-h').value=k.board[1];
+  syncSizeButtons(k.board[0],k.board[1]);
+  cursorCol=0;cursorRow=0;
+  // place parts sequentially for nicer animation
+  k.parts.forEach((p,i)=>{
+    setTimeout(()=>{const pos=nextPos(DEFS[p]);place(p,pos.x,pos.y,false,null,'');},i*180);
+  });
+  kitOverlay.classList.remove('open');
+  updateBom();updateHint();
+  gbTitle.innerHTML=k.name+' 세트 완성!';
+  gbStep.textContent='KIT';
+  gbText.innerHTML=`<b>${k.parts.length}종</b>의 핵심 부품과 보조 부품이 자동 배치됐어요. 각 부품을 클릭하면 <span class="hl">오른쪽 패널</span>에서 무슨 역할인지 볼 수 있어요!`;
+  guideEl.classList.remove('hide');
+}
+document.getElementById('kit-btn').addEventListener('click',()=>kitOverlay.classList.add('open'));
+document.getElementById('kit-close').addEventListener('click',()=>kitOverlay.classList.remove('open'));
+kitOverlay.addEventListener('click',e=>{if(e.target===kitOverlay)kitOverlay.classList.remove('open');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')kitOverlay.classList.remove('open');});
+
+/* welcome: open kit picker for beginners */
 setTimeout(()=>showGuide('welcome'),600);
+setTimeout(()=>{if(!comps.size)kitOverlay.classList.add('open');},900);
 </script>
 </body>
 </html>
