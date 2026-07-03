@@ -710,6 +710,7 @@ const KITS={
   analog:{name:'📈 신호 분석기',desc:'미세한 아날로그 신호를 증폭·변환해 측정하는 계측 보드',board:[100,80],parts:['USB','LDO','MCU','INA','ADC','MUX','TP']},
   hormone:{name:'🧪 호르몬 분석기',desc:'LED로 진단 스트립을 비추고 PD로 반사광을 읽어 호르몬 농도를 측정하는 LFA 분석 보드',board:[100,80],parts:['USB','LDO','MCU','LED','PD','ADC','FLASH','LED_IND']},
   optical:{name:'🔦 광학 센싱기',desc:'LED 발광 → 물체 반사 → PD 수광으로 감지하는 범용 광학 센서 보드',board:[85,55],parts:['BATTERY','LDO','MCU','LED','PD','ADC','BLE']},
+  trf:{name:'⏱️ TRF LFA 분석기',desc:'UV LED로 형광 표지를 펄스 여기하고, 짧은 지연 후 PD로 잔광 형광만 읽어 감도를 높이는 시간분해형광(TRF) LFA 테스트 스트립 분석기',board:[100,80],parts:['USB','LDO','MCU','LED','MOSFET_P','PD','INA','ADC','FLASH','LED_IND']},
 };
 
 const CAT_ORDER=['전원','디지털','센서','아날로그','보호','인터페이스','입력','패시브'];
