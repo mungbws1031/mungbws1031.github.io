@@ -45,6 +45,12 @@ body{
 }
 .hdr-size-btn:hover{border-color:var(--cyan);color:var(--cyan);}
 .hdr-size-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(8,152,176,.09);}
+.hdr-zoom-btn{
+  padding:3px 9px;border-radius:5px;border:1px solid var(--border2);
+  background:var(--panel2);color:var(--dim);font-size:12px;font-weight:700;cursor:pointer;
+  transition:all .14s;font-family:inherit;line-height:1.4;
+}
+.hdr-zoom-btn:hover{border-color:var(--cyan);color:var(--cyan);}
 .spacer{flex:1;}
 .hdr-actions{display:flex;gap:7px;}
 .hdr-btn{
@@ -76,30 +82,30 @@ body{
   font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
   color:var(--dim);padding:10px 4px 6px;
 }
-.pal-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:4px;}
+.pal-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:4px;}
 .pal-card{
-  background:var(--panel2);border:1px solid var(--border);border-radius:8px;
-  padding:9px 7px 7px;cursor:pointer;transition:all .17s;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  position:relative;overflow:hidden;
+  background:transparent;border:none;border-radius:8px;
+  padding:7px 5px 6px;cursor:pointer;transition:background .14s,transform .12s;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  position:relative;
 }
-.pal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:8px 8px 0 0;}
-.pal-card:hover{border-color:var(--dim);transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.10);}
-.pal-card:active{transform:translateY(0);}
-.pal-card-sym{display:block;opacity:.8;}
-.pal-card-name{font-size:11px;font-weight:700;text-align:center;line-height:1.2;}
-.pal-card-sub{font-size:9px;color:var(--dim);text-align:center;line-height:1.3;}
-.pal-card-badge{
-  font-size:8px;color:var(--amber);background:rgba(192,120,32,.10);
-  border:1px solid rgba(192,120,32,.25);border-radius:10px;
-  padding:1px 5px;margin-top:1px;
+.pal-card:hover{background:var(--panel2);transform:translateY(-1px);}
+.pal-card:active{transform:translateY(0);background:var(--border);}
+.pal-card-sym{display:block;}
+.pal-card-name{font-size:10.5px;font-weight:700;text-align:center;line-height:1.2;}
+.pal-card-sub{font-size:8.5px;color:var(--dim);text-align:center;line-height:1.3;}
+.pal-auto-dot{
+  position:absolute;top:3px;right:6px;
+  font-size:7.5px;font-weight:700;color:#fff;background:var(--amber);
+  border-radius:8px;padding:0px 4px;line-height:1.4;
 }
 /* BOARD */
 #board-wrap{position:relative;overflow:auto;background:var(--bg);}
 #board-wrap::-webkit-scrollbar{width:6px;height:6px;}
 #board-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+#board-zoom{position:relative;margin:14px;}
 #board{
-  position:relative;
+  position:relative;transform-origin:0 0;margin:0;
   background-color:#1C3D1C;
   background-image:
     radial-gradient(circle,#2A5A2A 1px,transparent 1px),
@@ -107,7 +113,7 @@ body{
     linear-gradient(90deg,rgba(42,90,42,.18) 1px,transparent 1px);
   background-size:20px 20px,100px 100px,100px 100px;
   border:1px solid #143214;
-  margin:14px;border-radius:5px;
+  border-radius:5px;
   box-shadow:0 0 0 1px #0A1A0A,var(--shadow);
 }
 #board::after{
@@ -376,6 +382,12 @@ body{
     <button class="hdr-size-btn" data-w="85" data-h="55">85×55</button>
     <button class="hdr-size-btn" data-w="100" data-h="80">100×80</button>
   </div>
+  <div class="hdr-sep"></div>
+  <div class="hdr-size-group">
+    <button class="hdr-zoom-btn" id="zoom-out-btn" title="축소">－</button>
+    <span class="hdr-size-lbl" id="zoom-label" style="min-width:34px;text-align:center;cursor:pointer" title="100%로 초기화">100%</span>
+    <button class="hdr-zoom-btn" id="zoom-in-btn" title="확대">＋</button>
+  </div>
   <div class="spacer"></div>
   <div class="hdr-actions">
     <button class="hdr-btn primary" id="kit-btn">📦 보드 세트</button>
@@ -393,13 +405,15 @@ body{
     <div id="pal-scroll"></div>
   </div>
   <div id="board-wrap">
-    <div id="board" data-lbl="PCB · 72×47mm">
-      <div id="board-hint">
-        <div class="hint-icon">⊕</div>
-        <div class="hint-t">클릭 또는 드래그로 소자 배치</div>
-        <div class="hint-s">좌측 팔레트에서 소자를 선택하세요</div>
+    <div id="board-zoom">
+      <div id="board" data-lbl="PCB · 72×47mm">
+        <div id="board-hint">
+          <div class="hint-icon">⊕</div>
+          <div class="hint-t">클릭 또는 드래그로 소자 배치</div>
+          <div class="hint-s">좌측 팔레트에서 소자를 선택하세요</div>
+        </div>
+        <svg id="traces" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
-      <svg id="traces" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
   <div id="props">
@@ -790,6 +804,8 @@ const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
 
 /* ── BOARD SIZE ── */
 const boardEl=document.getElementById('board');
+const boardZoomEl=document.getElementById('board-zoom');
+const boardWrapEl=document.getElementById('board-wrap');
 function setBoard(wmm,hmm){
   BOARD_W=wmm*20;BOARD_H=hmm*20;
   boardEl.style.width=BOARD_W+'px';boardEl.style.height=BOARD_H+'px';
@@ -799,8 +815,45 @@ function setBoard(wmm,hmm){
     const el=document.getElementById('c-'+c.id);
     if(el){el.style.left=c.x+'px';el.style.top=c.y+'px';}
   }
+  applyZoom();
   refreshTraces();cursorCol=0;cursorRow=0;
 }
+
+/* ── ZOOM ── */
+let zoom=1;
+function applyZoom(){
+  boardZoomEl.style.width=(BOARD_W*zoom)+'px';
+  boardZoomEl.style.height=(BOARD_H*zoom)+'px';
+  boardEl.style.transform=`scale(${zoom})`;
+}
+function setZoom(nz,anchorCX,anchorCY){
+  nz=Math.round(Math.max(0.4,Math.min(2,nz))*20)/20;
+  if(nz===zoom) return;
+  const wrapRect=boardWrapEl.getBoundingClientRect();
+  const acx=anchorCX!=null?anchorCX:wrapRect.left+boardWrapEl.clientWidth/2;
+  const acy=anchorCY!=null?anchorCY:wrapRect.top+boardWrapEl.clientHeight/2;
+  const bx=(boardWrapEl.scrollLeft+(acx-wrapRect.left))/zoom;
+  const by=(boardWrapEl.scrollTop+(acy-wrapRect.top))/zoom;
+  zoom=nz;
+  applyZoom();
+  boardWrapEl.scrollLeft=bx*zoom-(acx-wrapRect.left);
+  boardWrapEl.scrollTop=by*zoom-(acy-wrapRect.top);
+  document.getElementById('zoom-label').textContent=Math.round(zoom*100)+'%';
+}
+document.getElementById('zoom-in-btn').addEventListener('click',()=>setZoom(zoom+0.1));
+document.getElementById('zoom-out-btn').addEventListener('click',()=>setZoom(zoom-0.1));
+document.getElementById('zoom-label').addEventListener('click',()=>setZoom(1));
+boardWrapEl.addEventListener('wheel',e=>{
+  if(!e.ctrlKey&&!e.metaKey) return;
+  e.preventDefault();
+  setZoom(zoom+(e.deltaY<0?0.1:-0.1),e.clientX,e.clientY);
+},{passive:false});
+document.addEventListener('keydown',e=>{
+  if(!(e.ctrlKey||e.metaKey)) return;
+  if(e.key==='='||e.key==='+'){e.preventDefault();setZoom(zoom+0.1);}
+  else if(e.key==='-'){e.preventDefault();setZoom(zoom-0.1);}
+  else if(e.key==='0'){e.preventDefault();setZoom(1);}
+});
 
 /* ── CURSOR ── */
 const SLOT_W=300,SLOT_H=380,ORIGIN_X=200,ORIGIN_Y=240;
@@ -847,11 +900,10 @@ function buildPalette(filter=''){
       const card=document.createElement('div');
       card.className='pal-card';card.draggable=true;card.dataset.type=t;
       card.innerHTML=`
-        <style>.pal-card[data-type="${t}"]::before{background:${d.col}}</style>
-        ${symSvg(t,d.col)}
+        ${d.companions.length?`<div class="pal-auto-dot" title="보조부품 +${d.companions.length}">+${d.companions.length}</div>`:''}
+        ${iconSvg(t,34)}
         <div class="pal-card-name" style="color:${d.col}">${d.label}</div>
         <div class="pal-card-sub">${d.desc||d.sub}</div>
-        ${d.companions.length?`<div class="pal-card-badge">+${d.companions.length} 자동</div>`:''}
       `;
       card.addEventListener('click',e=>{
         if(e.defaultPrevented) return;
@@ -875,8 +927,8 @@ boardEl.addEventListener('drop',e=>{
   e.preventDefault();boardEl.classList.remove('over');
   const t=e.dataTransfer.getData('type');if(!t||!DEFS[t]) return;
   const rect=boardEl.getBoundingClientRect();const d=DEFS[t];
-  const x=clamp(snap(e.clientX-rect.left-d.w/2),20,BOARD_W-d.w-20);
-  const y=clamp(snap(e.clientY-rect.top-d.h/2),20,BOARD_H-d.h-20);
+  const x=clamp(snap((e.clientX-rect.left)/zoom-d.w/2),20,BOARD_W-d.w-20);
+  const y=clamp(snap((e.clientY-rect.top)/zoom-d.h/2),20,BOARD_H-d.h-20);
   place(t,x,y,false,null,'');
 });
 
@@ -1008,7 +1060,7 @@ function autoAdd(parentId,px,py,companions){
 /* ── DRAG ── */
 function dragComp(e0,c,el){
   const sx=e0.clientX,sy=e0.clientY,ox=c.x,oy=c.y;
-  const mv=e=>{c.x=clamp(snap(ox+e.clientX-sx),0,BOARD_W-c.w);c.y=clamp(snap(oy+e.clientY-sy),0,BOARD_H-c.h);el.style.left=c.x+'px';el.style.top=c.y+'px';refreshTraces();};
+  const mv=e=>{c.x=clamp(snap(ox+(e.clientX-sx)/zoom),0,BOARD_W-c.w);c.y=clamp(snap(oy+(e.clientY-sy)/zoom),0,BOARD_H-c.h);el.style.left=c.x+'px';el.style.top=c.y+'px';refreshTraces();};
   const up=()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);};
   document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
 }
