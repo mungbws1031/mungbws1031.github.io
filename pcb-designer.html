@@ -833,7 +833,41 @@ function place(type,x,y,isAuto=false,parentId=null,reason=''){
   comps.set(id,c);buildEl(c);
   if(parentId){const p=comps.get(parentId);if(p)p.kids.push(id);}
   if(!isAuto&&def.companions.length) setTimeout(()=>autoAdd(id,x,y,def.companions),280);
+  if(!isAuto) setTimeout(()=>autoConnect(id),340);
   updateHint();updateBom();return id;
+}
+
+/* ── AUTO NET CONNECTION (주요 부품끼리 자동 배선) ── */
+const POWER_SRC=['BATTERY','USB'];
+const REGULATOR=['LDO','DCDC'];
+function mainComps(){return [...comps.values()].filter(c=>!c.isAuto);}
+function nearestOfType(id,types){
+  const c=comps.get(id);if(!c) return null;
+  const a=ctr(c);let best=null,bd=1e9;
+  for(const o of mainComps()){
+    if(o.id===id||!types.includes(o.type)) continue;
+    const b=ctr(o),d=(a.x-b.x)**2+(a.y-b.y)**2;
+    if(d<bd){bd=d;best=o;}
+  }
+  return best;
+}
+function autoConnect(id){
+  const c=comps.get(id);if(!c||c.isAuto) return;
+  const t=c.type;
+  let target=null,col='#C8960A';
+  if(POWER_SRC.includes(t)){
+    return; /* 전원 소스는 연결 시작점 */
+  }else if(REGULATOR.includes(t)){
+    target=nearestOfType(id,POWER_SRC);col='#DC2050'; /* 전원 라인(빨강) */
+  }else if(t==='MCU'){
+    target=nearestOfType(id,REGULATOR)||nearestOfType(id,POWER_SRC);col='#DC2050';
+  }else{
+    /* 주변장치 → MCU 허브(신호선), 없으면 레귤레이터/전원 */
+    target=nearestOfType(id,['MCU']);col='#1878D0';
+    if(!target){target=nearestOfType(id,REGULATOR)||nearestOfType(id,POWER_SRC);col='#DC2050';}
+  }
+  if(target){drawTrace(target.id,id,{col});
+    c.netTo=target.id;}
 }
 
 function buildEl(c){
@@ -876,7 +910,8 @@ function autoAdd(parentId,px,py,companions){
     const cc=comps.get(cid);
     if(cc){cc.label=c.label;cc.sub=c.sub;
       const el=document.getElementById('c-'+cid);
-      if(el){el.querySelector('.comp-label').textContent=c.label;el.querySelector('.comp-sub').textContent=c.sub;}
+      if(el){const lbl=el.querySelector('.comp-label');if(lbl)lbl.textContent=c.label;
+        const sb=el.querySelector('.comp-sub');if(sb)sb.textContent=c.sub;}
       drawTrace(parentId,cid);}
     added.push({label:c.label,sub:c.sub,reason:c.reason});
   }
@@ -914,11 +949,16 @@ function del(id){
 const tracesSvg=document.getElementById('traces');
 const traceMap=new Map();
 const ctr=c=>({x:c.x+c.w/2,y:c.y+c.h/2});
-function drawTrace(fid,tid){
+function drawTrace(fid,tid,net){
   const key=`${fid}~${tid}`;if(traceMap.has(key)) return;
   const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('stroke','#5A8A5A');path.setAttribute('stroke-width','1.5');
-  path.setAttribute('fill','none');path.setAttribute('stroke-dasharray','5,4');path.setAttribute('opacity','.5');
+  if(net){ /* main net: solid colored line */
+    path.setAttribute('stroke',net.col||'#C8960A');path.setAttribute('stroke-width','2');
+    path.setAttribute('fill','none');path.setAttribute('opacity','.7');path.setAttribute('stroke-linecap','round');
+  }else{ /* companion: dashed green */
+    path.setAttribute('stroke','#5A8A5A');path.setAttribute('stroke-width','1.5');
+    path.setAttribute('fill','none');path.setAttribute('stroke-dasharray','5,4');path.setAttribute('opacity','.5');
+  }
   tracesSvg.appendChild(path);traceMap.set(key,path);updTrace(fid,tid);
 }
 function updTrace(fid,tid){
