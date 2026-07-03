@@ -250,6 +250,37 @@ body{
   font-size:13px;cursor:pointer;transition:all .14s;font-family:inherit;
 }
 .sp-close:hover{border-color:var(--text);color:var(--text);}
+/* GUIDE BUBBLE */
+#guide{
+  position:fixed;left:214px;bottom:18px;z-index:400;
+  display:flex;align-items:flex-end;gap:10px;max-width:430px;
+  pointer-events:none;
+}
+#guide-char{
+  width:52px;height:52px;flex-shrink:0;border-radius:50%;
+  background:linear-gradient(135deg,#1878D0,#0898B0);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;box-shadow:0 4px 14px rgba(24,120,208,.35);
+  border:2.5px solid #fff;
+}
+#guide-bubble{
+  background:#fff;border:1.5px solid var(--border2);border-radius:14px 14px 14px 4px;
+  padding:12px 15px;box-shadow:0 6px 24px rgba(0,0,0,.14);
+  pointer-events:auto;position:relative;
+  transition:opacity .3s,transform .3s;
+}
+#guide.hide{opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s;pointer-events:none;}
+#guide{transition:opacity .3s,transform .3s;}
+.gb-title{font-size:12px;font-weight:800;color:var(--blue);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.gb-text{font-size:12px;color:var(--text);line-height:1.65;padding-right:14px;}
+.gb-text b{color:var(--blue);font-weight:700;}
+.gb-text .hl{background:rgba(24,120,208,.10);border-radius:4px;padding:0 4px;font-weight:600;}
+.gb-close{
+  position:absolute;top:6px;right:8px;border:none;background:none;
+  color:var(--dim);font-size:14px;cursor:pointer;padding:2px;line-height:1;font-family:inherit;
+}
+.gb-close:hover{color:var(--red);}
+.gb-step{font-size:9px;color:var(--dim);margin-top:6px;letter-spacing:.05em;}
 /* TOAST */
 #toast-wrap{position:fixed;bottom:20px;right:240px;display:flex;flex-direction:column;gap:6px;pointer-events:none;z-index:300;}
 .toast{
@@ -360,6 +391,17 @@ body{
 </div>
 
 <div id="toast-wrap"></div>
+
+<!-- BEGINNER GUIDE -->
+<div id="guide">
+  <div id="guide-char">🤖</div>
+  <div id="guide-bubble">
+    <button class="gb-close" id="guide-close">×</button>
+    <div class="gb-title" id="gb-title"></div>
+    <div class="gb-text" id="gb-text"></div>
+    <div class="gb-step" id="gb-step"></div>
+  </div>
+</div>
 
 <script>
 /* ── SCHEMATIC SYMBOLS (palette) ── */
@@ -959,6 +1001,55 @@ document.getElementById('clear-btn').addEventListener('click',()=>{
 document.addEventListener('keydown',e=>{if(e.key==='Delete'&&selId)del(selId);if(e.key==='Escape'){deselect();overlay.classList.remove('open');}});
 
 setBoard(72,47);
+
+/* ── BEGINNER GUIDE ── */
+const GUIDE_MSGS={
+  welcome:{t:'👋 환영합니다!',x:'여기는 <b>전자 보드(PCB) 만들기 연습장</b>이에요. 초록색 판이 전자 부품을 올려놓는 기판이고, <span class="hl">왼쪽 목록</span>이 부품 창고예요.<br>먼저 왼쪽에서 <b>MCU</b>(두뇌 칩)를 클릭해보세요!',s:'STEP 1 / 5'},
+  firstPlace:{t:'🎉 첫 부품 배치 성공!',x:'방금 놓은 부품 주변에 <span class="hl">점선으로 연결된 작은 부품들</span>이 자동으로 따라왔죠? 칩이 안정적으로 작동하려면 <b>커패시터(C)·저항(R)</b> 같은 보조 부품이 항상 필요해서, 제가 자동으로 넣어드린 거예요.',s:'STEP 2 / 5'},
+  firstSelect:{t:'🔍 부품 정보 보기',x:'부품을 클릭하면 <span class="hl">오른쪽 패널</span>에 상세 정보가 나와요. 어떤 전압을 쓰는지, 어떤 보조 부품이 딸려있는지 확인할 수 있어요.<br>부품을 <b>드래그</b>하면 위치도 옮길 수 있어요!',s:'STEP 3 / 5'},
+  firstDrag:{t:'✋ 이동 완료!',x:'부품이 <span class="hl">격자(1mm 단위)</span>에 맞춰 움직여요. 실제 PCB 설계에서도 이렇게 부품을 정렬해요.<br>부품 위 <b>× 버튼</b>으로 삭제할 수도 있어요 (세트로 같이 지워져요).',s:'STEP 4 / 5'},
+  sizeChange:{t:'📐 보드 크기 변경!',x:'실제 제품 크기에 맞춰 기판 크기를 정해요. <b>45×18</b>은 USB 메모리만 하고, <b>100×80</b>은 손바닥만 해요.<br>부품이 많으면 큰 보드를 쓰면 돼요.',s:'TIP'},
+  voltage:{t:'⚡ 전압이란?',x:'부품마다 필요한 전기의 세기(<b>전압</b>)가 달라요. <span class="hl">VBAT</span>은 배터리 원본 전압, <span class="hl">VCC</span>는 칩들이 쓰는 전압이에요. 각 부품의 색깔 뱃지가 어떤 전압을 쓰는지 알려줘요.',s:'TIP'},
+  clear:{t:'🧹 깨끗해졌어요',x:'처음부터 다시 시작! 이번엔 <b>전원부(BATT→LDO)</b> 먼저 놓고 → <b>MCU</b> → <b>센서</b> 순서로 놓아보세요. 실제 엔지니어들이 설계하는 순서랍니다.',s:'TIP'},
+  done:{t:'🏆 기본 조작 마스터!',x:'이제 자유롭게 만들어보세요. 추천 조합: <b>BATT + LDO + MCU + BLE + 센서 1개</b> = 실제 웨어러블 기기 구성이에요!<br>말풍선이 방해되면 <b>×</b>를 눌러 닫을 수 있어요.',s:'STEP 5 / 5 · 완료'},
+};
+const guideEl=document.getElementById('guide');
+const gbTitle=document.getElementById('gb-title'),gbText=document.getElementById('gb-text'),gbStep=document.getElementById('gb-step');
+let guideOff=false,guideTimer=null;
+const guideSeen={};
+function showGuide(key,autoHideMs=0){
+  if(guideOff||guideSeen[key]) return;
+  guideSeen[key]=true;
+  const m=GUIDE_MSGS[key];if(!m) return;
+  gbTitle.innerHTML=m.t;gbText.innerHTML=m.x;gbStep.textContent=m.s;
+  guideEl.classList.remove('hide');
+  clearTimeout(guideTimer);
+  if(autoHideMs) guideTimer=setTimeout(()=>guideEl.classList.add('hide'),autoHideMs);
+}
+document.getElementById('guide-close').addEventListener('click',()=>{
+  guideEl.classList.add('hide');guideOff=true;
+});
+
+/* hook guide into existing actions */
+const _place=place;
+place=function(type,x,y,isAuto,parentId,reason){
+  const id=_place(type,x,y,isAuto,parentId,reason);
+  if(!isAuto&&id){
+    showGuide('firstPlace');
+    if(comps.size>10) showGuide('done');
+  }
+  return id;
+};
+const _select=select;
+select=function(id){_select(id);showGuide('firstSelect');};
+const _setBoard=setBoard;
+setBoard=function(w,h){_setBoard(w,h);if(comps.size||guideSeen.welcome) showGuide('sizeChange',12000);};
+document.addEventListener('mouseup',()=>{if(selId&&guideSeen.firstSelect) showGuide('firstDrag');});
+document.getElementById('settings-btn').addEventListener('click',()=>showGuide('voltage',15000));
+document.getElementById('clear-btn').addEventListener('click',()=>{if(guideSeen.firstPlace) showGuide('clear',12000);});
+
+/* welcome on load */
+setTimeout(()=>showGuide('welcome'),600);
 </script>
 </body>
 </html>
