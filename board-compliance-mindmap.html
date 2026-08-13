@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전자보드 외주 규제확보자료(상세)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+:root{
+  --mm-accent:#E60044;
+  --mm-bg:#FFFFFF;
+  --mm-panel:#FFFFFF;
+  --mm-text:#1A1A1A;
+  --mm-muted:#727171;
+  --mm-line:#E4E4E7;
+  --mm-node-bg:#FFFFFF;
+  --mm-hover:#F7F7F8;
+}
+.theme-dark{
+  --mm-bg:#12141A; --mm-panel:#1B1E26; --mm-text:#F5F5F5;
+  --mm-muted:#9AA0AC; --mm-line:#2C313C; --mm-node-bg:#1B1E26; --mm-hover:#232833;
+}
+.theme-neutral{ --mm-accent:#3F3F46; }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;width:100%}
+body{
+  font-family:'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--mm-bg); color:var(--mm-text); overflow:hidden;
+}
+body.transparent{background:transparent}
+#app{display:flex;flex-direction:column;height:100%;width:100%}
+
+header{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:12px 18px;border-bottom:1px solid var(--mm-line);
+  background:var(--mm-bg);z-index:5;flex:0 0 auto;
+}
+body.transparent header{background:transparent}
+.hd-title{font-size:16px;font-weight:700;letter-spacing:-.2px}
+.hd-sub{font-size:12px;color:var(--mm-muted);margin-top:2px}
+.hd-left{display:flex;flex-direction:column;min-width:0}
+.spacer{flex:1 1 auto}
+.tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+button.tool{
+  font:inherit;font-size:12px;padding:6px 11px;border-radius:7px;
+  border:1px solid var(--mm-line);background:var(--mm-node-bg);color:var(--mm-text);
+  cursor:pointer;transition:background .12s,border-color .12s;
+}
+button.tool:hover{background:var(--mm-hover);border-color:var(--mm-muted)}
+button.tool:focus-visible{outline:2px solid var(--mm-accent);outline-offset:1px}
+#search{
+  font:inherit;font-size:12px;padding:6px 10px;border-radius:7px;width:150px;
+  border:1px solid var(--mm-line);background:var(--mm-node-bg);color:var(--mm-text);
+}
+#search:focus{outline:2px solid var(--mm-accent);outline-offset:0;border-color:transparent}
+#hitcount{font-size:11px;color:var(--mm-muted);min-width:38px}
+
+#stage{position:relative;flex:1 1 auto;min-height:0}
+svg#canvas{display:block;width:100%;height:100%;cursor:grab}
+svg#canvas.grabbing{cursor:grabbing}
+.node-g{cursor:pointer}
+.node-g:focus{outline:none}
+.node-g.dim{opacity:.18}
+.node-g.hit .node-box{stroke-width:2}
+
+#panel{
+  position:absolute;top:12px;right:12px;width:300px;max-height:calc(100% - 24px);
+  background:var(--mm-panel);border:1px solid var(--mm-line);border-radius:12px;
+  box-shadow:0 8px 28px rgba(0,0,0,.10);padding:16px 16px 18px;
+  overflow-y:auto;display:none;z-index:4;
+}
+#panel.open{display:block}
+#panel .p-close{
+  position:absolute;top:10px;right:10px;border:none;background:transparent;
+  color:var(--mm-muted);font-size:18px;line-height:1;cursor:pointer;padding:4px;
+}
+#panel .p-path{font-size:11px;color:var(--mm-muted);margin-bottom:6px;padding-right:22px;word-break:keep-all}
+#panel .p-name{font-size:15px;font-weight:700;margin-bottom:8px;padding-right:22px;word-break:keep-all}
+#panel .p-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+#panel .p-tag{font-size:10.5px;padding:2px 8px;border-radius:99px;border:1px solid var(--mm-line);color:var(--mm-muted)}
+#panel .p-note{font-size:13px;line-height:1.65;color:var(--mm-text);white-space:pre-wrap;word-break:keep-all}
+#panel .p-empty{font-size:12.5px;color:var(--mm-muted);font-style:italic}
+#panel .p-link{display:inline-block;margin-top:12px;font-size:12px;color:var(--mm-accent);text-decoration:none;font-weight:600}
+#panel .p-link:hover{text-decoration:underline}
+#panel .p-meta{margin-top:14px;padding-top:10px;border-top:1px solid var(--mm-line);font-size:11px;color:var(--mm-muted)}
+
+#hint{
+  position:absolute;left:12px;bottom:12px;font-size:11px;color:var(--mm-muted);
+  background:var(--mm-panel);border:1px solid var(--mm-line);border-radius:7px;
+  padding:5px 9px;opacity:.85;pointer-events:none;
+}
+body.transparent #hint{background:transparent;border-color:transparent}
+@media (max-width:640px){
+  #panel{width:auto;left:12px;right:12px;top:auto;bottom:12px;max-height:52%}
+  #search{width:110px}
+  #hint{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="hd-left">
+      <div class="hd-title" id="hd-title">전자보드 외주 규제확보자료(상세)</div>
+      <div class="hd-sub" id="hd-sub"></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="tools">
+      <input id="search" type="search" placeholder="노드 검색" aria-label="노드 검색">
+      <span id="hitcount"></span>
+      <button class="tool" id="btn-expand-one" title="현재 보이는 가장 깊은 레벨에서 한 단계 더 펼침">+한 단계</button>
+      <button class="tool" id="btn-collapse-one" title="가장 바깥 레벨을 한 단계 접음">−한 단계</button>
+      <button class="tool" id="btn-expand">전체 펼치기</button>
+      <button class="tool" id="btn-collapse">접기</button>
+      <button class="tool" id="btn-fit">화면 맞춤</button>
+      <button class="tool" id="btn-layout">방사형</button>
+      <button class="tool" id="btn-svg">SVG</button>
+      <button class="tool" id="btn-png">PNG</button>
+    </div>
+  </header>
+  <div id="stage">
+    <svg id="canvas" role="img" aria-label="마인드맵"></svg>
+    <aside id="panel" aria-live="polite">
+      <button class="p-close" id="p-close" aria-label="닫기">&times;</button>
+      <div class="p-path" id="p-path"></div>
+      <div class="p-name" id="p-name"></div>
+      <div class="p-tags" id="p-tags"></div>
+      <div id="p-body"></div>
+      <div class="p-meta" id="p-meta"></div>
+    </aside>
+    <div id="hint">드래그=이동 · 휠=줌 · 클릭=상세 · 노드 우측 원=접기 · +/−한 단계=레벨별 펼침</div>
+  </div>
+</div>
+
+<script>
+const RAW_DATA = {"root": {"name": "전자보드 외주 규제확보자료 상세", "note": "IVDR/FDA/MDSAP 매핑, 2026 기준", "children": [{"name": "설계 입출력", "note": "DHF 뼈대", "tags": ["IVDR", "FDA", "MDSAP"], "children": [{"name": "HW 요구사항 명세서", "note": "보드가 만족해야 할 스펙 문서. 신호레벨·응답시간 등 수치기준.", "tags": ["IVDR", "FDA"]}, {"name": "회로도(승인리비전)", "note": "실제 배선 설계도. 서명·날짜 있는 승인본이어야 함.", "tags": ["IVDR", "FDA", "MDSAP"]}, {"name": "Gerber/CAM 파일", "note": "PCB 제조사에 넘기는 제조용 도면. 없으면 같은 보드 재생산 불가.", "tags": ["FDA"]}, {"name": "BOM(AVL 포함)", "note": "부품 목록 + 승인된 대체 제조사 리스트. 단종 대응용 후보 미리 확보.", "tags": ["IVDR", "FDA", "MDSAP"]}, {"name": "설계검토 회의록", "note": "설계 확정 전 검토 기록. 누가 뭘 확인·승인했는지 증거.", "tags": ["FDA", "MDSAP"]}]}, {"name": "V&V", "note": "IEC 60601-1/61010-1 라인", "tags": ["IVDR", "FDA", "MDSAP"], "children": [{"name": "기능시험 리포트", "note": "보드가 스펙대로 동작하는지 실측한 결과.", "tags": ["IVDR", "FDA"]}, {"name": "EMC 시험 리포트", "note": "전자파 방출·내성 시험. 다른 기기 간섭 안 주고 외부 전자파에도 안 먹히는지. IEC 61326-1", "tags": ["IVDR", "FDA"]}, {"name": "전기안전 시험", "note": "감전·화재 위험 없는지 확인. IEC 61010-1/2-101", "tags": ["IVDR", "FDA"]}, {"name": "환경시험", "note": "온습도·진동·낙하 등 실사용 조건에서 정상동작 확인.", "tags": ["IVDR", "FDA"]}, {"name": "ESD/서지 내성 시험", "note": "정전기·전원 순간 튐에도 안 망가지는지 확인.", "tags": ["IVDR", "FDA"]}]}, {"name": "리스크관리", "note": "ISO 14971:2019", "tags": ["IVDR", "FDA", "MDSAP"], "children": [{"name": "보드단위 dFMEA", "note": "보드가 고장나는 모든 방식을 나열하고 위험도 평가한 표.", "tags": ["IVDR", "FDA"]}, {"name": "위험분석-요구사항 추적매트릭스", "note": "\"이 위험 때문에 이 요구사항이 생겼다\"를 연결한 표. GSPR까지 추적됨.", "tags": ["IVDR"]}, {"name": "잔여위험 평가/수용기준", "note": "대책 세운 후 남는 위험이 받아들일 수준인지 판단한 기록.", "tags": ["IVDR", "FDA"]}]}, {"name": "SW·펌웨어 & 사이버보안", "note": "IEC 62304", "tags": ["FDA"], "children": [{"name": "펌웨어 요구사항/아키텍처", "note": "펌웨어가 뭘 해야 하고 어떻게 구조화됐는지 설명한 문서.", "tags": ["IVDR", "FDA"]}, {"name": "SOUP 목록", "note": "직접 안 만들고 가져다 쓴 SW(오픈소스·라이브러리·OS) 목록. 취약점 영향범위 파악용.", "tags": ["IVDR", "FDA", "MDSAP"]}, {"name": "SBOM", "note": "SOUP 목록을 기계판독 표준포맷으로 만든 것. FDA가 법적으로 의무화(524B).", "tags": ["FDA"]}, {"name": "소스코드 버전관리 이력", "note": "펌웨어 커밋 기록. \"이 보드리비전엔 이 펌웨어버전\"이라는 매핑.", "tags": ["FDA", "MDSAP"]}, {"name": "유닛/통합 테스트 기록", "note": "펌웨어 단위·통합 테스트 실행 결과.", "tags": ["IVDR", "FDA"]}, {"name": "취약점 모니터링·패치 프로세스", "note": "보안 취약점 나오면 발견·수정하는 절차 정의.", "tags": ["FDA"]}]}, {"name": "공급자·품질관리", "note": "ISO 13485 4.1.5", "tags": ["MDSAP", "FDA", "IVDR"], "children": [{"name": "공급자 평가/승인 기록", "note": "모션뱅크를 왜 선정했고 어떤 기준으로 통과했는지 남긴 기록.", "tags": ["MDSAP", "FDA"]}, {"name": "품질협약서", "note": "서로 뭘 책임지고 뭘 통보해야 하는지 계약으로 못박은 문서.", "tags": ["MDSAP", "FDA"]}, {"name": "공급자 QMS 인증서", "note": "모션뱅크가 ISO 13485 등 품질시스템 인증 보유한다는 증거.", "tags": ["MDSAP", "IVDR"]}, {"name": "정기 감사·모니터링 기록", "note": "주기적으로 모션뱅크를 점검한 기록.", "tags": ["MDSAP"]}]}, {"name": "부품·자재 추적성", "children": [{"name": "Critical 부품", "note": "MCU·배터리·RF모듈·광학소자", "tags": ["IVDR", "FDA", "MDSAP"], "children": [{"name": "풀 데이터시트", "note": "부품 제조사가 제공하는 전체 스펙 문서. V&V 시점 리비전으로 스냅샷 고정.", "tags": ["IVDR", "FDA"]}, {"name": "MCU errata sheet", "note": "해당 MCU에 알려진 실리콘 버그 목록. 펌웨어가 이걸 피해가는지 확인용.", "tags": ["FDA"]}, {"name": "PCN 구독·이력", "note": "부품사가 스펙 바꿀 때 미리 통보받는 절차와 그 통보 기록.", "tags": ["MDSAP", "FDA"]}, {"name": "RF 자체인증서", "note": "BLE/NFC 등 무선모듈 자체가 받은 전자파 인증(FCC/CE 등).", "tags": ["FDA"]}, {"name": "배터리 인증", "note": "배터리 안전성 국제 인증. UN38.3, IEC 62133", "tags": ["IVDR", "FDA"]}, {"name": "로트별 CoC", "note": "부품이 생산된 배치마다 \"스펙대로 만들었다\"는 제조사 확인서.", "tags": ["MDSAP"]}]}, {"name": "비critical 부품", "children": [{"name": "BOM 제조사/P·N", "note": "저항·캐패시터 등 일반부품은 제조사+부품번호만 BOM에 기재하면 충분.", "tags": ["MDSAP"]}, {"name": "RoHS/REACH 선언서", "note": "유해물질 규제 준수 선언.", "tags": ["IVDR"]}, {"name": "부품단종(EOL) 관리계획", "note": "부품 단종 시 대응방안 미리 정한 계획.", "tags": ["MDSAP"]}]}]}, {"name": "변경관리", "note": "형상관리", "tags": ["IVDR", "FDA", "MDSAP"], "children": [{"name": "ECR/ECN 이력", "note": "설계변경 제안(ECR)하고 승인·반영(ECN)한 기록.", "tags": ["FDA", "MDSAP"]}, {"name": "리비전 관리기록", "note": "회로도·BOM 등이 버전별로 어떻게 바뀌었는지 이력.", "tags": ["FDA", "MDSAP"]}, {"name": "변경영향평가", "note": "이 변경이 리스크나 시험결과에 영향 주는지 판단한 기록.", "tags": ["IVDR", "FDA"]}]}]}, "title": "전자보드 외주 규제확보자료(상세)", "layout": "horizontal", "theme": "sugentech", "collapseDepth": 2, "transparent": true};
+
+/* ---------- config ---------- */
+const PALETTES = {
+  sugentech: ["#E60044","#C4003A","#8A4B5E","#727171","#4A5568","#2D3748"],
+  neutral:   ["#3F3F46","#52525B","#71717A","#8A8A93","#A1A1AA","#5B5B63"],
+  dark:      ["#FF4D77","#FF8A5B","#FFD166","#5BC8AF","#5B9BD5","#B08BE8"]
+};
+const FONT = "'Pretendard','Noto Sans KR',sans-serif";
+const NODE_H = 30, ROOT_H = 38, PAD_X = 12, GAP_X = 46, ROW_H = 34, MAX_W = 300;
+
+const theme  = RAW_DATA.theme || "sugentech";
+const colors = PALETTES[theme] || PALETTES.sugentech;
+let layout   = RAW_DATA.layout === "radial" ? "radial" : "horizontal";
+
+if (theme === "dark") document.body.classList.add("theme-dark");
+if (theme === "neutral") document.body.classList.add("theme-neutral");
+if (RAW_DATA.transparent) document.body.classList.add("transparent");
+
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C = { text:cssv("--mm-text"), muted:cssv("--mm-muted"), line:cssv("--mm-line"),
+            nodeBg:cssv("--mm-node-bg"), accent:cssv("--mm-accent") };
+
+document.getElementById("hd-title").textContent = RAW_DATA.title || RAW_DATA.root.name || "마인드맵";
+document.title = RAW_DATA.title || RAW_DATA.root.name || "마인드맵";
+if (RAW_DATA.subtitle) document.getElementById("hd-sub").textContent = RAW_DATA.subtitle;
+
+/* ---------- text measurement ---------- */
+const mctx = document.createElement("canvas").getContext("2d");
+function measure(text, size, weight){
+  mctx.font = `${weight} ${size}px ${FONT}`;
+  return mctx.measureText(text || "").width;
+}
+function truncate(text, size, weight, max){
+  if (measure(text, size, weight) <= max) return text;
+  let s = text;
+  while (s.length > 1 && measure(s + "…", size, weight) > max) s = s.slice(0, -1);
+  return s + "…";
+}
+
+/* ---------- hierarchy ---------- */
+const root = d3.hierarchy(RAW_DATA.root, d => d.children);
+let uid = 0;
+root.each(d => {
+  d.id = ++uid;
+  d.h = d.depth === 0 ? ROOT_H : NODE_H;
+  d.kidCount = (d.children || []).length;
+  // branch color inherited from the depth-1 ancestor
+  if (d.depth === 0) d.color = C.accent;
+  else {
+    const a1 = d.ancestors().find(n => n.depth === 1);
+    const idx = a1 ? (a1.parent.children.indexOf(a1) % colors.length) : 0;
+    d.color = d.data.color || colors[idx];
+  }
+});
+
+// 폰트가 늦게 로드되면 폭이 틀어지므로 측정은 별도 함수로 두고 재호출한다
+function remeasure(){
+  root.each(d => {
+    const fs = d.depth === 0 ? 15 : 13.5;
+    const fw = d.depth === 0 ? 700 : (d.depth === 1 ? 600 : 500);
+    d.fs = fs; d.fw = fw;
+    d.label = truncate(d.data.name || "", fs, fw, MAX_W - 2 * PAD_X - 26);
+    d.tagW = (d.data.tags || []).reduce((a, t) => a + measure(t, 10, 500) + 16 + 4, 0);
+    d.w = Math.min(MAX_W, Math.max(64,
+          PAD_X * 2 + measure(d.label, fs, fw) + d.tagW + (d.kidCount ? 20 : 0)));
+  });
+}
+remeasure();
+
+// initial collapse
+const collapseDepth = (RAW_DATA.collapseDepth === undefined ? null : RAW_DATA.collapseDepth);
+function collapse(d){ if (d.children){ d._children = d.children; d._children.forEach(collapse); d.children = null; } }
+root.each(d => {
+  if (d.data.collapsed === true) collapse(d);
+  else if (collapseDepth !== null && d.depth >= collapseDepth && d.children) collapse(d);
+});
+
+/* ---------- svg scaffold ---------- */
+const svg = d3.select("#canvas");
+const gRoot = svg.append("g");
+const gLink = gRoot.append("g").attr("fill","none");
+const gNode = gRoot.append("g");
+
+const zoom = d3.zoom().scaleExtent([0.15, 3]).on("zoom", ev => gRoot.attr("transform", ev.transform));
+svg.call(zoom)
+   .on("mousedown.cur", () => svg.classed("grabbing", true))
+   .on("mouseup.cur mouseleave.cur", () => svg.classed("grabbing", false))
+   .on("dblclick.zoom", null);
+
+/* ---------- layout ---------- */
+function computeHorizontal(){
+  d3.tree().nodeSize([ROW_H, 1]).separation((a,b) => a.parent === b.parent ? 1 : 1.35)(root);
+  // per-depth column offsets based on the widest node at each depth
+  const widest = {};
+  root.each(d => { widest[d.depth] = Math.max(widest[d.depth] || 0, d.w); });
+  const offset = {0: 0};
+  const maxD = Math.max(...Object.keys(widest).map(Number));
+  for (let i = 1; i <= maxD; i++) offset[i] = offset[i-1] + widest[i-1] + GAP_X;
+  root.each(d => { d.px = offset[d.depth]; d.py = d.x; });
+}
+function computeRadial(){
+  const nodes = root.descendants().length;
+  const radius = Math.max(230, Math.min(620, 42 * Math.sqrt(nodes) + 130));
+  d3.tree().size([2*Math.PI, radius])
+    .separation((a,b) => (a.parent === b.parent ? 1 : 2) / Math.max(a.depth,1))(root);
+  root.each(d => {
+    d.angle = d.x - Math.PI/2;
+    d.px = Math.cos(d.angle) * d.y;
+    d.py = Math.sin(d.angle) * d.y;
+  });
+}
+
+function linkPath(l){
+  const p = l.source, d = l.target;
+  if (layout === "radial"){
+    const mx = (p.px + d.px) / 2, my = (p.py + d.py) / 2;
+    return `M${p.px},${p.py}Q${mx},${my} ${d.px},${d.py}`;
+  }
+  const x0 = p.px + p.w, x1 = d.px, mid = (x0 + x1) / 2;
+  return `M${x0},${p.py}C${mid},${p.py} ${mid},${d.py} ${x1},${d.py}`;
+}
+
+/* ---------- render ---------- */
+let selected = null;
+function render(){
+  layout === "radial" ? computeRadial() : computeHorizontal();
+  const nodes = root.descendants();
+  const links = root.links();
+
+  const link = gLink.selectAll("path").data(links, d => d.target.id);
+  link.exit().remove();
+  link.enter().append("path")
+      .attr("stroke-linecap","round")
+    .merge(link)
+      .attr("stroke", d => d.target.color)
+      .attr("stroke-opacity", 0.42)
+      .attr("stroke-width", d => Math.max(1.1, 2.6 - d.target.depth * 0.45))
+      .attr("d", linkPath);
+
+  const node = gNode.selectAll("g.node-g").data(nodes, d => d.id);
+  node.exit().remove();
+
+  const ent = node.enter().append("g")
+    .attr("class","node-g")
+    .attr("tabindex", 0)
+    .attr("role","treeitem")
+    .on("click", (ev,d) => { ev.stopPropagation(); showPanel(d); })
+    .on("keydown", (ev,d) => {
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); toggle(d); }
+    });
+
+  ent.append("rect").attr("class","node-box").attr("rx",7).attr("ry",7);
+  ent.append("rect").attr("class","node-bar").attr("rx",1.5).attr("ry",1.5);
+  ent.append("text").attr("class","node-label").attr("dominant-baseline","middle");
+  ent.append("g").attr("class","node-tags");
+  ent.append("circle").attr("class","node-toggle").attr("r",7)
+     .on("click", (ev,d) => { ev.stopPropagation(); toggle(d); });
+  ent.append("text").attr("class","node-count")
+     .attr("text-anchor","middle").attr("dominant-baseline","central")
+     .style("pointer-events","none");
+
+  const all = ent.merge(node);
+
+  if (layout === "radial") {
+    all.attr("transform", d => `translate(${d.px},${d.py})`);
+    all.select(".node-box").attr("opacity",0).attr("width",0).attr("height",0);
+    all.select(".node-bar").attr("opacity",0).attr("width",0).attr("height",0);
+    all.select(".node-tags").selectAll("*").remove();
+    all.select(".node-label")
+      .attr("font-family",FONT).attr("font-size",d=>d.fs).attr("font-weight",d=>d.fw)
+      .attr("fill",C.text)
+      .attr("transform", d => {
+        const deg = d.angle * 180 / Math.PI;
+        const flip = (d.angle > Math.PI/2 || d.angle < -Math.PI/2);
+        return `rotate(${deg}) translate(${flip ? -12 : 12},0) ${flip ? "rotate(180)" : ""}`;
+      })
+      .attr("text-anchor", d => (d.angle > Math.PI/2 || d.angle < -Math.PI/2) ? "end" : "start")
+      .text(d => d.label);
+    all.select(".node-toggle")
+      .attr("cx",0).attr("cy",0)
+      .attr("r", d => d.depth === 0 ? 9 : (hasKids(d) ? 6.5 : 3.5))
+      .attr("fill", d => d._children ? d.color : C.nodeBg)
+      .attr("stroke", d => d.color).attr("stroke-width",2)
+      .style("display",null);
+    all.select(".node-count").text("");
+  } else {
+    all.attr("transform", d => `translate(${d.px},${d.py - d.h/2})`);
+    all.select(".node-box")
+      .attr("width", d=>d.w).attr("height", d=>d.h).attr("opacity",1)
+      .attr("fill", C.nodeBg)
+      .attr("stroke", d => d.depth === 0 ? d.color : C.line)
+      .attr("stroke-width", d => d.depth === 0 ? 1.8 : 1);
+    all.select(".node-bar")
+      .attr("x",0).attr("y",5).attr("width",3.5).attr("height", d=>d.h-10)
+      .attr("opacity",1).attr("fill", d=>d.color);
+    all.select(".node-label")
+      .attr("x", PAD_X).attr("y", d=>d.h/2)
+      .attr("transform",null).attr("text-anchor","start")
+      .attr("font-family",FONT).attr("font-size",d=>d.fs).attr("font-weight",d=>d.fw)
+      .attr("fill",C.text).text(d=>d.label);
+    all.select(".node-tags").each(function(d){
+      const g = d3.select(this); g.selectAll("*").remove();
+      let x = PAD_X + measure(d.label, d.fs, d.fw) + 8;
+      (d.data.tags || []).forEach(t => {
+        const tw = measure(t,10,500) + 16;
+        g.append("rect").attr("x",x).attr("y",d.h/2-8).attr("width",tw).attr("height",16)
+         .attr("rx",8).attr("fill","none").attr("stroke",d.color).attr("stroke-opacity",.5);
+        g.append("text").attr("x",x+tw/2).attr("y",d.h/2).attr("text-anchor","middle")
+         .attr("dominant-baseline","central").attr("font-family",FONT)
+         .attr("font-size",10).attr("font-weight",500).attr("fill",C.muted).text(t);
+        x += tw + 4;
+      });
+    });
+    all.select(".node-toggle")
+      .attr("cx", d=>d.w).attr("cy", d=>d.h/2).attr("r",7.5)
+      .attr("fill", d => d._children ? d.color : C.nodeBg)
+      .attr("stroke", d=>d.color).attr("stroke-width",1.6)
+      .style("display", d => hasKids(d) ? null : "none");
+    all.select(".node-count")
+      .attr("x", d=>d.w).attr("y", d=>d.h/2)
+      .attr("font-family",FONT).attr("font-size",9).attr("font-weight",700)
+      .attr("fill", d => d._children ? "#fff" : d.color)
+      .text(d => hasKids(d) ? (d._children ? (d._children.length) : "–") : "");
+  }
+
+  all.select("title").remove();
+  all.append("title").text(d => d.data.note ? `${d.data.name}\n${d.data.note}` : d.data.name);
+  applySearch();
+}
+
+const hasKids = d => !!(d.children || d._children);
+function toggle(d){
+  if (!hasKids(d)) return;
+  if (d.children){ d._children = d.children; d.children = null; }
+  else { d.children = d._children; d._children = null; }
+  render();
+}
+
+/* ---------- panel ---------- */
+function showPanel(d){
+  selected = d;
+  const path = d.ancestors().reverse().map(n => n.data.name);
+  document.getElementById("p-path").textContent = path.slice(0,-1).join(" › ") || "—";
+  document.getElementById("p-name").textContent = d.data.name;
+  const tg = document.getElementById("p-tags"); tg.innerHTML = "";
+  (d.data.tags || []).forEach(t => {
+    const s = document.createElement("span"); s.className = "p-tag"; s.textContent = t; tg.appendChild(s);
+  });
+  const body = document.getElementById("p-body"); body.innerHTML = "";
+  if (d.data.note){
+    const p = document.createElement("div"); p.className = "p-note"; p.textContent = d.data.note; body.appendChild(p);
+  } else {
+    const p = document.createElement("div"); p.className = "p-empty"; p.textContent = "상세 내용 없음"; body.appendChild(p);
+  }
+  if (d.data.link){
+    const a = document.createElement("a");
+    a.className = "p-link"; a.href = d.data.link; a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.textContent = "링크 열기 ↗"; body.appendChild(a);
+  }
+  const kids = (d.children || d._children || []).length;
+  const leaves = d.leaves().length;
+  document.getElementById("p-meta").textContent =
+    `깊이 ${d.depth} · 하위 ${kids}개` + (kids ? ` · 잎 ${leaves}개` : "");
+  document.getElementById("panel").classList.add("open");
+}
+document.getElementById("p-close").onclick = () => document.getElementById("panel").classList.remove("open");
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") document.getElementById("panel").classList.remove("open");
+});
+
+/* ---------- search ---------- */
+let query = "";
+function applySearch(){
+  const nodes = gNode.selectAll("g.node-g");
+  if (!query){ nodes.classed("dim",false).classed("hit",false);
+    document.getElementById("hitcount").textContent = ""; return; }
+  const q = query.toLowerCase();
+  let hits = 0;
+  nodes.each(function(d){
+    const t = ((d.data.name||"") + " " + (d.data.note||"") + " " + (d.data.tags||[]).join(" ")).toLowerCase();
+    const hit = t.includes(q);
+    if (hit) hits++;
+    d3.select(this).classed("hit",hit).classed("dim",!hit);
+  });
+  gNode.selectAll("g.node-g.hit").select(".node-box").attr("stroke", d => d.color);
+  document.getElementById("hitcount").textContent = hits ? `${hits}건` : "0건";
+}
+document.getElementById("search").addEventListener("input", e => {
+  query = e.target.value.trim();
+  if (query){
+    // 검색어를 포함한 노드의 조상을 자동으로 펼침
+    const q = query.toLowerCase();
+    let changed = false;
+    root.each(d => {
+      const t = ((d.data.name||"")+" "+(d.data.note||"")).toLowerCase();
+      if (t.includes(q)) d.ancestors().forEach(a => {
+        if (a._children){ a.children = a._children; a._children = null; changed = true; }
+      });
+    });
+    if (changed){ render(); return; }
+  }
+  applySearch();
+});
+
+/* ---------- controls ---------- */
+function expandAll(d){ if (d._children){ d.children = d._children; d._children = null; } (d.children||[]).forEach(expandAll); }
+document.getElementById("btn-expand").onclick = () => { expandAll(root); render(); fit(); };
+document.getElementById("btn-collapse").onclick = () => {
+  (root.children || root._children || []).forEach(collapse);
+  if (root._children){ root.children = root._children; root._children = null; }
+  render(); fit();
+};
+
+// 현재 화면에 보이는 노드 중 가장 깊은 depth = "프론티어".
+// root.descendants()는 .children 경로만 따라가므로 접힌(._children) 하위는 잡히지 않는다 → 딱 프론티어만 나온다.
+function frontierDepth(){ return d3.max(root.descendants(), d => d.depth) || 0; }
+
+document.getElementById("btn-expand-one").onclick = () => {
+  const f = frontierDepth();
+  let changed = false;
+  root.each(d => { if (d.depth === f && d._children) { d.children = d._children; d._children = null; changed = true; } });
+  if (changed) { render(); fit(); }
+};
+document.getElementById("btn-collapse-one").onclick = () => {
+  const f = frontierDepth();
+  if (f <= 0) return; // 루트만 남았으면 더 접을 게 없음
+  let changed = false;
+  root.each(d => { if (d.depth === f - 1 && d.children) { d._children = d.children; d.children = null; changed = true; } });
+  if (changed) { render(); fit(); }
+};
+
+document.getElementById("btn-fit").onclick = () => fit();
+document.getElementById("btn-layout").onclick = e => {
+  layout = layout === "radial" ? "horizontal" : "radial";
+  e.target.textContent = layout === "radial" ? "트리형" : "방사형";
+  render(); fit();
+};
+
+function fit(){
+  const b = gRoot.node().getBBox();
+  const s = svg.node().getBoundingClientRect();
+  if (!b.width || !b.height) return;
+  const k = Math.min(s.width / (b.width + 90), s.height / (b.height + 90), 1.5);
+  const tx = s.width/2 - k*(b.x + b.width/2);
+  const ty = s.height/2 - k*(b.y + b.height/2);
+  svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity.translate(tx,ty).scale(k));
+}
+
+/* ---------- export ---------- */
+function serialize(){
+  const b = gRoot.node().getBBox(), m = 40;
+  const clone = svg.node().cloneNode(true);
+  clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  clone.setAttribute("width", Math.ceil(b.width + m*2));
+  clone.setAttribute("height", Math.ceil(b.height + m*2));
+  clone.setAttribute("viewBox", `${b.x-m} ${b.y-m} ${b.width+m*2} ${b.height+m*2}`);
+  clone.querySelector("g").setAttribute("transform","");
+  if (!RAW_DATA.transparent){
+    const bg = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    bg.setAttribute("x",b.x-m); bg.setAttribute("y",b.y-m);
+    bg.setAttribute("width",b.width+m*2); bg.setAttribute("height",b.height+m*2);
+    bg.setAttribute("fill", cssv("--mm-bg") || "#fff");
+    clone.insertBefore(bg, clone.firstChild);
+  }
+  clone.querySelectorAll(".dim").forEach(n => n.setAttribute("opacity","0.18"));
+  return {xml:new XMLSerializer().serializeToString(clone), w:b.width+m*2, h:b.height+m*2};
+}
+function download(blob, name){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+const fname = (RAW_DATA.title || "mindmap").replace(/[^\w가-힣.-]+/g,"_");
+document.getElementById("btn-svg").onclick = () => {
+  download(new Blob([serialize().xml], {type:"image/svg+xml;charset=utf-8"}), fname + ".svg");
+};
+document.getElementById("btn-png").onclick = () => {
+  const {xml,w,h} = serialize(), scale = 2;
+  const img = new Image();
+  img.onload = () => {
+    const cv = document.createElement("canvas");
+    cv.width = Math.ceil(w*scale); cv.height = Math.ceil(h*scale);
+    const cx = cv.getContext("2d"); cx.scale(scale,scale); cx.drawImage(img,0,0);
+    cv.toBlob(bl => download(bl, fname + ".png"), "image/png");
+  };
+  img.onerror = () => alert("PNG 변환 실패 — SVG로 내려받은 뒤 변환하세요.");
+  img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
+};
+
+/* ---------- boot ---------- */
+render();
+window.addEventListener("resize", () => { /* keep transform; user can hit 화면 맞춤 */ });
+setTimeout(fit, 60);
+if (document.fonts) document.fonts.ready.then(() => { remeasure(); render(); fit(); });
+</script>
+</body>
+</html>
