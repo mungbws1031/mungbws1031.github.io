@@ -10,31 +10,51 @@ body{background:#07100C;color:#9AB4C4;font-family:'Courier New',monospace;min-he
 .mark{width:10px;height:10px;background:#E60044;border-radius:1px;display:inline-block;margin-right:10px;vertical-align:middle;}
 h1{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#9AB4C4;margin-bottom:6px;}
 .sub{font-size:9px;color:#334A58;letter-spacing:.12em;margin-bottom:48px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:860px;width:100%;}
+.section{max-width:860px;width:100%;margin-bottom:32px;}
+.section:last-of-type{margin-bottom:0;}
+.section-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.section-dot{width:6px;height:6px;border-radius:50%;display:inline-block;}
+.section-title{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#5E7A8A;}
+.section-title .kr{color:#334A58;letter-spacing:.05em;margin-left:8px;text-transform:none;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;width:100%;}
 .card{background:#0C1820;border:1px solid #172230;padding:20px 22px;text-decoration:none;color:inherit;transition:border-color .15s,transform .12s;display:block;}
 .card:hover{border-color:#E60044;transform:translateY(-2px);}
 .card-tag{font-size:7.5px;letter-spacing:.2em;text-transform:uppercase;color:#334A58;margin-bottom:8px;}
 .card-title{font-size:13px;letter-spacing:.08em;color:#C8D8E4;margin-bottom:5px;}
 .card-desc{font-size:9px;color:#4A6070;line-height:1.6;}
 .card-dot{width:4px;height:4px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;}
-footer{margin-top:48px;font-size:8px;color:#1E3040;letter-spacing:.1em;}
+footer{margin-top:16px;font-size:8px;color:#1E3040;letter-spacing:.1em;}
 </style>
 </head>
 <body>
 <div>
   <h1><span class="mark"></span>Sugentech Dev Tools</h1>
   <div class="sub">Internal Engineering Utilities 쨌 mungbws1031.github.io</div>
-  <div class="grid">
-    <a class="card" href="pcb-designer.html">
-      <div class="card-tag"><span class="card-dot" style="background:#1A85D8"></span>PCB 쨌 Hardware</div>
-      <div class="card-title">PCB Component Placer</div>
-      <div class="card-desc">?뚯옄 ?쒕옒洹?諛곗튂 쨌 ?먮룞 ?명듃 異붽? 쨌 ?뚮줈???щ쾶 쨌 ?꾩썝 ?덉씪 ?ㅼ젙 쨌 蹂대뱶 ?ш린 ?ㅼ젙</div>
-    </a>
-    <a class="card" href="board-compliance-mindmap.html">
-      <div class="card-tag"><span class="card-dot" style="background:#E60044"></span>Regulatory · Compliance</div>
-      <div class="card-title">전자보드 외주 규제확보자료</div>
-      <div class="card-desc">IVDR/FDA/MDSAP 매핑 마인드맵 · 설계입출력·V&amp;V·리스크관리·SW·공급자관리·부품추적성·변경관리</div>
-    </a>
+  <div class="section">
+    <div class="section-head">
+      <span class="section-dot" style="background:#1A85D8"></span>
+      <span class="section-title">Development<span class="kr">개발</span></span>
+    </div>
+    <div class="grid">
+      <a class="card" href="pcb-designer.html">
+        <div class="card-tag"><span class="card-dot" style="background:#1A85D8"></span>PCB 쨌 Hardware</div>
+        <div class="card-title">PCB Component Placer</div>
+        <div class="card-desc">?뚯옄 ?쒕옒洹?諛곗튂 쨌 ?먮룞 ?명듃 異붽? 쨌 ?뚮줈???щ쾶 쨌 ?꾩썝 ?덉씪 ?ㅼ젙 쨌 蹂대뱶 ?ш린 ?ㅼ젙</div>
+      </a>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-head">
+      <span class="section-dot" style="background:#E60044"></span>
+      <span class="section-title">Mass Production<span class="kr">양산</span></span>
+    </div>
+    <div class="grid">
+      <a class="card" href="board-compliance-mindmap.html">
+        <div class="card-tag"><span class="card-dot" style="background:#E60044"></span>Regulatory · Compliance</div>
+        <div class="card-title">전자보드 외주 규제확보자료</div>
+        <div class="card-desc">IVDR/FDA/MDSAP 매핑 마인드맵 · 설계입출력·V&amp;V·리스크관리·SW·공급자관리·부품추적성·변경관리</div>
+      </a>
+    </div>
   </div>
   <footer>짤 Sugentech 쨌 Internal Use</footer>
 </div>
