@@ -208,10 +208,10 @@ const RAW_DATA = {"root": {"name": "전자보드 규제확보자료 상세", "no
       {"name": "UDI 라벨링 자료", "note": "보드가 UDI 대상 구성품·교체용 부품으로 별도 유통되는 경우의 라벨/식별자 사양. FDA UDI(21 CFR Part 830) 및 IVDR Annex VI 대응 — QMSR 시행 후에도 별도 규정으로 유지.", "tags": ["FDA", "IVDR"]},
       {"name": "GSPR 대응표(Annex I 체크리스트)", "note": "IVDR Annex II §4 근거 문서. Annex I Ch.1(§1-8 일반요구사항)·Ch.2(§9-19 설계·제조)·Ch.3(§20 정보제공)을 GSPR번호·설명·적용여부·적용방법·표준/솔루션·증거위치(기술문서 참조) 컬럼으로 매핑, 미적용 항목은 정당화 근거 기재. 전환기한(2024/1860 개정): Class D 2025-05-26·Class C 2026-05-26 경과, Class B/A(멸균) 2027-05-26. 참고: 2025-12-16 EU집행위 MDR/IVDR 단순화 개정안 발표(미발효, 모니터링 필요).", "tags": ["IVDR"]}
     ]},
-    {"name": "V&V", "note": "IEC 60601-1/61010-1 라인", "tags": ["IVDR", "FDA", "MDSAP"], "children": [
+    {"name": "V&V", "note": "IEC 60601-1/61010-1 라인 · 61010-1은 Ed.3.1(2010+AMD1:2016+COR1:2019) 현재 유효 — Amendment 2 개발 중(2026년 발행 예정, 미발효)", "tags": ["IVDR", "FDA", "MDSAP"], "children": [
       {"name": "기능시험 리포트", "note": "보드가 스펙대로 동작하는지 실측한 결과.", "tags": ["IVDR", "FDA"]},
       {"name": "EMC 시험 리포트", "note": "전자파 방출·내성 시험. 다른 기기 간섭 안 주고 외부 전자파에도 안 먹히는지. IEC 61326-1", "tags": ["IVDR", "FDA"]},
-      {"name": "전기안전 시험", "note": "감전·화재 위험 없는지 확인. IEC 61010-1/2-101", "tags": ["IVDR", "FDA"]},
+      {"name": "전기안전 시험", "note": "감전·화재 위험 없는지 확인. IEC 61010-1:2010+AMD1:2016+COR1:2019(Ed.3.1) / IEC 61010-2-101:2015(Ed.2) — EU 조화표준은 EN IEC 61010-2-101 A11 계열 특유편차(Group differences) 적용.", "tags": ["IVDR", "FDA"]},
       {"name": "환경시험", "note": "온습도·진동·낙하 등 실사용 조건에서 정상동작 확인.", "tags": ["IVDR", "FDA"]},
       {"name": "ESD/서지 내성 시험", "note": "정전기·전원 순간 튐에도 안 망가지는지 확인.", "tags": ["IVDR", "FDA"]}
     ]},
@@ -220,7 +220,8 @@ const RAW_DATA = {"root": {"name": "전자보드 규제확보자료 상세", "no
       {"name": "위험분석-요구사항 추적매트릭스", "note": "\"이 위험 때문에 이 요구사항이 생겼다\"를 연결한 표. GSPR까지 추적됨 — 위험 관점의 추적이며, GSPR 전체 커버리지 확인은 별도 'GSPR 대응표'로 관리.", "tags": ["IVDR"]},
       {"name": "잔여위험 평가/수용기준", "note": "대책 세운 후 남는 위험이 받아들일 수준인지 판단한 기록.", "tags": ["IVDR", "FDA"]}
     ]},
-    {"name": "SW·펌웨어 & 사이버보안(개발)", "note": "IEC 62304", "tags": ["FDA"], "children": [
+    {"name": "SW·펌웨어 & 사이버보안(개발)", "note": "IEC 62304:2006+AMD1:2015(현재 EU MDR/IVDR 조화표준, 유효) — Edition 2는 committee draft로 2026년 발행 예정(미발효): Class A/B/C 3단계 폐지, Process Rigor Level I/II 2단계로 개편 예정. 발행 후 규제 인정까지 2-3년 소요 전망.", "tags": ["FDA"], "children": [
+      {"name": "SW 안전등급 분류서", "note": "펌웨어를 Class A(무해)/B/C(치명적)로 분류한 근거 문서. IEC 62304 4.3. (참고: Edition 2에서는 Level I/II 2단계로 개편 예정 — 아직 미발효, 현재는 Class A/B/C 체계 유지.)", "tags": ["IVDR", "FDA"]},
       {"name": "펌웨어 요구사항/아키텍처", "note": "펌웨어가 뭘 해야 하고 어떻게 구조화됐는지 설명한 문서.", "tags": ["IVDR", "FDA"]},
       {"name": "SOUP 목록", "note": "직접 안 만들고 가져다 쓴 SW(오픈소스·라이브러리·OS) 목록. 취약점 영향범위 파악용.", "tags": ["IVDR", "FDA", "MDSAP"]},
       {"name": "SBOM", "note": "SOUP 목록을 기계판독 표준포맷으로 만든 것. FDA가 법적으로 의무화(524B).", "tags": ["FDA"]},
@@ -259,7 +260,7 @@ const RAW_DATA = {"root": {"name": "전자보드 규제확보자료 상세", "no
       {"name": "정기 감사·모니터링 기록", "note": "주기적으로 모션뱅크를 점검한 기록. MDSAP Audit Approach v010(2026-02-06) 기준 'critical supplier' 용어가 폐지되고 '감사대상으로 고려할 공급자'라는 운영적 정의로 대체 — 보드 공급자가 이 기준에 해당하는지 재검토 필요.", "tags": ["MDSAP"]},
       {"name": "MDSAP 감사모델 대응자료(Audit Approach v010)", "note": "기존 Audit Model+Process Companion 문서가 단일 문서로 통합된 v010(2026-02-06, FDA QMSR 시행에 맞춰 개정)에 대응하는 자료. FDA QSR 참조가 전부 삭제되고 ISO13485 조항·국가별 요구사항 매핑 중심으로 재편됨. RAC(Regulatory Authority Council) 5개국: FDA(미국)·Health Canada·TGA(호주)·ANVISA(브라질)·MHLW/PMDA(일본).", "tags": ["MDSAP"]}
     ]},
-    {"name": "취약점 모니터링·패치 프로세스", "note": "보안 취약점 나오면 발견·수정하는 절차 정의.", "tags": ["FDA"]},
+    {"name": "취약점 모니터링·패치 프로세스", "note": "보안 취약점 나오면 발견·수정하는 절차 정의. IEC 81001-5-1:2021(헬스소프트웨어 보안 생명주기)과 정합 권고 — IEC 62304 Edition 2에서 이 표준과의 연계가 명시적으로 강화될 예정.", "tags": ["FDA"]},
     {"name": "품질기록(ISO13485 8장·QMSR)", "note": "ISO13485:2016 8장(측정·분석·개선) 기록 — FDA QMSR(2026-02-02 시행) 이후 경영검토·내부심사·공급자심사 기록의 FDA 제출 면제가 폐지됨", "children": [
       {"name": "불만처리 기록", "note": "보드 관련 고객 불만 접수·조사·종결 기록. ISO13485 8.2.2.", "tags": ["MDSAP", "QMSR"]},
       {"name": "부적합품(NCR) 처리 기록", "note": "부적합 보드 격리·검토·처분 기록. ISO13485 8.3.", "tags": ["MDSAP", "QMSR"]},
