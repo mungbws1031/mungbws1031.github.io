@@ -96,6 +96,50 @@ body.transparent #hint{background:transparent;border-color:transparent}
   #search{width:110px}
   #hint{display:none}
 }
+
+#cl-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
+  display:none;align-items:center;justify-content:center;z-index:20;padding:24px;
+}
+#cl-overlay.open{display:flex}
+#cl-modal{
+  background:var(--mm-panel);border:1px solid var(--mm-line);border-radius:14px;
+  width:100%;max-width:640px;max-height:88vh;display:flex;flex-direction:column;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;
+}
+#cl-modal .p-close{position:absolute;top:10px;right:10px}
+#cl-head{padding:20px 22px 14px;border-bottom:1px solid var(--mm-line)}
+#cl-title{font-size:16px;font-weight:700;margin-bottom:10px;padding-right:22px}
+#cl-progress-row{display:flex;align-items:center;gap:10px}
+#cl-progress-text{font-size:12px;color:var(--mm-muted);white-space:nowrap;min-width:78px}
+#cl-progress-bar{flex:1 1 auto;height:6px;border-radius:99px;background:var(--mm-line);overflow:hidden}
+#cl-progress-fill{height:100%;background:var(--mm-accent);width:0%;transition:width .2s}
+#cl-body{padding:14px 22px;overflow-y:auto;flex:1 1 auto}
+.cl-section{margin-bottom:16px}
+.cl-section:last-child{margin-bottom:0}
+.cl-section-head{
+  font-size:11px;font-weight:700;letter-spacing:.02em;color:var(--cl-accent, var(--mm-text));
+  margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--mm-line);
+}
+.cl-section .cl-section{margin-left:14px;margin-top:8px}
+.cl-row{
+  display:flex;align-items:center;gap:8px;padding:6px 2px;font-size:13px;
+  color:var(--mm-text);cursor:pointer;border-radius:6px;
+}
+.cl-row:hover{background:var(--mm-hover)}
+.cl-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--mm-accent);cursor:pointer;flex:0 0 auto}
+.cl-row-name{flex:1 1 auto;word-break:keep-all}
+.cl-row.checked .cl-row-name{color:var(--mm-muted);text-decoration:line-through}
+.cl-row-tags{font-size:10px;color:var(--mm-muted);white-space:nowrap}
+#cl-foot{
+  padding:12px 22px;border-top:1px solid var(--mm-line);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+#cl-hint2{font-size:10.5px;color:var(--mm-muted)}
+@media (max-width:640px){
+  #cl-modal{max-height:82vh}
+  #cl-foot{flex-direction:column;align-items:flex-start;gap:8px}
+}
 </style>
 </head>
 <body>
@@ -115,6 +159,7 @@ body.transparent #hint{background:transparent;border-color:transparent}
       <button class="tool" id="btn-collapse">접기</button>
       <button class="tool" id="btn-fit">화면 맞춤</button>
       <button class="tool" id="btn-layout">방사형</button>
+      <button class="tool" id="btn-checklist">체크리스트</button>
       <button class="tool" id="btn-svg">SVG</button>
       <button class="tool" id="btn-png">PNG</button>
     </div>
@@ -129,7 +174,25 @@ body.transparent #hint{background:transparent;border-color:transparent}
       <div id="p-body"></div>
       <div class="p-meta" id="p-meta"></div>
     </aside>
-    <div id="hint">드래그=이동 · 휠=줌 · 클릭=상세 · 노드 우측 원=접기 · +/−한 단계=레벨별 펼침</div>
+    <div id="hint">드래그=이동 · 휠=줌 · 클릭=상세 · 노드 우측 원=접기(분기)/확보체크(말단) · +/−한 단계=레벨별 펼침</div>
+  </div>
+</div>
+
+<div id="cl-overlay">
+  <div id="cl-modal" role="dialog" aria-modal="true" aria-label="확보 자료 체크리스트">
+    <button class="p-close" id="cl-close" aria-label="닫기">&times;</button>
+    <div id="cl-head">
+      <div id="cl-title">확보 자료 체크리스트</div>
+      <div id="cl-progress-row">
+        <div id="cl-progress-text">0 / 0 확보</div>
+        <div id="cl-progress-bar"><div id="cl-progress-fill"></div></div>
+      </div>
+    </div>
+    <div id="cl-body"></div>
+    <div id="cl-foot">
+      <button class="tool" id="cl-reset">전체 초기화</button>
+      <span id="cl-hint2">체크 상태는 이 브라우저에만 저장됩니다</span>
+    </div>
   </div>
 </div>
 
@@ -241,6 +304,7 @@ root.each(d => {
   d.id = ++uid;
   d.h = d.depth === 0 ? ROOT_H : NODE_H;
   d.kidCount = (d.children || []).length;
+  d.pathKey = d.ancestors().reverse().map(a => a.data.name).join(" > ");
   // branch color inherited from the depth-1 ancestor
   if (d.depth === 0) d.color = C.accent;
   else {
@@ -259,7 +323,7 @@ function remeasure(){
     d.label = truncate(d.data.name || "", fs, fw, MAX_W - 2 * PAD_X - 26);
     d.tagW = (d.data.tags || []).reduce((a, t) => a + measure(t, 10, 500) + 16 + 4, 0);
     d.w = Math.min(MAX_W, Math.max(64,
-          PAD_X * 2 + measure(d.label, fs, fw) + d.tagW + (d.kidCount ? 20 : 0)));
+          PAD_X * 2 + measure(d.label, fs, fw) + d.tagW + 20));
   });
 }
 remeasure();
@@ -271,6 +335,98 @@ root.each(d => {
   if (d.data.collapsed === true) collapse(d);
   else if (collapseDepth !== null && d.depth >= collapseDepth && d.children) collapse(d);
 });
+
+/* ---------- checklist (확보 자료) ---------- */
+const CHECK_KEY = "bcm_checklist_" + (RAW_DATA.title || RAW_DATA.root.name || "default");
+function loadChecks(){
+  try { return JSON.parse(localStorage.getItem(CHECK_KEY) || "{}"); }
+  catch(e){ return {}; }
+}
+function saveChecks(){
+  try { localStorage.setItem(CHECK_KEY, JSON.stringify(checks)); } catch(e){}
+}
+let checks = loadChecks();
+function setChecked(d, val){
+  if (val) checks[d.pathKey] = true; else delete checks[d.pathKey];
+  saveChecks();
+}
+function toggleCheckNode(d){ setChecked(d, !checks[d.pathKey]); }
+
+function collectLeafKeys(node, path, acc){
+  const here = path.concat([node.name]);
+  if (!node.children || !node.children.length) acc.push(here.join(" > "));
+  else node.children.forEach(c => collectLeafKeys(c, here, acc));
+  return acc;
+}
+const ALL_LEAF_KEYS = collectLeafKeys(RAW_DATA.root, [], []);
+function updateProgress(){
+  const total = ALL_LEAF_KEYS.length;
+  const done = ALL_LEAF_KEYS.filter(k => checks[k]).length;
+  document.getElementById("cl-progress-text").textContent = `${done} / ${total} 확보`;
+  document.getElementById("cl-progress-fill").style.width = (total ? (done / total * 100) : 0) + "%";
+}
+
+function renderChecklistNode(node, path, container, depth){
+  const here = path.concat([node.name]);
+  const key = here.join(" > ");
+  if (!node.children || !node.children.length){
+    const row = document.createElement("label");
+    row.className = "cl-row" + (checks[key] ? " checked" : "");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!checks[key];
+    cb.addEventListener("change", () => {
+      if (cb.checked) checks[key] = true; else delete checks[key];
+      saveChecks();
+      row.classList.toggle("checked", cb.checked);
+      updateProgress();
+      render();
+    });
+    const name = document.createElement("span");
+    name.className = "cl-row-name";
+    name.textContent = node.name;
+    row.appendChild(cb);
+    row.appendChild(name);
+    if (node.tags && node.tags.length){
+      const tags = document.createElement("span");
+      tags.className = "cl-row-tags";
+      tags.textContent = node.tags.join(" · ");
+      row.appendChild(tags);
+    }
+    if (node.note) row.title = node.note;
+    container.appendChild(row);
+  } else {
+    const section = document.createElement("div");
+    section.className = "cl-section";
+    const head = document.createElement("div");
+    head.className = "cl-section-head";
+    head.textContent = node.name;
+    if (node.color) head.style.setProperty("--cl-accent", node.color);
+    section.appendChild(head);
+    const body = document.createElement("div");
+    body.className = "cl-section-body";
+    node.children.forEach(c => renderChecklistNode(c, here, body, depth + 1));
+    section.appendChild(body);
+    container.appendChild(section);
+  }
+}
+function buildChecklist(){
+  const container = document.getElementById("cl-body");
+  container.innerHTML = "";
+  const rootPath = [RAW_DATA.root.name];
+  RAW_DATA.root.children.forEach(c => renderChecklistNode(c, rootPath, container, 0));
+  updateProgress();
+}
+
+const clOverlay = document.getElementById("cl-overlay");
+document.getElementById("btn-checklist").onclick = () => { buildChecklist(); clOverlay.classList.add("open"); };
+document.getElementById("cl-close").onclick = () => clOverlay.classList.remove("open");
+clOverlay.addEventListener("click", e => { if (e.target === clOverlay) clOverlay.classList.remove("open"); });
+document.getElementById("cl-reset").onclick = () => {
+  if (confirm("체크리스트를 모두 초기화할까요?")){
+    checks = {}; saveChecks(); buildChecklist(); render();
+  }
+};
 
 /* ---------- svg scaffold ---------- */
 const svg = d3.select("#canvas");
@@ -351,7 +507,11 @@ function render(){
   ent.append("text").attr("class","node-label").attr("dominant-baseline","middle");
   ent.append("g").attr("class","node-tags");
   ent.append("circle").attr("class","node-toggle").attr("r",7)
-     .on("click", (ev,d) => { ev.stopPropagation(); toggle(d); });
+     .on("click", (ev,d) => {
+       ev.stopPropagation();
+       if (hasKids(d)) { toggle(d); }
+       else { toggleCheckNode(d); render(); updateProgress(); }
+     });
   ent.append("text").attr("class","node-count")
      .attr("text-anchor","middle").attr("dominant-baseline","central")
      .style("pointer-events","none");
@@ -375,9 +535,10 @@ function render(){
       .text(d => d.label);
     all.select(".node-toggle")
       .attr("cx",0).attr("cy",0)
-      .attr("r", d => d.depth === 0 ? 9 : (hasKids(d) ? 6.5 : 3.5))
-      .attr("fill", d => d._children ? d.color : C.nodeBg)
-      .attr("stroke", d => d.color).attr("stroke-width",2)
+      .attr("r", d => d.depth === 0 ? 9 : (hasKids(d) ? 6.5 : 5))
+      .attr("fill", d => hasKids(d) ? (d._children ? d.color : C.nodeBg) : (checks[d.pathKey] ? "#2E9E5B" : C.nodeBg))
+      .attr("stroke", d => hasKids(d) ? d.color : (checks[d.pathKey] ? "#2E9E5B" : C.muted))
+      .attr("stroke-width",2)
       .style("display",null);
     all.select(".node-count").text("");
   } else {
@@ -410,14 +571,15 @@ function render(){
     });
     all.select(".node-toggle")
       .attr("cx", d=>d.w).attr("cy", d=>d.h/2).attr("r",7.5)
-      .attr("fill", d => d._children ? d.color : C.nodeBg)
-      .attr("stroke", d=>d.color).attr("stroke-width",1.6)
-      .style("display", d => hasKids(d) ? null : "none");
+      .attr("fill", d => hasKids(d) ? (d._children ? d.color : C.nodeBg) : (checks[d.pathKey] ? "#2E9E5B" : C.nodeBg))
+      .attr("stroke", d => hasKids(d) ? d.color : (checks[d.pathKey] ? "#2E9E5B" : C.muted))
+      .attr("stroke-width",1.6)
+      .style("display",null);
     all.select(".node-count")
       .attr("x", d=>d.w).attr("y", d=>d.h/2)
-      .attr("font-family",FONT).attr("font-size",9).attr("font-weight",700)
-      .attr("fill", d => d._children ? "#fff" : d.color)
-      .text(d => hasKids(d) ? (d._children ? (d._children.length) : "–") : "");
+      .attr("font-family",FONT).attr("font-size", d => hasKids(d) ? 9 : 10).attr("font-weight",700)
+      .attr("fill", d => hasKids(d) ? (d._children ? "#fff" : d.color) : "#fff")
+      .text(d => hasKids(d) ? (d._children ? (d._children.length) : "–") : (checks[d.pathKey] ? "✓" : ""));
   }
 
   all.select("title").remove();
@@ -462,7 +624,9 @@ function showPanel(d){
 }
 document.getElementById("p-close").onclick = () => document.getElementById("panel").classList.remove("open");
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape") document.getElementById("panel").classList.remove("open");
+  if (e.key !== "Escape") return;
+  if (document.getElementById("cl-overlay").classList.contains("open")) document.getElementById("cl-overlay").classList.remove("open");
+  else document.getElementById("panel").classList.remove("open");
 });
 
 /* ---------- search ---------- */
