@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>포장 규정(PPWR) 대응자료</title>
+<title>운송 밸리데이션 대응자료</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <style>
@@ -146,7 +146,7 @@ body.transparent #hint{background:transparent;border-color:transparent}
 <div id="app">
   <header>
     <div class="hd-left">
-      <div class="hd-title" id="hd-title">포장 규정(PPWR) 대응자료</div>
+      <div class="hd-title" id="hd-title">운송 밸리데이션 대응자료</div>
       <div class="hd-sub" id="hd-sub"></div>
     </div>
     <div class="spacer"></div>
@@ -197,41 +197,35 @@ body.transparent #hint{background:transparent;border-color:transparent}
 </div>
 
 <script>
-const RAW_DATA = {"root": {"name": "포장 규정(PPWR) 대응자료", "note": "Regulation (EU) 2025/40, 2025-02-11 발효(Directive 94/62/EC 폐지) · 당사는 IVD 제조사로 1차(제품접촉)/2차(외포장)/3차(운송포장) 포장을 구분 대응 · 내부검토 SU문서 2026-05-29 작성(정래은)/06-04 승인(박선영). PFAS 기준(Article 5)은 2026-08-12부터 시행 — 이미 시행일 경과, 최우선 확인 필요.", "children": [
-  {"name": "포장재 지속가능성 문서", "note": "Article 5-10 · 포장 설계단계부터 충족해야 하는 지속가능성 요구사항", "children": [
-    {"name": "유해물질(SoC) 시험성적서", "note": "중금속(Pb·Cd·Hg·Cr6+) 합계 100mg/kg 이하 + PFAS 기준(개별 25ppb·합계 250ppb·총불소 50ppm, 초과 시 불소함량 증빙 기술문서 필요). PFAS 기준은 2026-08-12부터 시행 — 이미 경과, 긴급 대응 필요. Article 5.", "tags": ["Article5", "긴급", "전체포장"]},
-    {"name": "재활용성 등급 평가서(DfR)", "note": "포장 재활용설계 등급(A~D) 평가. 2030-01-01부터 D등급 시장출시 금지(2038부터 A/B등급만 허용). 당사 1차포장(IVDR 접촉민감성포장)은 면제. Article 6.", "tags": ["Article6", "2차포장", "3차포장"]},
-    {"name": "재활용원료 함량 증빙", "note": "플라스틱 포장의 재생원료 함량 비율 준수 증빙 — PET 30%→50%, 기타 플라스틱 10%→25%(2030/2040 기준). 당사 1차포장(IVDR 접촉민감성포장)은 면제. Article 7.", "tags": ["Article7", "2차포장", "3차포장"]},
-    {"name": "퇴비화 적합성 자료", "note": "투과성 티백·커피백, 과일/채소 부착 스티커 등 특정 포맷 대상. 2028-02-12부터 산업퇴비화 가능해야 함 — 당사 제품 해당여부는 낮으나 조건부 확인 필요. Article 9.", "tags": ["Article9", "해당시"]},
-    {"name": "포장 최소화 검토서", "note": "빈공간비율(empty space ratio) 50% 이하, 이중벽·가짜바닥 등 외관상 부피증가 포장 금지. 2030-01-01 또는 시행령 발효 3년 후 중 늦은 시점. Article 10, 24.", "tags": ["Article10", "2차포장", "3차포장"]}
+const RAW_DATA = {"root": {"name": "운송 밸리데이션 대응자료", "note": "ASTM D4169 Distribution Cycle 13(DC-13) 기반 · 당사 P-LA3-103-00 Shipping Validation Protocol / R-LA3-103-00 Shipping Report 근거 · 포장 규정(PPWR) 대응자료의 1차/2차/3차 포장 구분과 직접 연결됨 — 포장 최소화·재질 변경 시 이 마인드맵의 재검토 항목도 함께 확인.", "children": [
+  {"name": "제품·포장 구조 정의", "note": "Protocol §1.3-1.6 근거", "children": [
+    {"name": "제품 사양서", "note": "테스트기 제품 사양(모델·구성품·전원 등). Shipping Validation Protocol §1.3-1.4 근거."},
+    {"name": "포장 구성 정의서(1차/2차/3차)", "note": "1차(Outer box: 디바이스+IFU+지지대, 예 200x63x45mm)·2차(Carton box: 1차포장 다수 EA)·3차(Pallet: 2차포장 다수 EA, 최종 운송단위) 구조·치수·중량 정의. 포장 규정(PPWR) 대응자료의 1차(제품접촉)/2차(외포장)/3차(운송포장) 구분과 1:1 대응."},
+    {"name": "포장재 사양 및 공급업체 정보", "note": "포장 재질(코팅지, EVA 폼 등) 및 공급업체별 사양·중량 허용오차."},
+    {"name": "제조·포장 기록 연계 문서", "note": "Manufacturing Flow Chart(SOP-PR-125)·제조기록(MR)·포장기록(PR) — 밸리데이션 시료가 실제 절차대로 제조·포장됐다는 근거."}
   ]},
-  {"name": "적합성평가·기술문서", "note": "Article 38 · Annex VII 근거", "children": [
-    {"name": "기술문서(Technical Documentation)", "note": "포장 설계·재질·시험자료 등 포함. Annex VII 근거. 보관기간: 일회용포장 시장출시일부터 5년/재사용포장 10년. Article 38.", "tags": ["AnnexVII", "전체포장"]},
-    {"name": "적합성선언서(DoC)", "note": "포장이 PPWR 요구사항을 충족함을 선언하는 문서. 기술문서와 동일 보관기간(일회용 5년/재사용 10년). Article 38.", "tags": ["Article38", "전체포장"]},
-    {"name": "공급업체 원재료 시험성적서(CoA)", "note": "PFAS 포함여부·중금속 함량·재질구성(material composition) 자료를 포장재 공급업체로부터 확보 — 현재 미확보, 우선 확보 대상.", "tags": ["공급업체", "전체포장"]}
+  {"name": "밸리데이션 계획(Protocol)", "note": "Shipping Validation Protocol §2 근거", "children": [
+    {"name": "적용표준 확인서", "note": "ASTM D4169 Distribution Cycle 13(DC-13) 적용 — ISTA 3A 아님(과거 ISTA 3A 기준으로 개발했다가 사내 실제 표준이 DC-13임을 확인하고 전면 개편한 사례 있음, 표준 재확인 필수)."},
+    {"name": "유통 사이클 정의서", "note": "핸들링(충격,1h)→지상운송 포장도로진동(4h)→항공/해상운송 비포장도로진동(5h)→지상운송 포장도로진동(4h)→핸들링(충격,1h), 총 15h. 이동속도 최대 80km/h(평균 60km/h), 포장도로 약 240km/비포장도로 약 300km."},
+    {"name": "환경조건(온습도) 정의서", "note": "3계절(겨울 -15±3℃/봄가을 20-25℃/여름 40±3℃) × 유통사이클 후 72시간 챔버보관 5조건(무보관/-15·90%RH/65·90%RH/-15·10%RH/65·10%RH, SU-R-T-171 챔버 설정 기준) = 총 15개 세부조건. 72시간은 ASTM D4169 권장 보관기간."},
+    {"name": "샘플링 계획서", "note": "ISO 2859-1 기준. 1 lot = 단일포장단위(파렛트 1개). Inspection Level S-2 / AQL 2.5 → 시험당 샘플 5개."}
   ]},
-  {"name": "경제주체별 의무 문서", "note": "제조자·공급자·대리인·수입자·유통자·이행서비스제공자 — 경제주체별 책임 구분", "children": [
-    {"name": "제조자 의무 준수 체크리스트", "note": "출시 전 적합성평가(Art.38) 수행, 설계변경·적용표준 개정 시 재평가 및 관련문서 갱신 의무. Article 15.", "tags": ["Article15"]},
-    {"name": "수입자/유통자 표시정보", "note": "수입자는 포장에 이름·상호명·우편주소·연락정보 명시 의무(제조자와 동일 의무 부담). 유통자는 EPR등록·라벨부착·식별정보 명확성 확인 의무."},
-    {"name": "회수·리콜 통보 절차", "note": "요구사항 미충족 포장 발견 시 시장감시당국(MSA, Market Surveillance Authority)에 통보 및 시정조치 이행에 대해 국가 당국과 협력 의무."}
+  {"name": "밸리데이션 시험·판정", "note": "Protocol §3 / Report §5 근거", "children": [
+    {"name": "포장 무결성 검사 기록", "note": "유통사이클 시뮬레이션 전후 포장 손상 여부 확인(파렛트·카톤박스·아웃박스 전 단계). 손상 발생 시 불합격 — 예외 없음."},
+    {"name": "제품 성능시험 기록", "note": "외관·디바이스 상태표시·부속품 삽입·무선통신·라벨·정량분석(색상강도) 등 항목별 시험. Final Product QC SOP 기준 판정."},
+    {"name": "전기적합성 시험 제외 근거서", "note": "전기부품 변경이 없는 경우 접지저항·누설전류·내전압 시험은 제외 가능 — 제외할 경우 그 근거를 문서로 남겨야 함."},
+    {"name": "밸리데이션 리포트(Shipping Report)", "note": "R-LA3-103-00. Protocol 대비 실제 수행결과·판정·이탈사항·최종 결론(Conclusion)을 정리한 최종 보고서."}
   ]},
-  {"name": "라벨링 자료", "note": "조화된 라벨(harmonized label) — 픽토그램/QR코드 기반", "children": [
-    {"name": "포장재질 라벨(픽토그램/QR)", "note": "재질구성 기반 조화된 라벨. 운송포장 및 DRS(보증금반환제) 대상 포장은 제외. 2028-08-12 또는 시행령 발효 24개월 후 중 늦은 시점(시행령은 2026-08-12까지 채택 예정)."},
-    {"name": "우려물질(SoC) 디지털 마킹", "note": "포장 내 우려물질(SoC) 포함 시 디지털마킹기술로 물질명·농도 표시. 2030-01-01까지 관련 시행령 채택 예정 — 세부기준 미확정."},
-    {"name": "재사용포장 표시", "note": "지역·국가·수거지점·회전율 등 재사용 가능성 정보를 문구/QR코드로 표시, 일회용포장(SUP)과 명확히 구분. 2029-02-12 또는 시행령 발효 30개월 후 중 늦은 시점."},
-    {"name": "IVDR/MDR 표시 예외 검토서", "note": "MDR(2017/745)·IVDR(2017/746)·동물용의약품규정(2019/6)·의약품지침(2001/83/EC) 의무표시로 포장공간이 제한되거나 추가표시가 안전한 사용에 영향을 줄 수 있는 경우 PPWR 라벨요구사항 일부 예외 인정 가능 — 당사 해당여부 사전 검토 필요.", "tags": ["IVDR"]}
+  {"name": "일정·책임·모니터링", "note": "Protocol §4-6 근거", "children": [
+    {"name": "밸리데이션 일정·장소 기록", "note": "계획-수행-보고 일정 및 시험장소(자체 실험실 등) 기록."},
+    {"name": "역할·책임 지정서", "note": "Study Coordinator/Reviewer/Researcher/Overall Supervisor 지정 — 프로토콜 작성·검토·시험수행·최종승인 역할을 분리해서 명시."},
+    {"name": "시판 후 포장 피드백 모니터링 기록", "note": "출하 후 포장·성능 이상 여부를 자재 및 제품관리(SU-QP-704)·모니터링 및 측정관리(SU-QP-812) 절차 기준으로 모니터링, 필요시 개선활동 입력자료로 활용."}
   ]},
-  {"name": "EPR·폐기물관리 등록", "note": "확대생산자책임(Extended Producer Responsibility) · 회원국별 등록체계", "children": [
-    {"name": "EPR 등록증(회원국별)", "note": "포장을 EU 회원국 시장에 최초로 출시하는 자(제조자·수입자·유통자 가능)의 등록 의무. 국가별 등록방식·요구문서가 상이 — 수출 대상국별 개별 확인 필요."},
-    {"name": "EPR 디지털 표시", "note": "등록번호·이행여부·소재국코드 등을 디지털 방식으로만 표시 허용(비디지털 방식 불허). 2027-02-12 이후 적용."},
-    {"name": "제3국 생산자 대리인 지정서", "note": "역외(제3국) 생산자가 EU 역내 시장에 포장재를 최초 출시하는 경우 각 회원국 내 공인대리인(Authorised representative) 지정 의무."}
-  ]},
-  {"name": "당사 영향 검토·공급업체 협업", "note": "RA팀 내부검토(2026-05-29/06-04) 기준 사전 확인 필요 항목", "children": [
-    {"name": "1차포장(제품접촉) 면제 검토서", "note": "시약용기·카트리지 포장·멸균포장 등 제품과 직접 접촉하는 포장 — IVDR 접촉민감성포장(contact-sensitive packaging) 해당 시 Article 6(재활용성)·Article 7(재활용원료) 면제 대상 여부 사전 검토·문서화."},
-    {"name": "2차/3차포장 적용범위 검토서", "note": "제품박스·라벨부착 carton box(외포장) 및 골판지박스·완충제·팔레트(운송포장)는 PPWR 전면 적용 대상 — 1차포장과 구분관리 필요."},
-    {"name": "공급업체 협업·validation 영향평가", "note": "포장재 규격 변경 발생 시 포장 validation(멸균 유지·운송시험 등) 영향 재검토 필요 — 포장재 공급업체와 사전 협의 절차 수립. 운송시험(ASTM D4169 DC-13) 재검토 여부는 별도 '운송 밸리데이션 대응자료' 마인드맵 참조."}
+  {"name": "포장 변경 시 재검토", "note": "재밸리데이션 트리거 관리", "children": [
+    {"name": "포장/제품 변경영향평가서", "note": "포장 형태나 제품 모델의 구조·크기·무게·재질·용도가 유의하게 달라지거나 운송 중 성능저하 우려가 커지는 경우, 추가 밸리데이션 필요 여부를 판단한 기록."},
+    {"name": "PPWR 연계 재검토 체크리스트", "note": "포장 규정(PPWR) 대응으로 포장 최소화(빈공간비율 50% 이하)·재질 변경(재활용원료 함량 준수)이 반영되면 운송 밸리데이션 재수행 필요 여부를 확인 — 포장 규정(PPWR) 대응자료와 상호 참조."}
   ]}
-]}, "title": "포장 규정(PPWR) 대응자료", "layout": "horizontal", "theme": "sugentech", "transparent": true};
+]}, "title": "운송 밸리데이션 대응자료", "layout": "horizontal", "theme": "sugentech", "transparent": true};
 
 /* ---------- config ---------- */
 const PALETTES = {
