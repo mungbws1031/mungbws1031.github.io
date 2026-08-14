@@ -255,8 +255,9 @@ const RAW_DATA = {"root": {"name": "전자보드 규제확보자료 상세", "no
       {"name": "변경영향평가", "note": "이 변경이 리스크나 시험결과에 영향 주는지 판단한 기록.", "tags": ["IVDR", "FDA"]}
     ]},
     {"name": "공급자 지속관리", "note": "ISO 13485 4.1.5 · 양산 중 정기 확인", "tags": ["MDSAP", "IVDR"], "children": [
-      {"name": "공급자 QMS 인증서", "note": "모션뱅크가 ISO 13485 등 품질시스템 인증 보유한다는 증거.", "tags": ["MDSAP", "IVDR"]},
-      {"name": "정기 감사·모니터링 기록", "note": "주기적으로 모션뱅크를 점검한 기록.", "tags": ["MDSAP"]}
+      {"name": "공급자 QMS 인증서", "note": "모션뱅크가 ISO 13485 등 품질시스템 인증 보유한다는 증거. MDSAP 인증 보유 시 FDA 정기 감시(surveillance) 검사를 대체할 수 있어 가치가 커짐(for-cause·사전승인·컴플라이언스 후속검사는 예외).", "tags": ["MDSAP", "IVDR"]},
+      {"name": "정기 감사·모니터링 기록", "note": "주기적으로 모션뱅크를 점검한 기록. MDSAP Audit Approach v010(2026-02-06) 기준 'critical supplier' 용어가 폐지되고 '감사대상으로 고려할 공급자'라는 운영적 정의로 대체 — 보드 공급자가 이 기준에 해당하는지 재검토 필요.", "tags": ["MDSAP"]},
+      {"name": "MDSAP 감사모델 대응자료(Audit Approach v010)", "note": "기존 Audit Model+Process Companion 문서가 단일 문서로 통합된 v010(2026-02-06, FDA QMSR 시행에 맞춰 개정)에 대응하는 자료. FDA QSR 참조가 전부 삭제되고 ISO13485 조항·국가별 요구사항 매핑 중심으로 재편됨. RAC(Regulatory Authority Council) 5개국: FDA(미국)·Health Canada·TGA(호주)·ANVISA(브라질)·MHLW/PMDA(일본).", "tags": ["MDSAP"]}
     ]},
     {"name": "취약점 모니터링·패치 프로세스", "note": "보안 취약점 나오면 발견·수정하는 절차 정의.", "tags": ["FDA"]},
     {"name": "품질기록(ISO13485 8장·QMSR)", "note": "ISO13485:2016 8장(측정·분석·개선) 기록 — FDA QMSR(2026-02-02 시행) 이후 경영검토·내부심사·공급자심사 기록의 FDA 제출 면제가 폐지됨", "children": [
@@ -270,7 +271,7 @@ const RAW_DATA = {"root": {"name": "전자보드 규제확보자료 상세", "no
     {"name": "시장감시·이상대응", "note": "양산 이후 시장 데이터 기반 대응 — ISO13485 8.2.3 및 FDA 별도 규정(QMSR로 대체되지 않음)", "children": [
       {"name": "PMS(시장출시 후 감시) 계획/보고서", "note": "보드 관련 이슈가 반영된 시장출시 후 감시 계획·보고서. IVDR 시장출시 후 감시(PMS) 요구사항.", "tags": ["IVDR"]},
       {"name": "이상사례·MDR 보고 절차", "note": "보드 결함이 이상사례로 이어질 경우 FDA MDR(21 CFR Part 803)/IVDR Vigilance 보고 절차.", "tags": ["FDA", "IVDR", "QMSR"]},
-      {"name": "회수·수정조치(Recall/Correction) 기록", "note": "보드 결함으로 인한 회수·현장 수정조치 기록. FDA 21 CFR Part 806 — QMSR와 별도로 유지되는 요구사항.", "tags": ["FDA", "QMSR"]},
+      {"name": "회수·수정조치(Recall/Correction) 기록", "note": "보드 결함으로 인한 회수·현장 수정조치 기록. FDA 21 CFR Part 806 — QMSR와 별도로 유지되는 요구사항. 호주에 유통되는 경우 TGA의 신규 PRAC(Procedure for Recalls, product Alerts and product Corrections) 프로토콜이 기존 URPTG를 대체 — MDSAP Audit Approach v010에 반영됨.", "tags": ["FDA", "QMSR", "MDSAP"]},
       {"name": "기기 추적(Device Tracking) 기록", "note": "추적대상 기기에 보드가 포함되는 경우의 추적 기록. FDA 21 CFR Part 821 — QMSR와 별도로 유지되는 요구사항.", "tags": ["FDA"]}
     ]}
   ]}
