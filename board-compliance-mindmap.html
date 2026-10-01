@@ -222,8 +222,8 @@ const RAW_DATA = {"root": {"name": "전자보드 규제확보자료 상세", "no
       {"name": "Benefit-risk analysis(이익-위험 분석)", "note": "잔여위험 대비 의료기기의 유익성이 이를 정당화하는지 판단하는 분석. SU-QP-901 Rev.11(2026-08-03 시행)에서 절차가 구체화됨 — 이번 개정으로 신규/강화된 항목.", "tags": ["IVDR", "KGMP"]},
       {"name": "High severity risk policy", "note": "심각도가 높은 위험에 대한 별도 관리방침. SU-QP-901 Rev.11(2026-08-03 시행)에서 명확화됨 — 이번 개정으로 신규/강화된 항목.", "tags": ["IVDR", "KGMP"]}
     ]},
-    {"name": "SW·펌웨어 & 사이버보안(개발)", "note": "IEC 62304:2006+AMD1:2015(현재 EU MDR/IVDR 조화표준, 유효) — Edition 2는 committee draft로 2026년 발행 예정(미발효): Class A/B/C 3단계 폐지, Process Rigor Level I/II 2단계로 개편 예정. 발행 후 규제 인정까지 2-3년 소요 전망. 당사 SU-QP-902 SW 개발 및 Validation 절차서 참조.", "tags": ["KGMP"], "children": [
-      {"name": "SW 안전등급 분류서", "note": "펌웨어를 Class A(무해)/B/C(치명적)로 분류한 근거 문서. IEC 62304 4.3. (참고: Edition 2에서는 Level I/II 2단계로 개편 예정 — 아직 미발효, 현재는 Class A/B/C 체계 유지.)", "tags": ["IVDR", "KGMP"]},
+    {"name": "SW·펌웨어 & 사이버보안(개발)", "note": "IEC 62304:2006+AMD1:2015(현재 EU MDR/IVDR 조화표준, 유효) — Edition 2는 2nd Committee Draft(CD2) 단계: 당초 2026년 발행 예정이었으나 CD2에 약 1,500건의 의견이 접수되어 지연, IEC 공식 예정 발행일은 2028-10로 연기 확인(2026-10 기준, 여전히 미발효). Class A/B/C 3단계 폐지, Process Rigor Level I/II 2단계로 개편 예정. 발행 후 규제 인정까지 2-3년 소요 전망. 당사 SU-QP-902 SW 개발 및 Validation 절차서 참조.", "tags": ["KGMP", "자동업데이트"], "children": [
+      {"name": "SW 안전등급 분류서", "note": "펌웨어를 Class A(무해)/B/C(치명적)로 분류한 근거 문서. IEC 62304 4.3. (참고: Edition 2에서는 Level I/II 2단계로 개편 예정이나 CD2 의견 접수로 지연, 공식 예정 발행일 2028-10로 연기 — 아직 미발효, 현재는 Class A/B/C 체계 유지.)", "tags": ["IVDR", "KGMP", "자동업데이트"]},
       {"name": "펌웨어 요구사항/아키텍처", "note": "펌웨어가 뭘 해야 하고 어떻게 구조화됐는지 설명한 문서.", "tags": ["IVDR", "KGMP"]},
       {"name": "SOUP 목록", "note": "직접 안 만들고 가져다 쓴 SW(오픈소스·라이브러리·OS) 목록. 취약점 영향범위 파악용.", "tags": ["IVDR", "KGMP", "MDSAP"]},
       {"name": "SBOM", "note": "SOUP 목록을 기계판독 표준포맷으로 만든 것. 국내는 아직 SBOM 제출이 의무화되지 않음('의료기기 사이버보안 허가심사 가이드라인'은 사이버보안 요구사항만 적용) — 향후 의무화 예상되어 선제적 준비 권장.", "tags": ["참고"]},
