@@ -173,6 +173,7 @@ h1{margin:0;font-size:clamp(26px,4vw,38px);line-height:1.25;font-weight:700;lett
 .tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--fg)}
 .tabs button:focus-visible{outline:2px solid var(--fg);outline-offset:-2px}
 .panel{display:flex;flex-direction:column;gap:22px}
+.panel[hidden],[hidden]{display:none!important}
 .verdict{background:var(--band);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
 .verdict p{margin:0}
 .cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
