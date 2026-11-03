@@ -1453,18 +1453,20 @@ function gDetail(i){ const g=G[i], ev=g.id?byId[g.id]:null;
   document.getElementById("gdet").innerHTML=`<div class="meta"><span class="date">${when}</span><span>${["공식 일정","커플 프레임","팬덤 갈등·규칙","연기 비판"][g.r]}</span></div>
     <h2>${(ev&&g.k==="ms")?ev.h:g.l}</h2><p>${body}</p>${src}
     ${ev?`<button type="button" class="goto" data-id="${ev.id}">타임라인에서 근거 보기</button>`:""}`;
-  const b=document.querySelector("#gdet .goto"); if(b) b.addEventListener("click",()=>{ setFilter("all"); location.hash="timeline"; showTab("timeline"); select(b.dataset.id,true); });
+  const b=document.querySelector("#gdet .goto"); if(b) b.addEventListener("click",()=>{ setFilter("all"); showTab("timeline"); setHash("timeline"); select(b.dataset.id,true); });
 }
 function showTab(name){ const tabs=["timeline","gantt","motives","psych","theory","cases","kim","airport"]; const t=tabs.includes(name)?name:"timeline";
   document.querySelectorAll(".tabs [role=tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===t)));
   tabs.forEach(x=>{const p=document.getElementById("p-"+x); if(p)p.hidden=x!==t;});
   if(t==="gantt"&&!window.__gDone){renderGantt();window.__gDone=true;} }
-document.querySelectorAll(".tabs [role=tab]").forEach(b=>b.addEventListener("click",()=>{ location.hash=b.dataset.tab; showTab(b.dataset.tab); }));
+document.querySelectorAll(".tabs [role=tab]").forEach(b=>b.addEventListener("click",e=>{ e.preventDefault(); showTab(b.dataset.tab); setHash(b.dataset.tab); }));
 document.querySelector(".tabs").addEventListener("keydown",k=>{ if(k.key!=="ArrowRight"&&k.key!=="ArrowLeft")return;
   const bs=[...document.querySelectorAll(".tabs [role=tab]")]; const i=bs.findIndex(b=>b.getAttribute("aria-selected")==="true");
   const n=bs[(i+(k.key==="ArrowRight"?1:-1)+bs.length)%bs.length]; n.focus(); n.click(); });
-window.addEventListener("hashchange",()=>showTab(location.hash.slice(1)));
-showTab(location.hash.slice(1));
+function setHash(t){ try{ history.replaceState(null,"","#"+t); }catch(_){} }
+const TABS=["timeline","gantt","motives","psych","theory","cases","kim","airport"];
+window.addEventListener("hashchange",()=>{ let h=""; try{h=location.hash.slice(1);}catch(_){} if(TABS.includes(h)) showTab(h); });
+(function(){ let h=""; try{h=location.hash.slice(1);}catch(_){} showTab(TABS.includes(h)?h:"timeline"); })();
 
 document.querySelectorAll(".ibar .bar").forEach(b=>{ const box=b.closest(".chartbox"), tt=box.querySelector(".tt");
   const show=(e)=>{ tt.textContent=b.dataset.tip; tt.hidden=false; const br=box.getBoundingClientRect(); const r=b.getBoundingClientRect();
