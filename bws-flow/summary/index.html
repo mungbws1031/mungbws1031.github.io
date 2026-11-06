@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>팬덤 갈등 종합 정리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f9f9f7;--card:#fff;--ink:#141414;--sub:#52514e;--mute:#898781;--line:#e1e0d9;--grid:#ecebe5;
+  --warn-bg:#fff7e6;--warn:#6b4a00;--accent:#5A45C8;
+  --k1:#2a78d6;--k2:#eb6834;--k3:#1baf7a;--k4:#eda100;--red:#d03b3b;
+  --t-ok:#0F7F63;--t-inf:#3A58A3;--t-unk:#6d6c66;--t-cl:#A85F17;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#1C1A23;--card:#24222c;--ink:#f1f0ec;--sub:#c4c2bb;--mute:#8f8d86;--line:#3a3843;--grid:#2f2d37;
+  --warn-bg:#3a3020;--warn:#f0d49a;--accent:#9d8cf0;
+  --k1:#5b9ae6;--k2:#f08a5d;--k3:#3cc795;--k4:#f2b93b;--red:#ef6b6b;
+  --t-ok:#2FA07C;--t-inf:#6E89D4;--t-unk:#a19f98;--t-cl:#C4823F;
+}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "Noto Sans KR","Malgun Gothic",sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+h1{font:400 34px/1.25 "Do Hyeon","Noto Sans KR",sans-serif;margin:0 0 6px}
+h2{font:400 24px/1.3 "Do Hyeon","Noto Sans KR",sans-serif;margin:0 0 10px}
+h3{font-size:16px;margin:0 0 6px}
+.meta{color:var(--sub);font-size:13px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.banner{background:var(--warn-bg);color:var(--warn);border-radius:12px;padding:10px 14px;font-size:13px;margin:14px 0 18px}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:22px;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;background:none;border:0;border-bottom:3px solid transparent;color:var(--sub);font:600 15px "Noto Sans KR",sans-serif;padding:10px 12px;cursor:pointer}
+nav.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;min-width:0}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.tile .k{font-size:13px;color:var(--sub)}
+.tile .v{font:400 30px/1.2 "Do Hyeon","Noto Sans KR",sans-serif;margin:4px 0}
+.tile .s{font-size:12px;color:var(--mute)}
+.concl{display:grid;gap:12px}
+.concl .card{margin:0}
+.concl b{display:block;font-size:16px;margin-bottom:4px}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;line-height:1;padding:4px 7px;border-radius:999px;border:1px solid currentColor;margin:0 2px;vertical-align:1px;white-space:nowrap}
+.tag.ok{color:var(--t-ok)}.tag.inf{color:var(--t-inf)}.tag.unk{color:var(--t-unk)}.tag.cl{color:var(--t-cl)}
+a.ref{font:600 11.5px "IBM Plex Mono",monospace;color:var(--accent);text-decoration:none;margin-left:2px;white-space:nowrap}
+a.ref:hover{text-decoration:underline}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:10px 8px;border-top:1px solid var(--line)}
+th{font-size:12.5px;color:var(--sub);font-weight:600;border-top:0}
+td.who{font-weight:600;white-space:nowrap}
+td.lim{color:var(--sub);font-size:13px}
+.tablewrap{overflow-x:auto}
+.apply{background:var(--bg);border-left:4px solid var(--accent);border-radius:6px;padding:10px 14px;margin-top:12px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{fill:var(--sub);font-family:"IBM Plex Mono","Noto Sans KR",monospace}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--sub);margin:4px 0 8px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.note{font-size:12.5px;color:var(--warn);background:var(--warn-bg);border-radius:8px;padding:8px 12px;margin-top:10px}
+.src{border-top:1px solid var(--line);padding:12px 0}
+.src:first-child{border-top:0}
+.src .t a{color:var(--ink);font-weight:600}
+.src .l{font-size:12.5px;color:var(--sub)}
+.ev{margin:8px 0 0 0;padding:8px 12px;border-radius:8px;background:var(--bg);font-size:13.5px}
+.ev:target{outline:2px solid var(--accent)}
+.ev .id{font:600 12px "IBM Plex Mono",monospace;color:var(--accent);margin-right:6px}
+.ev q{display:block;color:var(--sub);font-size:13px;margin-top:4px}
+.ev .ok{font-size:11.5px;color:var(--t-ok);font-weight:600}
+details summary{cursor:pointer;font-weight:600;padding:4px 0}
+ul.plain{margin:6px 0;padding-left:20px}
+ul.plain li{margin:4px 0}
+footer{margin-top:30px;color:var(--mute);font-size:12px}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:6px;white-space:pre;z-index:9}
+@media (max-width:760px){
+  .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid2{grid-template-columns:1fr}
+  h1{font-size:28px}
+  td.who{white-space:normal}
+  .tile .v{font-size:24px}
+  table.rs thead{display:none}
+  table.rs tr{display:block;border-top:1px solid var(--line);padding:10px 0}
+  table.rs td{display:block;border:0;padding:2px 0;width:auto!important}
+  table.rs td.lim:before{content:"주의: ";font-weight:600}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>팬덤 갈등 종합 정리</h1>
+  <div class="meta" id="meta"></div>
+  <div class="banner">검색엔진에 노출되지 않게 설정한 정리 페이지입니다. 숫자는 건수만 실었고 글 제목, 닉네임, IP, 글 링크는 넣지 않았습니다. 근거 표시는 확인됨(출처 원문 직접 확인), 추론(확인된 사실에 근거한 해석), 확인 불가(자료 없음), 주장(미확인 주장) 네 가지입니다.</div>
+
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" id="t-sum" aria-controls="p-sum">요약</button>
+    <button role="tab" id="t-dc" aria-controls="p-dc">디시 비방 의심 글</button>
+    <button role="tab" id="t-res" aria-controls="p-res">연구와 사례</button>
+    <button role="tab" id="t-src" aria-controls="p-src">출처와 인용</button>
+    <button role="tab" id="t-lim" aria-controls="p-lim">한계와 다음 단계</button>
+  </nav>
+
+  <section role="tabpanel" id="p-sum" aria-labelledby="t-sum">
+    <div class="grid4" id="sumTiles"></div>
+    <h2>결론 네 가지</h2>
+    <div class="concl" id="concl"></div>
+    <div class="card" style="margin-top:16px">
+      <h3>판단 순서와 체크 기준</h3>
+      <ul class="plain">
+        <li>디시 집계: 제목에 '변우석'이 든 글을 현황판과 같은 제목 단어 규칙으로 나눴습니다. 4종 분류 중 하나에 걸린 글만 '비방 의심 글'로 셌습니다.</li>
+        <li>연구와 사례: 해외 조사, 국내 조사, PDF 본문 추가 조사 세 번의 결과를 질문 네 개로 다시 묶었습니다.</li>
+        <li>인용: 페이지의 근거 번호(예: <span class="mono">A-E1</span>)는 모두 인용 검증기에서 원문 일치를 확인한 문장입니다. 번호를 누르면 원문 인용으로 이동합니다.</li>
+        <li>새 인과관계는 덧붙이지 않았습니다. 연구를 이 사안에 적용한 부분은 모두 추론으로 표시했습니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section role="tabpanel" id="p-dc" aria-labelledby="t-dc" hidden>
+    <div class="grid4" id="dcTiles"></div>
+    <div class="card">
+      <h2>달마다 올라온 비방 의심 글</h2>
+      <div class="meta">제목 단어로 4종 분류. 빗금은 진행 중인 달입니다. 막대 위에 손가락이나 마우스를 올리면 건수가 나옵니다.</div>
+      <div class="legend" id="lgCats"></div>
+      <div id="chMonthly"></div>
+      <div class="meta" id="evLabels" style="margin-top:6px"></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h2>종류 비중</h2>
+        <div id="chCats"></div>
+        <div class="note">'소문·열애 추측'은 열애, 결혼, 커플 같은 단어만 들어도 걸려서 비방이 아닌 글이 많이 섞여 있을 수 있습니다. '갤 안 싸움'에는 변우석을 감싸는 글도 들어 있습니다.</div>
+      </div>
+      <div class="card">
+        <h2>변우석을 직접 겨냥한 후보 글</h2>
+        <div class="meta">가장 좁은 기준입니다. 이름 옆에 비하나 확인 안 된 소문이 붙은 제목이고, 맞싸움 글은 뺐습니다.</div>
+        <div id="chDirect"></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h2>함께 나온 이름</h2>
+        <div class="meta">비방 의심 글 중 제목에 김혜윤 관련 단어, 아이유·대군부인 관련 단어가 든 글의 수입니다.</div>
+        <div class="legend"><span><i style="background:var(--k1)"></i>김혜윤</span><span><i style="background:var(--k2)"></i>아이유·대군부인</span></div>
+        <div id="chNames"></div>
+      </div>
+      <div class="card">
+        <h2>시간대별 비중</h2>
+        <div class="meta">비방 의심 글 전체를 100으로 놓은 시간대별 비중(%)입니다. 기존 현황판의 '시간대별 비방 비율'과 기준이 다릅니다.</div>
+        <div id="chHours"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>소문 종류별 흐름</h2>
+      <div class="meta">비방 의심 글 안에서 소문 단어가 든 글의 수입니다. 색이 진할수록 많습니다.</div>
+      <div id="chRumor"></div>
+    </div>
+    <div class="note">비방이 확정된 글의 수가 아닙니다. 작성자를 보지 않았기 때문에 특정 팬덤이 쓴 글이라는 뜻도 아닙니다. 2024년 1~3월은 건수가 적어 달별 비교에 쓰기 어렵습니다.</div>
+  </section>
+
+  <section role="tabpanel" id="p-res" aria-labelledby="t-res" hidden>
+    <div class="card"><div>세 번의 조사에서 찾은 논문과 사례를 질문별로 묶었습니다. <b>이 사안을 직접 다룬 연구는 찾지 못했습니다.</b> 아래 자료는 현상의 일부와 구조가 닮은 것입니다. 각 줄의 근거 수준은 그 자료에 적힌 내용을 원문에서 확인했는지를 뜻하고, 이 사안에 맞는지는 맨 아래 상자에 따로 적었습니다.</div></div>
+    <div id="questions"></div>
+  </section>
+
+  <section role="tabpanel" id="p-src" aria-labelledby="t-src" hidden>
+    <div class="card"><div id="srcIntro"></div></div>
+    <div id="sources"></div>
+  </section>
+
+  <section role="tabpanel" id="p-lim" aria-labelledby="t-lim" hidden>
+    <div class="card"><h2>한계</h2><ul class="plain" id="limits"></ul></div>
+    <div class="card"><h2>다음 단계</h2><ul class="plain" id="next"></ul></div>
+    <div class="card"><h2>자료 파일</h2><ul class="plain" id="files"></ul></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+<div class="tip" id="tip" hidden></div>
+<script>
+const D = {"dc": {"total": 128414, "first": "2024-01-01", "last": "2026-11-05 03:09", "months": ["2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11"], "cats": ["갤 안 싸움", "소문·열애 추측", "조롱·비하", "혹평·비교"], "byCat": {"갤 안 싸움": [0, 1, 4, 130, 914, 724, 306, 166, 192, 308, 203, 202, 225, 190, 55, 132, 204, 272, 239, 262, 188, 410, 114, 325, 255, 220, 255, 384, 344, 247, 651, 604, 347, 336, 61], "소문·열애 추측": [26, 8, 13, 157, 944, 705, 186, 149, 107, 140, 171, 566, 238, 97, 65, 328, 285, 228, 309, 146, 84, 160, 140, 260, 262, 118, 760, 2028, 716, 192, 174, 120, 266, 217, 58], "조롱·비하": [0, 2, 7, 111, 611, 400, 158, 104, 87, 71, 97, 60, 54, 45, 13, 32, 42, 44, 59, 68, 63, 45, 22, 34, 50, 97, 53, 186, 162, 56, 71, 57, 89, 71, 23], "혹평·비교": [1, 1, 1, 38, 261, 173, 89, 40, 23, 75, 53, 53, 38, 24, 12, 38, 13, 38, 26, 19, 18, 22, 10, 14, 35, 15, 28, 173, 241, 50, 27, 20, 22, 33, 15]}, "n": [60, 47, 72, 2639, 17409, 15710, 5888, 3472, 2673, 4458, 4894, 3929, 2763, 2529, 1311, 2793, 2245, 2372, 2981, 2917, 2415, 2385, 1198, 2336, 2234, 2241, 3705, 9731, 6241, 2154, 4152, 2890, 2628, 2540, 402], "sus": [27, 12, 25, 436, 2730, 2002, 739, 459, 409, 594, 524, 881, 555, 356, 145, 530, 544, 582, 633, 495, 353, 637, 286, 633, 602, 450, 1096, 2771, 1463, 545, 923, 801, 724, 657, 157], "direct": [1, 3, 1, 63, 386, 195, 65, 40, 18, 29, 33, 16, 16, 16, 12, 10, 18, 9, 11, 13, 11, 12, 7, 18, 14, 9, 17, 68, 77, 10, 19, 12, 33, 30, 21], "hy": [0, 8, 12, 149, 645, 617, 144, 49, 74, 56, 49, 107, 42, 10, 9, 92, 150, 12, 32, 55, 17, 21, 20, 56, 34, 22, 18, 79, 36, 19, 28, 71, 106, 76, 13], "iu": [0, 0, 0, 0, 6, 8, 2, 21, 3, 10, 80, 447, 178, 75, 56, 253, 174, 207, 258, 77, 40, 58, 107, 178, 219, 88, 770, 2114, 837, 190, 135, 65, 179, 99, 47], "rumors": [{"name": "열애·사귄다", "v": [1, 0, 0, 9, 167, 37, 11, 3, 6, 2, 2, 1, 1, 3, 0, 3, 3, 1, 2, 3, 3, 0, 0, 2, 1, 0, 2, 16, 3, 1, 0, 1, 1, 6, 0]}, {"name": "결혼·유부남", "v": [1, 0, 0, 3, 21, 25, 2, 23, 1, 22, 1, 1, 3, 2, 0, 1, 3, 2, 7, 5, 2, 10, 2, 2, 6, 2, 9, 34, 5, 0, 2, 0, 1, 5, 0]}, {"name": "광고 끊겼다", "v": [0, 0, 0, 0, 0, 0, 0, 1, 1, 7, 0, 0, 2, 2, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1]}, {"name": "집 경매", "v": [0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 2, 2, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 2, 0, 2]}, {"name": "성형", "v": [0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0]}, {"name": "인성·태도", "v": [0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 2, 1, 0, 0, 5, 4, 0, 0, 0, 47, 0, 0, 1, 2, 0, 0]}], "hours": [1193, 1268, 643, 357, 133, 83, 80, 349, 702, 1162, 1315, 1434, 1356, 1409, 1546, 1488, 1290, 1261, 1264, 1317, 1422, 1262, 1124, 1318], "events": [{"m": "2024-04", "label": "선재 업고 튀어 방영 (4/8)"}, {"m": "2024-12", "label": "대군부인 출연 확정 (12/2)"}, {"m": "2026-01", "label": "루머 형사고소 공지 (1/13)"}, {"m": "2026-04", "label": "대군부인 첫 방송 (4/10)"}], "susTotal": 24776, "directTotal": 1313}, "reports": [{"key": "A", "file": "RESEARCH-fandom-ship-conflict-papers.md", "label": "해외 논문·사례 조사 (2026-11-05)", "sources": [{"title": "Bay (2018) Weaponizing the haters, First Monday 23(11)", "url": "https://firstmonday.org/ojs/index.php/fm/article/view/9388", "date": "2018-11-01", "limit": "none stated", "ev": [{"id": "A-E1", "claim": "Bay(2018)는 스타워즈 「라스트 제다이」 논란에서 팬 싸움처럼 보이게 꾸민 조직적 정치 영향 활동의 증거를 찾았고, 감독에게 직접 불만을 쓴 계정의 절반 넘게가 봇, 위장 계정, 정치 활동가였다고 보고했다. 부정적인 글을 쓴 계정 자체는 소수였다.", "quote": "This study finds evidence of deliberate, organized political influence measures disguised as fan arguments.", "status": "matched"}, {"id": "A-E2", "claim": "Bay(2018)는 스타워즈 「라스트 제다이」 논란에서 팬 싸움처럼 보이게 꾸민 조직적 정치 영향 활동의 증거를 찾았고, 감독에게 직접 불만을 쓴 계정의 절반 넘게가 봇, 위장 계정, 정치 활동가였다고 보고했다. 부정적인 글을 쓴 계정 자체는 소수였다.", "quote": "more than half are bots, trolls/sock puppets or political activists", "status": "matched"}, {"id": "A-E3", "claim": "Bay(2018)는 스타워즈 「라스트 제다이」 논란에서 팬 싸움처럼 보이게 꾸민 조직적 정치 영향 활동의 증거를 찾았고, 감독에게 직접 불만을 쓴 계정의 절반 넘게가 봇, 위장 계정, 정치 활동가였다고 보고했다. 부정적인 글을 쓴 계정 자체는 소수였다.", "quote": "it is only a minority of Twitter accounts that tweet negatively about The Last Jedi", "status": "matched"}]}, {"title": "Kumar et al. (2018) Community Interaction and Conflict on the Web", "url": "https://arxiv.org/abs/1803.03697", "date": "2018-03-09", "limit": "none stated", "ev": [{"id": "A-E4", "claim": "Kumar 외(2018)는 레딧 3만 6천 개 공동체를 분석해, 공동체 간 갈등의 74%를 전체의 1% 미만 공동체가 시작하고, 갈등은 활동이 많은 구성원이 시작하지만 실제 공격은 덜 활동적인 구성원이 수행한다고 보고했다.", "quote": "less than 1% of communities start 74% of conflicts", "status": "matched"}, {"id": "A-E5", "claim": "Kumar 외(2018)는 레딧 3만 6천 개 공동체를 분석해, 공동체 간 갈등의 74%를 전체의 1% 미만 공동체가 시작하고, 갈등은 활동이 많은 구성원이 시작하지만 실제 공격은 덜 활동적인 구성원이 수행한다고 보고했다.", "quote": "While conflicts tend to be initiated by highly active community members, they are carried out by significantly less active members.", "status": "matched"}]}, {"title": "Kim & Noh (2025) Disproportionate Voices, arXiv preprint", "url": "https://arxiv.org/abs/2508.16040", "date": "2025-08-22", "limit": "none stated", "ev": [{"id": "A-E6", "claim": "Kim & Noh(2025, 심사 전 프리프린트)는 네이버 뉴스 댓글 2억 6천만 건을 분석해, 소수의 빈번한 이용자가 토론을 지배하고 이들이 적대적 댓글을 더 많이 쓴다고 보고했다.", "quote": "a small number of frequent users dominating discussions", "status": "matched"}, {"id": "A-E7", "claim": "Kim & Noh(2025, 심사 전 프리프린트)는 네이버 뉴스 댓글 2억 6천만 건을 분석해, 소수의 빈번한 이용자가 토론을 지배하고 이들이 적대적 댓글을 더 많이 쓴다고 보고했다.", "quote": "frequent commenters are significantly more likely to post hostile content", "status": "matched"}]}, {"title": "경향신문 (2006-01-25) 극소수 네티즌 ‘악플’ 남발", "url": "https://www.khan.co.kr/article/200601251818141", "date": "2006-01-25", "limit": "none stated", "ev": [{"id": "A-E8", "claim": "네이버가 2006년에 발표한 자체 분석에서는 뉴스 이용자의 0.06%가 하루 20건 이상 댓글을 써 전체 댓글의 25%를 생산했다. 이들 다수가 악플러일 가능성이 높다는 것은 네이버의 추론이었다.", "quote": "뉴스 이용자의 0.06%가 하루에 20건 이상의 댓글을 쏟아내 전체 댓글의 25%를 생산하는 것으로 조사됐다고 밝혔다", "status": "matched"}, {"id": "A-E9", "claim": "네이버가 2006년에 발표한 자체 분석에서는 뉴스 이용자의 0.06%가 하루 20건 이상 댓글을 써 전체 댓글의 25%를 생산했다. 이들 다수가 악플러일 가능성이 높다는 것은 네이버의 추론이었다.", "quote": "이들 중 다수가 악성 리플(악플)을 남발하는 악플러일 가능성이 매우 높다는 게 네이버의 추론이다", "status": "matched"}]}, {"title": "Wang & Ge (2023) Fan Conflicts and State Power in China, Asian Studies Review 47(2)", "url": "https://www.ingentaconnect.com/content/routledg/casr/2023/00000047/00000002/art00010", "date": "2023-04-03", "limit": "none stated", "ev": [{"id": "A-E10", "claim": "Wang & Ge(2023)는 「진정령」 팬 갈등을 12개월 관찰해, 일부 팬이 '팬덤 경찰'을 자처하며 상대 팬의 '불법' 댓글을 신고해 갈등에서 이기려 했고, 이 힘은 착각에 가깝다고 보고했다.", "quote": "Some fans portray themselves as ‘fandom police’ and use censorship to report ‘illegal’ comments by their rivals in order to prevail in fan conflicts.", "status": "matched"}, {"id": "A-E11", "claim": "Wang & Ge(2023)는 「진정령」 팬 갈등을 12개월 관찰해, 일부 팬이 '팬덤 경찰'을 자처하며 상대 팬의 '불법' 댓글을 신고해 갈등에서 이기려 했고, 이 힘은 착각에 가깝다고 보고했다.", "quote": "the power gained by these fandom police is illusory", "status": "matched"}]}, {"title": "Basu (2022) The Xiao Zhan Controversy and the Case of Misplaced Fan Activism, SocArXiv preprint", "url": "https://osf.io/preprints/socarxiv/5cxy9_v1", "date": "2022-08-10", "limit": "none stated", "ev": [{"id": "A-E12", "claim": "Basu(2022)는 샤오잔 사건에서 두 종류의 '엉뚱한 팬 행동'이 있었다고 정리했다. 하나는 팬 작가를 탓해 AO3 차단으로 이어진 것이고, 다른 하나는 사건과 무관한 배우를 탓해 광고 보이콧을 한 것이다.", "quote": "The first kind blamed the incident on the fan artists, resulting in the official block of AO3 in China on 29 February 2020.", "status": "matched"}, {"id": "A-E13", "claim": "Basu(2022)는 샤오잔 사건에서 두 종류의 '엉뚱한 팬 행동'이 있었다고 정리했다. 하나는 팬 작가를 탓해 AO3 차단으로 이어진 것이고, 다른 하나는 사건과 무관한 배우를 탓해 광고 보이콧을 한 것이다.", "quote": "The second blamed the hapless actor, who had nothing to do with the situation", "status": "matched"}]}, {"title": "Aburime (2022) Hate narratives, conditioned language and networked harassment, Journal of Fandom Studies (abstract page)", "url": "https://www.semanticscholar.org/paper/6a3c9c22be4e5bc92f36167b95ace5d0f242d1fe", "date": "2022-06-01", "limit": "none stated", "ev": [{"id": "A-E14", "claim": "Aburime(2022)는 서구 팬덤에서 무엇을 커플로 엮거나 용인하느냐를 둘러싼 팬 사이 적대가 커졌고, 반(反)커플 대 찬(贊)커플의 '선 대 악' 구도가 팬덤을 안에서부터 잠식했다고 썼다.", "quote": "hostility amongst fans based on what a person ships or tolerates in shipping has become a growing point of contention in western fandom", "status": "matched"}, {"id": "A-E15", "claim": "Aburime(2022)는 서구 팬덤에서 무엇을 커플로 엮거나 용인하느냐를 둘러싼 팬 사이 적대가 커졌고, 반(反)커플 대 찬(贊)커플의 '선 대 악' 구도가 팬덤을 안에서부터 잠식했다고 썼다.", "quote": "‘Good versus Evil’ dichotomy that has slowly consumed fandom communities from the inside out", "status": "matched"}]}, {"title": "Burkhardt, Trott & Monaghan (2021) #Bughead Is Endgame, Television & New Media (abstract page)", "url": "https://www.semanticscholar.org/paper/9e31f313384308684891f8e9a1bf3beeac332815", "date": "2021-06-03", "limit": "none stated", "ev": [{"id": "A-E16", "claim": "Burkhardt 외(2021)는 「리버데일」 팬덤에서 2017~2019년 텀블러 게시물을 분석해 커플팬, 반커플팬, 안티팬 사이의 팬덤 내부 대립이 있었다고 다뤘다.", "quote": "interrogate the intra-fan rivalries between shippers, anti-shippers, and anti-fans that underpin the Riverdale fandom on Tumblr", "status": "matched"}]}, {"title": "Marwick (2021) Morally Motivated Networked Harassment as Normative Reinforcement, Social Media + Society", "url": "https://journals.sagepub.com/doi/10.1177/20563051211021378", "date": "2021-06-03", "limit": "none stated", "ev": [{"id": "A-E17", "claim": "Marwick(2021)은 온라인 공동체 구성원이 상대가 규범을 어겼다고 고발하면 도덕적 분노가 일고, 구성원들이 공격 메시지를 보내며 소속감을 드러낸다는 설명 모형을 제시했다. 인터뷰 대상은 괴롭힘 피해자 28명과 플랫폼 신뢰·안전 담당자 9명이었다.", "quote": "a member of a social network or online community accuses a target of violating their network’s norms, triggering moral outrage", "status": "matched"}, {"id": "A-E18", "claim": "Marwick(2021)은 온라인 공동체 구성원이 상대가 규범을 어겼다고 고발하면 도덕적 분노가 일고, 구성원들이 공격 메시지를 보내며 소속감을 드러낸다는 설명 모형을 제시했다. 인터뷰 대상은 괴롭힘 피해자 28명과 플랫폼 신뢰·안전 담당자 9명이었다.", "quote": "Network members send harassing messages to the target, reinforcing their adherence to the norm and signaling network membership.", "status": "matched"}]}, {"title": "Fanlore: Sockpuppet (Wayback capture 2025-03-04)", "url": "https://web.archive.org/web/20250304004013/https://fanlore.org/wiki/Sockpuppet", "date": "2025-03-04", "limit": "none stated", "ev": [{"id": "A-E19", "claim": "팬 위키 Fanlore는 위장 계정이 '팬덤 전체의 반대나 지지가 있는 듯한 착시'를 만드는 용도로 쓰일 수 있다고 적는 동시에, 평판이 없는 새 이용자가 논쟁에 처음 끼어들면 위장 계정으로 오인될 수 있다고도 적는다.", "quote": "To create the illusion of mass, fandom-wide dissent or support", "status": "matched"}, {"id": "A-E20", "claim": "팬 위키 Fanlore는 위장 계정이 '팬덤 전체의 반대나 지지가 있는 듯한 착시'를 만드는 용도로 쓰일 수 있다고 적는 동시에, 평판이 없는 새 이용자가 논쟁에 처음 끼어들면 위장 계정으로 오인될 수 있다고도 적는다.", "quote": "newbies who do not have an established reputation in fandom may be mistaken for sockpuppets", "status": "matched"}]}, {"title": "Participatory Culture Wars (Driessen, Jones & Litherland eds., 2025), publisher blurb and table of contents", "url": "https://www.perlego.com/book/5157857/participatory-culture-wars-controversy-conflict-and-complicity-in-fandom-pdf", "date": "2025", "limit": "none stated", "ev": [{"id": "A-E21", "claim": "2025년 간행된 편저 「Participatory Culture Wars」에는 Mel Stanfill의 장 「Against 'Toxic Fandom': Fans, Harassment, and the Culture Wars」가 실려 있다. 이 장의 본문 주장은 이번에 읽지 못했다.", "quote": "1. Against “Toxic Fandom”: Fans, Harassment, and the Culture Wars", "status": "matched"}]}]}, {"key": "B", "file": "RESEARCH-kr-fandom-ship-conflict.md", "label": "국내 논문·사례 조사 (2026-11-05)", "sources": [{"title": "조해인(2021) 팬덤의 RPS 문화가 사회적 이슈로 구성되는 방식에 대한 비판적 고찰, 방송과 커뮤니케이션 22(2)", "url": "https://kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002723554", "date": "2021", "limit": "초록만 확인. 결과와 수치는 읽지 못함. 아이돌 팬덤 중심", "ev": [{"id": "B-E1", "claim": "조해인(2021)은 팬덤의 RPS(실존 인물을 주인공으로 한 창작) 문화가 사회 이슈로 떠오른 과정에서 언론이 이슈를 만드는 방식을 빅카인즈 기사 분석으로 살폈다.", "quote": "주요한 언론사들이 해당 이슈를 생산하는 방식을 보았다", "status": "matched"}, {"id": "B-E2", "claim": "조해인(2021)은 팬덤의 RPS(실존 인물을 주인공으로 한 창작) 문화가 사회 이슈로 떠오른 과정에서 언론이 이슈를 만드는 방식을 빅카인즈 기사 분석으로 살폈다.", "quote": "이 연구는 빅카인즈를 활용하여 페어클라우가 설명한 '언어학적 분석(linguistic analysis)'을 주요한 분석의 방법으로 삼았다.", "status": "matched"}]}, {"title": "조이진(2021) RPS 창작 문화로 보는 팬덤 참여 문화의 사회·문화적 맥락, 미디어, 젠더 & 문화 36(3)", "url": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002760306", "date": "2021", "limit": "초록만 확인. 팬 사이 갈등은 다루지 않음", "ev": [{"id": "B-E3", "claim": "조이진(2021)은 국내 아이돌 팬덤의 팬픽이 RPS 문화로 바뀐 과정을 다루며, 한국에서 RPS가 이성애를 포함한 팬덤의 다양한 관계성을 가리키는 말로 쓰인다고 밝혔다.", "quote": "RPS 용어가 한국에서는 이성애 등 팬덤 문화의 다양한 관계성을 표현할 수 있는 단어로 자리 잡은", "status": "matched"}]}, {"title": "강민지·정유정·장민지(2025) 더 이상 RPS를 사랑하지 않는 여자들, 문화콘텐츠연구 34", "url": "https://kci.go.kr/kciportal/landing/article.kci?arti_id=ART003236872", "date": "2025", "limit": "초록만 확인. 참여자 수와 구성은 초록에 없음. 아이돌 팬덤 이용자 대상", "ev": [{"id": "B-E4", "claim": "강민지 외(2025)는 국내 아이돌 팬덤의 RPS 이용자를 심층 인터뷰해, 이용자가 팬덤 내부 규범, 사회적 시선, 실존 인물성과 환상성 사이의 긴장 때문에 이용 스트레스를 겪는다고 보고했다.", "quote": "참여자들은 팬덤 내부 규범, 사회적 시선, 실존 인물성과 환상성의 긴장 속에서 RPS 이용 스트레스를 경험하였으며", "status": "matched"}]}, {"title": "JTBC(2018-04-24) 커지는 '댓글 불신'…'헤비 댓글러' 3200명 분석해보니", "url": "https://news.jtbc.co.kr/article/NB11623887", "date": "2018-04-24", "limit": "언론사 자체 분석. 분석 방법 비공개. 정치 뉴스 중심이며 팬덤이 아님", "ev": [{"id": "B-E5", "claim": "JTBC(2018)는 네이버 뉴스 댓글을 분석해, 하루 이용자 1300만 명 중 댓글 작성자가 1% 미만(약 11만 명)이고, 6개월간 댓글을 쓴 170만 명 중 1000개 넘게 쓴 헤비 유저가 3000명이었다고 보도했다.", "quote": "하루 이용자 1300만 명 가운데 댓글을 쓰는 사람들은 1%가 안 되는 11만 명 정도였습니다", "status": "matched"}, {"id": "B-E6", "claim": "JTBC(2018)는 네이버 뉴스 댓글을 분석해, 하루 이용자 1300만 명 중 댓글 작성자가 1% 미만(약 11만 명)이고, 6개월간 댓글을 쓴 170만 명 중 1000개 넘게 쓴 헤비 유저가 3000명이었다고 보도했다.", "quote": "지난 6개월 동안 네이버 뉴스에 댓글을 한 번이라도 남긴 사용자는 170만 명이었습니다.", "status": "matched"}, {"id": "B-E7", "claim": "JTBC(2018)는 네이버 뉴스 댓글을 분석해, 하루 이용자 1300만 명 중 댓글 작성자가 1% 미만(약 11만 명)이고, 6개월간 댓글을 쓴 170만 명 중 1000개 넘게 쓴 헤비 유저가 3000명이었다고 보도했다.", "quote": "이중 1000개가 넘는 댓글을 쓴 이른바 '헤비 유저'는 3000명이었습니다.", "status": "matched"}, {"id": "B-E8", "claim": "같은 JTBC 분석에서 댓글을 가장 많이 쓴 상위 30명 중 20명이 강한 정치색을 보였고, 같은 댓글을 복사해 반복해서 퍼뜨리는 모습이 자주 보였으며 한 사람은 같은 댓글을 하루 20번 달았다.", "quote": "30명 중 20명은 '강한 정치색'이 특징이었습니다.", "status": "matched"}, {"id": "B-E9", "claim": "같은 JTBC 분석에서 댓글을 가장 많이 쓴 상위 30명 중 20명이 강한 정치색을 보였고, 같은 댓글을 복사해 반복해서 퍼뜨리는 모습이 자주 보였으며 한 사람은 같은 댓글을 하루 20번 달았다.", "quote": "특정 댓글을 복사해 반복적으로 퍼트리는 모습도 자주 보였습니다.", "status": "matched"}, {"id": "B-E10", "claim": "같은 JTBC 분석에서 댓글을 가장 많이 쓴 상위 30명 중 20명이 강한 정치색을 보였고, 같은 댓글을 복사해 반복해서 퍼뜨리는 모습이 자주 보였으며 한 사람은 같은 댓글을 하루 20번 달았다.", "quote": "한 헤비 유저는 똑같은 정치 댓글을 하루 20번 복사해 달았습니다.", "status": "matched"}]}, {"title": "엑스포츠뉴스(2024-06-12) \"김수현 수준 안 맞아\"·\"임나영 인지도 높이려고\"…악플 테러 심각", "url": "https://www.xportsnews.com/article/1868918", "date": "2024-06-12", "limit": "기자의 서술이며 악플 작성자 수와 정체는 확인되지 않음. 열애설은 양측이 사실무근이라고 밝힘", "ev": [{"id": "B-E11", "claim": "엑스포츠뉴스(2024-06-12)는 드라마 「눈물의 여왕」 상대역과의 로맨스를 기대했던 팬들이 배우의 열애설에 배신감을 악플로 표현하고 있다고 보도했다.", "quote": "상대역으로 호흡 맞춘 배우 김지원과 핑크빛 로맨스를 기대했던 팬들은 현실에서의 열애설을 부정하는 것을 넘어 배신감까지 표현, 악플로 이를 해소하고 있다.", "status": "matched"}]}, {"title": "톱셀럽뉴스(2025-09-19) 플레이브 팬덤, '악개' 논란 확산…스밍 중단 논쟁까지", "url": "http://www.topcelev.co.kr/news/articleView.html?idxno=2619", "date": "2025-09-19", "limit": "소규모 매체. 분석 주체는 익명. 버추얼 아이돌 팬덤 사례", "ev": [{"id": "B-E12", "claim": "톱셀럽뉴스(2025-09-19)는 버추얼 아이돌 플레이브 팬덤에서 악개(특정 멤버만 지지하며 다른 멤버를 비난하는 팬)를 둘러싼 책임 공방이 과열됐다고 보도했다.", "quote": "특정 멤버만을 지지하면서 다른 멤버를 비난하거나 배척하는 팬을 뜻한다.", "status": "matched"}, {"id": "B-E13", "claim": "톱셀럽뉴스(2025-09-19)는 버추얼 아이돌 플레이브 팬덤에서 악개(특정 멤버만 지지하며 다른 멤버를 비난하는 팬)를 둘러싼 책임 공방이 과열됐다고 보도했다.", "quote": "이번 논란은 팬덤 내부 책임 공방이 과열된 결과라는 분석이 나온다.", "status": "matched"}]}, {"title": "세계일보(2024-08-12) 악성 팬덤 문화가 낳은 'BTS 슈가챌린지'…'악의적인 팬 사칭' 주장도", "url": "https://m.news.nate.com/view/20240812n13390", "date": "2024-08-12", "limit": "주장을 전한 보도이며 사칭 여부는 기사에서 확인되지 않음", "ev": [{"id": "B-E14", "claim": "세계일보(2024-08-12)는 BTS 슈가 관련 '슈가챌린지' 참여 계정을 두고 일부 BTS 팬이 팬 사칭이라고 주장한다고 전했다. 같은 기사는 가수 김호중 팬들도 비슷하게 악성 팬이 팬을 자칭한다고 주장했다고 적었다.", "quote": "일부 팬들은 슈가챌린지에 참여한 계정들이 BTS 팬과 아티스트를 조롱하기 위해 BTS 팬임을 사칭하고 있다고 주장했다.", "status": "matched"}, {"id": "B-E15", "claim": "세계일보(2024-08-12)는 BTS 슈가 관련 '슈가챌린지' 참여 계정을 두고 일부 BTS 팬이 팬 사칭이라고 주장한다고 전했다. 같은 기사는 가수 김호중 팬들도 비슷하게 악성 팬이 팬을 자칭한다고 주장했다고 적었다.", "quote": "해당 계정들이 과거 다른 K팝 가수와 관련된 글을 올려왔거나 BTS에 대한 악의적인 게시글에 반응해 왔다는 것이다.", "status": "matched"}, {"id": "B-E16", "claim": "세계일보(2024-08-12)는 BTS 슈가 관련 '슈가챌린지' 참여 계정을 두고 일부 BTS 팬이 팬 사칭이라고 주장한다고 전했다. 같은 기사는 가수 김호중 팬들도 비슷하게 악성 팬이 팬을 자칭한다고 주장했다고 적었다.", "quote": "김호중의 팬들은 악성 팬들이 팬을 자칭하며 논란을 키운다고 주장했다.", "status": "matched"}]}, {"title": "인사이트(2024-08-13) '음주운전' 슈가 살려라... '블핑' 로제·제니에 마약 누명", "url": "https://www.insight.co.kr/news/476316", "date": "2024-08-13", "limit": "국내 매체의 보도이나 해외 팬 중심 사건. 작성자 규모 미확인", "ev": [{"id": "B-E17", "claim": "인사이트(2024-08-13)는 블랙핑크 팬덤이 슈가챌린지를 만들었다는 소문이 돌자 일부 BTS 팬이 블랙핑크 멤버들을 공격했다고 보도했고, 챌린지를 누가 만들었는지는 밝혀지지 않았다고 적었다.", "quote": "일부 아미가 블랙핑크 로제와 제니를 향한 비난과 공격을 시작한 것이다.", "status": "matched"}, {"id": "B-E18", "claim": "인사이트(2024-08-13)는 블랙핑크 팬덤이 슈가챌린지를 만들었다는 소문이 돌자 일부 BTS 팬이 블랙핑크 멤버들을 공격했다고 보도했고, 챌린지를 누가 만들었는지는 밝혀지지 않았다고 적었다.", "quote": "해외 아미가 만든 것인지, 블링크가 만든 것인지, 아니면 다른 누군가의 소행인지는 밝혀지지 않은 상황에서", "status": "matched"}]}, {"title": "읽기전용위키 지능형 안티(나무위키 미러, 공동 편집)", "url": "https://readonly.wiki/w/%EC%A7%80%EB%8A%A5%ED%98%95%20%EC%95%88%ED%8B%B0", "date": "2026-11-05", "limit": "익명 공동 편집 위키. 용어 설명일 뿐 실제 발생 빈도나 개별 사건의 근거가 아님", "ev": [{"id": "B-E19", "claim": "국내 커뮤니티에는 특정 대상의 팬인 척하며 일부러 개념 없는 말을 해 그 팬덤에 대한 비난을 끌어모으는 행위를 '지능형 안티'라고 부르는 말이 있다. 같은 문서는 이런 의심이 과도한 빠질에 대한 의심에서 생기는 경우도 있다고 적는다.", "quote": "그 대상의 팬이나 빠인 척 하면서, 일부러 개념 없는 말들을 남발해서 남들의 비난을 끌어모으는 안티를 지능형 안티라고 한다.", "status": "matched"}, {"id": "B-E20", "claim": "국내 커뮤니티에는 특정 대상의 팬인 척하며 일부러 개념 없는 말을 해 그 팬덤에 대한 비난을 끌어모으는 행위를 '지능형 안티'라고 부르는 말이 있다. 같은 문서는 이런 의심이 과도한 빠질에 대한 의심에서 생기는 경우도 있다고 적는다.", "quote": "물론 이렇게 된 건 몇몇 경우는 과도한 빠질에 대한 의심이 있어서 발생하는 경우도 있다.", "status": "matched"}]}, {"title": "Kim (2015) Reshaped, reconnected and redefined, Journal of Fandom Studies 3(1)", "url": "https://doi.org/10.1386/jfs.3.1.79_1", "date": "2015-03-01", "limit": "초록만 확인. 기부 활동 보도를 분석한 연구로 팬 사이 갈등이 아님", "ev": [{"id": "B-E21", "claim": "Kim(2015)은 한국에서 K-pop 아이돌 팬이 대개 십대 소녀라는 점 때문에 오래 비판받아 왔고, 2000년대 후반 이후 뉴스 보도가 이 부정적 고정관념을 다시 생각하게 했다고 분석했다.", "quote": "K-pop idol fans, mostly teenaged girls, have long-provoked criticism in Korean society due to their fanatic behaviours.", "status": "matched"}, {"id": "B-E22", "claim": "Kim(2015)은 한국에서 K-pop 아이돌 팬이 대개 십대 소녀라는 점 때문에 오래 비판받아 왔고, 2000년대 후반 이후 뉴스 보도가 이 부정적 고정관념을 다시 생각하게 했다고 분석했다.", "quote": "In the late 2000s, however, the transnational popularity of K-pop idol groups encouraged the public to reconsider the negative stereotype of K-pop idol fandom.", "status": "matched"}]}]}, {"key": "C", "file": "RESEARCH-fandom-blame-evidence-more.md", "label": "PDF 본문 추가 조사 (2026-11-06)", "sources": [{"title": "박소라 외(2008) 디지털 시대 미디어 이용자 중심의 융합 정책 패러다임 연구, 방송통신위원회 조사연구지원사업 최종보고서(한양대학교)", "url": "https://www.kcc.go.kr/download.do?fileSeq=24899", "date": "2008-12", "limit": "2008년 정치 토론 게시판 7곳 표본이며 디시는 정치사회 갤러리. 연예·팬덤 게시판이 아님. 365쪽 중 요약과 3장 일부만 읽음. 글 단위 표본이라 작성자 평균이 아님", "ev": [{"id": "C-E1", "claim": "방송통신위원회 용역 보고서(한양대, 2008)는 온라인 토론 게시판 분석에서 소수의 적극적 참여자가 게시글 대다수를 차지한다고 정리했다.", "quote": "소수의 적극적 참여자들이 대다수의 게시글을 점유하고 있으며", "status": "matched"}, {"id": "C-E2", "claim": "같은 보고서는 근거 없는 글과 비난성 글이 상대적으로 많은 비중을 차지하고, 익명제 토론방에서 거친 말과 욕설·비난의 비중이 크다고 썼다.", "quote": "근거가 없는 글들, 비난성 글들이 상대적으로 많은 비중을 차지함", "status": "matched"}, {"id": "C-E3", "claim": "같은 보고서는 근거 없는 글과 비난성 글이 상대적으로 많은 비중을 차지하고, 익명제 토론방에서 거친 말과 욕설·비난의 비중이 크다고 썼다.", "quote": "익명제 토론방에서는 보다 거친 언사와 보다 자극적 주제, 욕설/비난의 비중이 큼", "status": "matched"}, {"id": "C-E4", "claim": "2008년 9월 말~10월 초 표본에서 디시인사이드 정치사회 갤러리 게시자가 일주일간 올린 글은 평균 35.98개로, 오늘의유머 시사게시판(2.12개)과 82쿡 자유게시판(8.38개)보다 많았다.", "quote": "디시인사이드가 35.98개로 나타남", "status": "matched"}, {"id": "C-E5", "claim": "2008년 9월 말~10월 초 표본에서 디시인사이드 정치사회 갤러리 게시자가 일주일간 올린 글은 평균 35.98개로, 오늘의유머 시사게시판(2.12개)과 82쿡 자유게시판(8.38개)보다 많았다.", "quote": "오유(오늘의유머) 시사게시판 2.12", "status": "matched"}, {"id": "C-E6", "claim": "2008년 9월 말~10월 초 표본에서 디시인사이드 정치사회 갤러리 게시자가 일주일간 올린 글은 평균 35.98개로, 오늘의유머 시사게시판(2.12개)과 82쿡 자유게시판(8.38개)보다 많았다.", "quote": "82쿡 커뮤니티 자유게시판 8.38", "status": "matched"}, {"id": "C-E7", "claim": "이 표본은 전체 게시글을 일정 간격(매 A번째 글)으로 뽑는 방식이어서 글 단위 표본이다.", "quote": "매 A번째 게시글을 분석하는 방식으로 표집하였다", "status": "matched"}, {"id": "C-E34", "claim": "2008년 방송통신위원회 용역 보고서의 표본 단위는 글이다. 원자료 표에서 표본 글 한 편마다 그 글 작성자가 지난 일주일간 같은 사이트에 올린 글 수(해당 글 포함)를 쟀고, 전체 평균은 26.73, 사례 수는 3,538이었다.", "quote": "작성자가 지난 일주일간 본 사이트에 게시한 총 게시글의 수(본 게", "status": "matched"}, {"id": "C-E35", "claim": "2008년 방송통신위원회 용역 보고서의 표본 단위는 글이다. 원자료 표에서 표본 글 한 편마다 그 글 작성자가 지난 일주일간 같은 사이트에 올린 글 수(해당 글 포함)를 쟀고, 전체 평균은 26.73, 사례 수는 3,538이었다.", "quote": "26.73 3538 56.871", "status": "matched"}]}, {"title": "김수아(2017) 해시태그 행동주의: 팬덤의 변화와 소셜 미디어 이용의 문화적 의미, 2017 한국문화사회학회 가을 학술대회 발표논문집", "url": "https://socul.or.kr/homepage/boardMedia/12844", "date": "2017-10-28", "limit": "심사 여부 미확인. 175~186쪽 중 약 절반을 읽음. 샤이니 팬덤 트위터 논쟁 한 건", "ev": [{"id": "C-E8", "claim": "김수아(2017)는 아이돌 팬덤 트위터 논쟁(발표문에는 12월로만 표기)에서 문제를 제기한 팬들이 '팬코'(팬 코스프레, 팬임을 가장함)라는 해시태그로 팬이 아닌 것으로 규정됐다고 분석했다.", "quote": "팬코는 팬 코스프레, 즉 팬임을 가장한다는 의미를 담는다", "status": "matched"}, {"id": "C-E9", "claim": "같은 발표문은 팬덤이 이슈화를 막기 위해 이슈화를 시도하는 팬 그룹을 공격하는 방식을 자주 택하며, 메신저를 공격하면 메시지의 의미를 줄이는 데 도움이 된다고 설명했다.", "quote": "이슈화를 막기 위해 이슈화를 시도하는 팬덤 그룹을 공격하는 방식을 자주 채택한다", "status": "matched"}, {"id": "C-E10", "claim": "같은 발표문은 팬덤이 이슈화를 막기 위해 이슈화를 시도하는 팬 그룹을 공격하는 방식을 자주 택하며, 메신저를 공격하면 메시지의 의미를 줄이는 데 도움이 된다고 설명했다.", "quote": "메신저를 공격하는 것이 메시지의 의미를 축소하는 데 도움이 되기 때문이다", "status": "matched"}, {"id": "C-E33", "claim": "김수아(2017)는 샤이니 팬덤 논쟁에서 문제 제기자가 개인이 아니라 '트페미'라는 이름으로 불리며, 아이돌을 비판하는 페미니스트 무리 전체가 문제인 것으로 구성되기 시작했다고 분석했다.", "quote": "페미’로 명명되고 트위터 내 아이돌에 대해 비판하는 페미니스트 무리 전체가 문제인 것으로 구성되", "status": "matched"}]}, {"title": "Wang & Ge (2023) Fan Conflicts and State Power in China, Asian Studies Review 47(2)", "url": "https://discovery.ucl.ac.uk/id/eprint/10200881/1/Fan%20Conflicts%20and%20State%20Power%20in%20China%20%20Internalised%20Heteronormativity%20%20Censorship%20Sensibilities%20%20and%20Fandom%20Police-3.pdf", "date": "2023", "limit": "중국 BL 드라마 팬덤, 웨이보, 2020년 사건 한 건. 인터뷰 3명", "ev": [{"id": "C-E11", "claim": "Wang & Ge(2023)에 따르면 중국 「진정령」 팬덤의 227 사건은 개인팬(Only-fan)이 집단으로 커플팬(CP-fan)의 팬픽을 신고한 데서 시작됐다.", "quote": "In February 2020, the Only-fans organised collectively on social media to report a work of fan fiction written by a CP-fan.", "status": "matched"}, {"id": "C-E12", "claim": "같은 논문은 이 갈등이 개인팬과 커플팬 사이의 다툼에서 팬덤 전체와 안티팬, 팬이 아니라고 밝힌 외부인 사이의 갈등으로 번졌다고 썼다.", "quote": "expanded from the original conflict between the Only-fan and CP-fan subcommunities to a conflict between the entire fan community and", "status": "matched"}, {"id": "C-E13", "claim": "같은 논문은 이 갈등이 개인팬과 커플팬 사이의 다툼에서 팬덤 전체와 안티팬, 팬이 아니라고 밝힌 외부인 사이의 갈등으로 번졌다고 썼다.", "quote": "including anti-fans and outsiders who did not identify as fans", "status": "matched"}, {"id": "C-E14", "claim": "같은 논문은 안티팬이 쓴 해시태그 페이지가 2021년 1월 13일 기준 읽힘 30억 회 남짓, 토론 게시글 약 500만 건, 참여자 17만 명 넘게 쌓였다고 적었다. 비교 기준이 되는 수치는 논문에 없다.", "quote": "By 13 January 2021, this tag page had just over 3 billion reads, almost 5 million discussion posts, and more than 170,000 participants.", "status": "matched"}, {"id": "C-E32", "claim": "같은 논문은 안티팬과 외부인도 웨이보에서 서로 글을 퍼 나르고 연대하며 하나의 비교적 단단한 하위 공동체를 이뤘고, 팬 쪽만큼 조직적이 됐다고 썼다.", "quote": "fans and non-fans also formed a relatively united subcommunity on Weibo by reposting, discussing, and showing solidarity with each other", "status": "matched"}, {"id": "C-E36", "claim": "Wang & Ge(2023)의 인터뷰 대상은 개인팬, 커플팬, 안티팬 각 1명, 모두 웨이보 팔로워 1,000명 넘는 핵심 팬 세 명이었다.", "quote": "The three informants identified themselves as an Only-fan, a CP-fan, and an anti-fan of Xiao respectively.", "status": "matched"}]}, {"title": "뉴스워커(2026-10-27) '조춘청랑' 극성 CP팬 공격에도...정백연·류원 결별은 헛소문?", "url": "https://www.newsworker.co.kr/news/articleView.html?idxno=510627", "date": "2026-10-27", "limit": "일부 극성 팬의 규모와 구체적 행동은 기사에 없음. 중국 드라마 팬덤", "ev": [{"id": "C-E15", "claim": "2026년 10월 국내 보도는 중국 드라마 「조춘청랑」의 극성 커플팬 일부가 주연 배우의 실제 연인에게 불만을 드러내 논란이 일었다고 전했다.", "quote": "일부 극성 팬들은 정백연의 실제 연인으로 널리 알려진 류원에게 불만을 드러내면서 논란이 일었다", "status": "matched"}]}, {"title": "스포츠서울(2026-11-06) '자칭 팬'과 '진짜 팬' 선 그어…나나♥탑, 17년 팬덤에 되묻다", "url": "https://m.sportsseoul.com/news/read/1647401", "date": "2026-11-06", "limit": "연예 매체 보도. 팬사이트 종료 이유는 미확인이라고 기사가 밝힘", "ev": [{"id": "C-E16", "claim": "2026년 11월 보도에서 나나는 열애 공개 뒤 악의적인 글을 쓰는 '자칭 팬'들에게 입장을 밝혔고, 탑 팬사이트 종료가 열애 때문이라고 확인된 것은 아니라고 보도됐다. 팬사이트 운영진은 전시 취소를 참여율과 비용 문제로 설명했다.", "quote": "의도적으로 악의적인 글을 쓰는 자칭 팬들에게 전하고 싶다", "status": "matched"}, {"id": "C-E17", "claim": "2026년 11월 보도에서 나나는 열애 공개 뒤 악의적인 글을 쓰는 '자칭 팬'들에게 입장을 밝혔고, 탑 팬사이트 종료가 열애 때문이라고 확인된 것은 아니라고 보도됐다. 팬사이트 운영진은 전시 취소를 참여율과 비용 문제로 설명했다.", "quote": "다만 해당 팬사이트의 종료 이유가 공개 열애 때문이라고 확인된 것은 아니다", "status": "matched"}]}, {"title": "미래경제(2026-10-11) 탑·나나 열애 인정 뒤 팬덤 갈등…20년 팬사이트 운영 종료", "url": "http://slv.mirae-biz.com/news/articleView.html?idxno=112439", "date": "2026-10-11", "limit": "팬사이트 운영진의 설명을 전한 기사", "ev": [{"id": "C-E18", "claim": "2026년 11월 보도에서 나나는 열애 공개 뒤 악의적인 글을 쓰는 '자칭 팬'들에게 입장을 밝혔고, 탑 팬사이트 종료가 열애 때문이라고 확인된 것은 아니라고 보도됐다. 팬사이트 운영진은 전시 취소를 참여율과 비용 문제로 설명했다.", "quote": "전시 취소는 참여율과 비용 문제에 따른 결정이었으며", "status": "matched"}]}, {"title": "인사이트(2026-05-29) '해병대 복무 중' 정동원, 무슨 일?... \"팬 사칭해 루머 유포, 강경한 법적 대응\"", "url": "https://www.insight.co.kr/news/556075", "date": "2026-05-29", "limit": "소속사 주장이며 해당 계정과 근거는 제시되지 않음", "ev": [{"id": "C-E19", "claim": "정동원 소속사는 2026년 5월 입장문에서 팬을 가장해 사실무근 내용을 퍼뜨리고 팬덤 내부 갈등을 조장하는 사례가 지속적으로 확인된다고 주장했다. 입장문에는 해당 계정의 근거가 제시되지 않았다.", "quote": "팬을 가장하여 전혀 사실 무근인 내용을 확산시키거나 특정 상황을 왜곡·과장하여 부정적인 여론 형성을 유도하는 행위, 팬덤 내부 갈등을 조장하는 행위", "status": "matched"}]}, {"title": "DFRLab(2018-06-07) K-Pop Goes Info Ops", "url": "https://dfrlab.org/2018/06/07/k-pop-goes-info-ops/", "date": "2018-06-07", "limit": "2018년 트위터 사례. 계정 수 등 헤드라인 수치는 인용하지 않음. 갈등 모집이 아니라 응원 증폭 사례", "ev": [{"id": "C-E20", "claim": "DFRLab(2018)은 BTS 팬이 응원을 위해 트위터 계정을 여러 개 만드는 일이 흔하다고 적었다. 한 공개 계정이 계정을 여러 개 만들라고 권했고, 한 이용자는 계정 17개의 이름을 직접 올렸다.", "quote": "BTS fans often create multiple accounts on Twitter to support their favorite band", "status": "matched"}, {"id": "C-E21", "claim": "DFRLab(2018)은 BTS 팬이 응원을 위해 트위터 계정을 여러 개 만드는 일이 흔하다고 적었다. 한 공개 계정이 계정을 여러 개 만들라고 권했고, 한 이용자는 계정 17개의 이름을 직접 올렸다.", "quote": "", "status": "matched"}, {"id": "C-E22", "claim": "DFRLab(2018)은 BTS 팬이 응원을 위해 트위터 계정을 여러 개 만드는 일이 흔하다고 적었다. 한 공개 계정이 계정을 여러 개 만들라고 권했고, 한 이용자는 계정 17개의 이름을 직접 올렸다.", "quote": "one user tweeting out the handles of their 17 accounts", "status": "matched"}, {"id": "C-E23", "claim": "같은 분석은 팬이 운영하는 가짜 계정과 알고리즘이 운영하는 봇 계정을 구분하기 거의 불가능하다고 결론지었다.", "quote": "it is nearly impossible to distinguish between a fake account managed by a fan and a bot account run by an algorithm", "status": "matched"}]}, {"title": "VICE(2014-06-20) What the Internet's Most Infamous Trolls Tell Us About Online Feminism", "url": "https://www.vice.com/en/article/trolls-4chan-online-feminism-women-of-color/", "date": "2014-06-20", "limit": "2014년 서양 트롤 캠페인. 팬덤 갈등 사례가 아님", "ev": [{"id": "C-E24", "claim": "VICE(2014)는 4chan 이용자들이 꾸민 가짜 해시태그 두 건(#WhitesCantBeRaped, #EndFathersDay)이 속임수로 드러났고, 한 트위터 이용자가 관련 가짜 계정 목록을 공개했다고 보도했다. 같은 기사는 십대 소녀 팬을 흉내 낸 트롤 캠페인(#CutForBieber 등)도 있었다고 적었다.", "quote": "The 4chan ruse ended last Friday when media pointed out their hashtags #WhitesCantBeRaped and #EndFathersDay were hoaxes", "status": "matched"}, {"id": "C-E25", "claim": "VICE(2014)는 4chan 이용자들이 꾸민 가짜 해시태그 두 건(#WhitesCantBeRaped, #EndFathersDay)이 속임수로 드러났고, 한 트위터 이용자가 관련 가짜 계정 목록을 공개했다고 보도했다. 같은 기사는 십대 소녀 팬을 흉내 낸 트롤 캠페인(#CutForBieber 등)도 있었다고 적었다.", "quote": "", "status": "matched"}, {"id": "C-E26", "claim": "VICE(2014)는 4chan 이용자들이 꾸민 가짜 해시태그 두 건(#WhitesCantBeRaped, #EndFathersDay)이 속임수로 드러났고, 한 트위터 이용자가 관련 가짜 계정 목록을 공개했다고 보도했다. 같은 기사는 십대 소녀 팬을 흉내 낸 트롤 캠페인(#CutForBieber 등)도 있었다고 적었다.", "quote": "Two notable campaigns of trolls in digital teen girl drag on Twitter from last year include #CutForBieber", "status": "matched"}]}, {"title": "Guo, Qiuyan(2024) Exploring Chinese celebrity fans' online information behaviors and understandings of their practices (박사학위논문, 일리노이대학교 어바나-섐페인)", "url": "https://www.ideals.illinois.edu/items/131596", "date": "2024-04-02", "limit": "초록만 읽음(본문 PDF 접근 403). 중국 팬덤", "ev": [{"id": "C-E27", "claim": "Guo(2024, 박사학위논문)는 중국 연예인 두 명의 팬 80명 관찰과 30명 인터뷰에서, 팬들이 상대 진영의 공격 행동은 업계가 부추긴 것으로, 자기 행동은 개인적 신념에서 나온 것으로 본다고 보고했다.", "quote": "Unobtrusive observation of 80 fans on the Weibo social media platform and sequential semi-structured interviews with 30 individual fans", "status": "matched"}, {"id": "C-E28", "claim": "Guo(2024, 박사학위논문)는 중국 연예인 두 명의 팬 80명 관찰과 30명 인터뷰에서, 팬들이 상대 진영의 공격 행동은 업계가 부추긴 것으로, 자기 행동은 개인적 신념에서 나온 것으로 본다고 보고했다.", "quote": "viewing opponents’ confrontational behaviors as incited by industry professionals and their own as stemming from personal convictions", "status": "matched"}]}, {"title": "Xiao 외(2025, CHI '25 채택) Let's Influence Algorithms Together (arXiv:2409.10670)", "url": "https://arxiv.org/abs/2409.10670", "date": "2025-02-13", "limit": "초록만 읽음. 집단행동 대상이 알고리즘(해시태그, 스트리밍)이며 팬 갈등이 아님", "ev": [{"id": "C-E29", "claim": "Xiao 외(2025, CHI)는 온라인 팬 활동 2년 민족지 연구에서 대규모 팬 집단행동을 늘 조직하는 핵심 팬 43명이 일반 팬 수백만 명을 동원하는 방식을 살폈다.", "quote": "this study investigates 43 core fans who always organize large-scale fans collective actions", "status": "matched"}, {"id": "C-E30", "claim": "Xiao 외(2025, CHI)는 온라인 팬 활동 2년 민족지 연구에서 대규모 팬 집단행동을 늘 조직하는 핵심 팬 43명이 일반 팬 수백만 명을 동원하는 방식을 살폈다.", "quote": "how these core fans mobilize millions of general fans", "status": "matched"}]}, {"title": "한유희(2026) LCK 팬덤의 세 가지 규범적 자아와 비난의 가시화: 유튜브 숏츠 분석을 중심으로, 2026 인문콘텐츠학회 춘계학술대회 논문집", "url": "https://humancontents.or.kr/homepage/boardMedia/208740", "date": "2026-05-02", "limit": "초록과 서론 일부만 읽음. 연구 의도 진술이며 결과는 읽지 못함. e스포츠 팬덤", "ev": [{"id": "C-E31", "claim": "한유희(2026)는 국내 LCK 팬덤의 유튜브 숏츠 댓글 갈등을 다루며, 공격성을 개별 구성원의 도덕적 결함이 아니라 구조적 모순과 기술문화적 상호작용의 산물로 다시 해석하겠다고 밝혔다.", "quote": "LCK 팬덤에서 나타나는 공격성을 개별 구성원의 도덕적 결함이 아닌, 구조적 모순과 기술문화적 상호작용이 빚어낸 산물로 재해석하고자 한다", "status": "matched"}]}]}], "conclusions": [["탓하는 글이 늘어난 이유를 커플팬 행동만으로 설명하기는 어렵습니다.", "세 차례 조사에서 이 판단을 뒤집는 국내외 근거는 나오지 않았습니다. [[inf]]"], ["소수가 글 수를 키우는 구조는 국내외 자료에서 되풀이해 나옵니다.", "뉴스 댓글, 레딧, 2008년 국내 토론 게시판 자료가 같은 방향입니다. [[ok]] {A-E6,A-E8,B-E7,C-E1} 이 갤러리에서도 그런지는 작성자를 보지 않아 알 수 없습니다. [[unk]]"], ["커플팬과 반대 측의 대립은 해외에서 여러 번 기록된 유형입니다.", "서구 팬덤과 중국 드라마 팬덤 연구가 있습니다. [[ok]] {A-E14,A-E16,C-E11} 한국 남녀 드라마 커플에 같은 틀이 맞는지는 이 자료로 답할 수 없습니다. [[unk]]"], ["\"팬인 척한다\", \"새 계정으로 영업한다\"는 의심은 어느 쪽도 확인되지 않았습니다.", "진짜 팬도 계정을 여러 개 만든다는 기록이 있어, 계정 모양만으로는 누가 만들었는지 가릴 수 없습니다. [[ok]] {C-E20,C-E23} 프로젝트 지침상 작성자를 추적하지 않으므로 이 의심은 확인 불가로 둡니다. [[unk]]"]], "questions": [{"id": "q1", "title": "① 소수의 꾸준한 게시자가 숫자를 키우는가", "lead": "이 질문의 근거가 가장 단단합니다. 다만 모두 뉴스 댓글, 레딧, 정치 게시판 자료이고 팬덤 갤러리를 직접 잰 자료는 없습니다.", "rows": [["Kim & Noh(2025)", "네이버 뉴스 댓글 2억 6천만 건을 분석해, 소수의 빈번한 이용자가 토론을 지배하고 이들이 적대적 댓글을 더 많이 쓴다고 보고했습니다.", "ok", "심사 전 프리프린트. 초록만 읽음", "A-E6,A-E7"], ["네이버 자체 분석(2006)", "뉴스 이용자의 0.06%가 하루 20건 이상 댓글을 써 전체 댓글의 25%를 만들었습니다. 이들 다수가 악플러일 가능성이 높다는 말은 네이버의 추정이었습니다.", "ok", "업체 자체 분석, 20년 전 자료", "A-E8,A-E9"], ["JTBC(2018)", "하루 이용자 1300만 명 중 댓글 작성자는 1%가 안 되는 11만 명 정도였고, 6개월간 1000개 넘게 쓴 이용자가 3000명이었습니다. 상위 30명 중 20명은 정치색이 강했고, 한 이용자는 같은 정치 댓글을 하루 20번 복사해 달았습니다.", "ok", "언론사 자체 분석, 방법 비공개", "B-E5,B-E6,B-E7,B-E8,B-E10"], ["Kumar 외(2018)", "레딧 공동체 간 갈등의 74%를 전체 1% 미만 공동체가 시작했습니다. 갈등은 활동이 많은 구성원이 시작하고, 실제 공격은 덜 활동적인 구성원이 맡았습니다.", "ok", "레딧 자료, 팬덤이 아님", "A-E4,A-E5"], ["방송통신위원회 용역 보고서(2008)", "토론 게시판에서 소수의 적극적 참여자가 게시글 대다수를 차지했습니다. 디시 정치사회 갤러리 게시자의 주당 평균 글은 35.98개로, 오늘의유머 시사게시판 2.12개, 82쿡 자유게시판 8.38개보다 많았습니다.", "ok", "2008년 정치 게시판. 글 단위 표본이라 평균이 부풀려졌을 가능성이 큼(추론)", "C-E1,C-E4,C-E5,C-E6,C-E7,C-E34"], ["Xiao 외(2025)", "대규모 팬 집단행동을 늘 조직하는 핵심 팬 43명이 일반 팬 수백만 명을 동원하는 방식을 살폈습니다.", "ok", "초록만 읽음. 대상이 알고리즘(해시태그, 스트리밍)이고 팬 갈등이 아님", "C-E29,C-E30"]], "apply": "이 구조가 변우석 관련 디시 글에도 있었는지는 작성자를 보지 않았기 때문에 확인하지 못했습니다. [[unk]] \"일부 이용자가 숫자를 키웠을 가능성\"은 일반 구조로만 뒷받침됩니다. [[inf]]"}, {"id": "q2", "title": "② 커플팬과 반대 측은 어떻게 부딪치는가", "lead": "해외에서는 잘 기록된 유형입니다. 국내 논문은 아이돌 팬덤의 RPS(실존 인물을 주인공으로 한 창작) 연구가 중심이고, 팬 사이 갈등을 잰 연구는 찾지 못했습니다.", "rows": [["Aburime(2022)", "서구 팬덤에서 무엇을 커플로 엮고 용인하느냐를 둘러싼 팬 사이 적대가 커졌고, 반커플 대 찬커플의 '선 대 악' 구도가 팬덤을 안에서부터 잠식했다고 썼습니다.", "ok", "초록 페이지만 읽음. 서구 팬덤", "A-E14,A-E15"], ["Burkhardt 외(2021)", "드라마 「리버데일」 팬덤의 2017~2019년 텀블러 게시물로 커플팬, 반커플팬, 안티팬 사이의 대립을 다뤘습니다.", "ok", "초록 페이지만 읽음", "A-E16"], ["Wang & Ge(2023)", "중국 「진정령」 팬덤에서 개인팬이 집단으로 커플팬의 팬픽을 신고했고, 갈등이 팬덤 전체와 안티팬, 외부인 사이로 번졌습니다. 안티팬과 외부인도 웨이보에서 비교적 단단한 하위 공동체를 이뤘습니다.", "ok", "중국 특유의 사건 1건, 인터뷰 3명", "C-E11,C-E12,C-E13,C-E32,C-E36"], ["Bay(2018)", "「라스트 제다이」 논란에서 감독에게 직접 불만을 쓴 계정의 절반 넘게가 봇, 위장 계정, 정치 활동가였고, 부정적인 글을 쓴 계정 자체가 소수였습니다.", "ok", "정치적 조작 사례. 커플팬 갈등과 같은 원인이라는 근거는 없음", "A-E1,A-E2,A-E3"], ["조이진(2021)", "한국에서는 RPS가 이성애를 포함한 팬덤의 여러 관계를 가리키는 말로 쓰인다고 밝혔습니다.", "ok", "초록만 읽음. 팬 사이 갈등은 다루지 않음. 남녀 커플 팬덤도 국내 RPS 연구 범위에 든다고 볼 수 있음(추론)", "B-E3"], ["강민지 외(2025)", "RPS 이용자를 심층 인터뷰해, 팬덤 내부 규범과 사회적 시선 사이에서 이용 스트레스를 겪는다고 보고했습니다.", "ok", "초록만 읽음. 아이돌 팬덤", "B-E4"], ["엑스포츠뉴스(2024)", "「눈물의 여왕」 상대역과의 로맨스를 기대했던 팬들이 배우의 열애설에 배신감을 악플로 표현하고 있다고 보도했습니다.", "ok", "기자 서술. 작성자 수와 정체는 미확인", "B-E11"], ["뉴스워커(2026)", "중국 드라마 「조춘청랑」의 일부 극성 커플팬이 주연 배우의 실제 연인에게 불만을 드러내 논란이 일었다고 전했습니다.", "ok", "규모와 구체적 행동은 기사에 없음", "C-E15"]], "apply": "대립 구도 자체는 한국만의 현상이 아닙니다. [[inf]] 다만 위 자료는 서구 영어권, 중국 사례, 아이돌 팬덤이어서 이 사안의 경로를 그대로 밟았다고 말할 근거는 없습니다. [[unk]]"}, {"id": "q3", "title": "③ 책임이 엉뚱한 쪽으로 옮겨 가는가", "lead": "\"대군부인 논란까지 김혜윤 팬 탓이냐\"는 비꼼과 구조가 닮은 사례는 국내외에 있습니다. 같은 현상이라고 단정할 근거는 없습니다.", "rows": [["Basu(2022)", "중국 227 사건에서 팬 작가를 탓해 AO3 차단으로 이어진 경우와, 사건과 무관한 배우를 탓한 경우를 나눠 정리했습니다.", "ok", "심사 전 프리프린트, 자료 수집 없는 논평", "A-E12,A-E13"], ["인사이트(2024)", "블랙핑크 팬덤이 슈가챌린지를 만들었다는 소문이 돌자 일부 BTS 팬이 블랙핑크 멤버들을 공격했습니다. 챌린지를 누가 만들었는지는 밝혀지지 않았다고 적었습니다.", "ok", "해외 팬 중심 사건", "B-E17,B-E18"], ["Marwick(2021)", "공동체 구성원이 누군가 규범을 어겼다고 고발하면 도덕적 분노가 일고, 구성원들이 공격 메시지를 보내며 소속감을 드러낸다는 설명 모형입니다.", "ok", "괴롭힘 피해자 28명과 플랫폼 담당자 9명 인터뷰. 팬덤 연구가 아님", "A-E17,A-E18"], ["Guo(2024)", "중국 연예인 팬들이 상대 진영의 공격은 업계가 부추긴 것으로, 자기 행동은 개인 신념에서 나온 것으로 본다고 보고했습니다.", "ok", "박사논문 초록만 읽음. 중국 팬덤", "C-E27,C-E28"], ["톱셀럽뉴스(2025)", "플레이브 팬덤에서 악개(특정 멤버만 지지하며 다른 멤버를 비난하는 팬)를 둘러싼 책임 공방이 과열됐다고 보도했습니다.", "ok", "버추얼 아이돌, 같은 팬덤 안의 갈등", "B-E12,B-E13"], ["한유희(2026)", "국내 LCK 팬덤의 유튜브 숏츠 댓글 갈등에서 공격성을 개별 구성원의 도덕적 결함이 아닌 구조적 모순과 기술문화적 상호작용의 산물로 다시 해석하겠다고 밝혔습니다.", "ok", "연구 의도만 읽음. e스포츠 팬덤", "C-E31"], ["Kim(2015)", "한국에서 K-pop 아이돌 팬이 대개 십대 소녀라는 이유로 오래 비판받아 왔다고 분석했습니다.", "ok", "초록만 읽음. 기부 활동 보도 분석. 팬덤을 한꺼번에 탓하는 시선의 배경으로 볼 수 있음(추론)", "B-E21,B-E22"]], "apply": "고발이 곧 소속 표시가 된다는 Marwick의 설명은 갤러리에서 탓하는 글이 되풀이되는 이유를 생각해 볼 틀을 줍니다. [[inf]] 이 갤러리에서 실제로 그런 과정이 있었는지는 확인하지 않았습니다. [[unk]]"}, {"id": "q4", "title": "④ \"팬인 척한다\", \"위장 계정이다\"라는 주장", "lead": "근거가 가장 약한 부분입니다. 국내에서 팬 사칭이 실제로 확인된 사례는 찾지 못했습니다.", "rows": [["김수아(2017)", "한 아이돌 팬덤의 트위터 논쟁에서 문제를 제기한 팬들이 '팬코'(팬 코스프레, 팬임을 가장함)로 규정돼 팬덤 밖으로 밀려났습니다. 메신저를 공격하면 메시지의 의미가 줄어든다는 설명도 있습니다.", "ok", "학술대회 발표문, 한 사건", "C-E8,C-E9,C-E10,C-E33"], ["세계일보(2024)", "BTS 팬들이 슈가챌린지 참여 계정을 팬 사칭이라고 주장한다고 전했습니다. 김호중 팬들도 비슷한 주장을 했습니다.", "cl", "주장을 전한 보도. 사칭 여부는 확인되지 않음", "B-E14,B-E15,B-E16"], ["정동원 소속사 입장문(2026)", "팬을 가장해 사실무근 내용을 퍼뜨리고 팬덤 내부 갈등을 조장하는 사례가 지속적으로 확인된다고 밝혔습니다.", "cl", "계정과 근거를 제시하지 않음", "C-E19"], ["나나 관련 보도(2026)", "열애 공개 뒤 악의적인 글을 쓰는 '자칭 팬'들에게 입장을 밝혔습니다. 팬사이트 종료가 열애 때문이라고 확인된 것은 아니라고 기사가 적었습니다.", "ok", "같은 결과를 다른 이유로도 설명할 수 있음", "C-E16,C-E17,C-E18"], ["지능형 안티(위키 문서)", "팬인 척하며 일부러 개념 없는 말을 해 비난을 끌어모으는 사람을 부르는 말입니다. 같은 문서는 과도한 빠질에 대한 의심에서 생기는 경우도 있다고 적습니다.", "ok", "익명 위키. 용어가 있다는 것만 보여 줌", "B-E19,B-E20"], ["DFRLab(2018)", "BTS 팬이 응원을 위해 트위터 계정을 여러 개 만드는 일이 흔하다고 적었고, 팬이 운영하는 가짜 계정과 봇을 구분하기 거의 불가능하다고 결론지었습니다.", "ok", "2018년 트위터 응원 사례", "C-E20,C-E23"], ["VICE(2014)", "4chan 이용자들이 꾸민 가짜 해시태그 두 건이 속임수로 드러났고, 십대 소녀 팬을 흉내 낸 트롤 캠페인도 있었습니다.", "ok", "서양 정치 트롤 캠페인. 팬덤 갈등이 아님", "C-E24,C-E26"], ["Fanlore(팬 위키)", "위장 계정이 팬덤 전체의 반대나 지지가 있는 듯한 착시를 만드는 데 쓰일 수 있고, 평판이 없는 새 이용자는 위장 계정으로 오인될 수 있다고 적습니다.", "ok", "팬이 쓴 위키, 학술 근거가 아님", "A-E19,A-E20"]], "apply": "\"팬인 척한다\"는 말이 상대를 팬덤 밖으로 밀어내는 도구로 쓰인 국내 기록이 있습니다. 이번 사안의 \"영업한다\"는 주장도 사실 판정보다 갈등의 도구일 수 있습니다. [[inf]] 양쪽의 위장 계정 의혹은 그대로 확인 불가로 둡니다. [[unk]]"}], "limits": ["디시 집계는 제목, 날짜, 댓글 수만 썼습니다. 본문과 댓글은 보지 않았고, 지워진 글은 집계에 없습니다.", "'비방 의심'은 제목 단어 규칙으로 나눈 결과라 틀린 분류가 섞여 있습니다. 특히 '소문·열애 추측'에는 비방이 아닌 글이 많이 들어 있을 수 있습니다. 법적 판단이 아닙니다.", "작성자를 보지 않았기 때문에, 이 집계로는 특정 팬덤이 쓴 글인지 가릴 수 없습니다.", "학술 데이터베이스(RISS, 구글 학술 등)는 쓰지 못했습니다. 못 찾았다는 것이 없다는 뜻은 아닙니다.", "본문을 읽지 못한 자료: Stanfill(2025) 「Against 'Toxic Fandom'」, Guo(2024) 본문, Kim & Noh(2025) 본문, 서울대 학위논문. 국내 논문 세 편(조해인, 조이진, 강민지 외)은 초록만 읽었습니다.", "방송통신위원회 보고서는 365쪽 중 요약과 3장 일부, 학술대회 발표논문집은 269쪽 중 김수아 발표문 위주로 읽었습니다."], "next": ["직접 겨냥 후보가 가장 많았던 달(2024년 5월, 2026년 4월)의 글을 사람이 본문까지 읽고 실제 비방 비율을 확인하면 '의심'이라는 표현을 줄일 수 있습니다.", "모아 둔 디시 자료에 고정닉, 유동닉 표시가 남아 있다면 유형별 글 비율만 세어 볼 수 있습니다. 계정을 식별하거나 엮지 않고 합계만 내는 방식이며, 프로젝트 지침 범위인지 먼저 정해야 합니다.", "RISS에서 \"팬덤 갈등\", \"커플링\", \"알페스\", \"안티팬\"으로 찾은 논문이나 Stanfill 장 본문을 주시면 본문 기준으로 더할 수 있습니다."], "tags": {"ok": "확인됨", "inf": "추론", "unk": "확인 불가", "cl": "주장"}, "quoteCount": 79, "sourceCount": 33};
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmt = n => n.toLocaleString("ko-KR");
+const dc = D.dc;
+const CC = ["var(--k1)","var(--k2)","var(--k3)","var(--k4)"];
+
+function rich(s){
+  let h = esc(s);
+  h = h.replace(/\[\[(ok|inf|unk|cl)\]\]/g,(m,k)=>`<span class="tag ${k}">${D.tags[k]}</span>`);
+  h = h.replace(/\{([^}]+)\}/g,(m,g)=>g.split(",").map(i=>`<a class="ref" href="#ev-${i.trim()}">${i.trim()}</a>`).join(""));
+  return h;
+}
+const refs = s => s.split(",").map(i=>`<a class="ref" href="#ev-${i}">${i}</a>`).join("");
+
+/* ---------- 탭 ---------- */
+const tabs = [...document.querySelectorAll('[role=tab]')];
+function showTab(id){
+  tabs.forEach(t=>{const on = t.getAttribute("aria-controls")===id; t.setAttribute("aria-selected",on); t.tabIndex = on?0:-1;
+    document.getElementById(t.getAttribute("aria-controls")).hidden = !on;});
+}
+tabs.forEach(t=>t.addEventListener("click",()=>{const id=t.getAttribute("aria-controls"); showTab(id); try{history.replaceState(null,"","#"+id)}catch(e){}}));
+document.addEventListener("click",e=>{
+  const a = e.target.closest("a.ref"); if(!a) return;
+  e.preventDefault(); showTab("p-src");
+  const el = document.getElementById(a.getAttribute("href").slice(1));
+  if(el){ const d = el.closest("details"); if(d) d.open = true; el.scrollIntoView({block:"center"});
+    try{history.replaceState(null,"","#"+el.id)}catch(err){} el.classList.add("hit"); }
+});
+
+/* ---------- 머리말 ---------- */
+const lastM = dc.months[dc.months.length-1];
+$("#meta").innerHTML = `만든 날 2026-11-06 · 디시 자료 ${esc(dc.first)} ~ ${esc(dc.last)} · 연구 출처 ${D.sourceCount}건, 검증된 인용 ${D.quoteCount}건`;
+const peakI = dc.sus.indexOf(Math.max(...dc.sus));
+const mLabel = m => `${m.slice(0,4)}년 ${+m.slice(5)}월`;
+function tiles(el, arr){ $(el).innerHTML = arr.map(([k,v,s,red])=>`<div class="tile"><div class="k">${k}</div><div class="v"${red?' style="color:var(--red)"':''}>${v}</div><div class="s">${s}</div></div>`).join(""); }
+tiles("#sumTiles",[
+  ["모은 디시 글", fmt(dc.total)+"건", "제목에 '변우석'이 든 글"],
+  ["비방 의심 글", fmt(dc.susTotal)+"건", `전체의 ${Math.round(dc.susTotal*100/dc.total)}% · 제목 단어 분류`],
+  ["직접 겨냥 후보", fmt(dc.directTotal)+"건", "가장 좁은 기준", true],
+  ["연구 출처", D.sourceCount+"건", `검증된 인용 ${D.quoteCount}건`],
+]);
+tiles("#dcTiles",[
+  ["비방 의심 글", fmt(dc.susTotal)+"건", "4종 분류 합계"],
+  ["직접 겨냥 후보", fmt(dc.directTotal)+"건", "모두 4종 안에 포함", true],
+  ["가장 많았던 달", mLabel(dc.months[peakI]), `비방 의심 ${fmt(dc.sus[peakI])}건`],
+  ["이번 달 (진행 중)", fmt(dc.sus[dc.sus.length-1])+"건", `${mLabel(lastM)} · ${esc(dc.last.slice(5,10))}까지`],
+]);
+$("#concl").innerHTML = D.conclusions.map(([h,b])=>`<div class="card"><b>${esc(h)}</b><div>${rich(b)}</div></div>`).join("");
+
+/* ---------- 차트 도구 ---------- */
+const tip = $("#tip");
+function bindTips(root){
+  root.querySelectorAll("[data-tip]").forEach(n=>{
+    const show = e=>{tip.textContent = n.dataset.tip; tip.hidden=false; const p = e.touches?e.touches[0]:e;
+      tip.style.left = Math.min(p.clientX+12, innerWidth-tip.offsetWidth-8)+"px"; tip.style.top = (p.clientY-34)+"px";};
+    n.addEventListener("mousemove",show); n.addEventListener("touchstart",show,{passive:true});
+    n.addEventListener("mouseleave",()=>tip.hidden=true);
+  });
+}
+document.addEventListener("touchend",()=>setTimeout(()=>tip.hidden=true,1200));
+function nice(v){const p = Math.pow(10,String(Math.floor(v)).length-1); for(const s of [1,1.2,1.5,2,2.5,3,4,5,6,8,10]) if(v<=s*p) return s*p; return 10*p;}
+function axis(W,H,L,T,R,B,mx,unit=""){
+  let s=""; for(let k=0;k<=4;k++){const y = H-B-(H-B-T)*k/4;
+    s+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="var(${k?"--grid":"--line"})"/>`;
+    s+=`<text x="${L-6}" y="${y+4}" font-size="11" text-anchor="end">${fmt(Math.round(mx*k/4))}${unit}</text>`;}
+  return s;
+}
+function xlabs(W,H,L,R,B,n){
+  const bw=(W-L-R)/n; let s="",prev=-1e9;
+  dc.months.forEach((m,i)=>{const mo=+m.slice(5); if(!(mo===1||mo===7||i===0)) return; const x=L+bw*i+bw/2; if(x-prev<44) return; prev=x;
+    s+=`<text x="${x}" y="${H-B+16}" font-size="11" text-anchor="middle">${mo===1||i===0?m.slice(0,4)+"."+mo:mo+"월"}</text>`;});
+  return s;
+}
+const hatch = `<defs><pattern id="hz" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--mute)" opacity=".25"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--sub)" stroke-width="2.5"/></pattern></defs>`;
+
+/* 월별 누적 */
+(function(){
+  const W=1000,H=330,L=50,T=26,R=10,B=26,n=dc.months.length,bw=(W-L-R)/n,mx=nice(Math.max(...dc.sus));
+  let s=hatch+axis(W,H,L,T,R,B,mx);
+  dc.events.forEach((e,j)=>{const i=dc.months.indexOf(e.m); const x=L+bw*i+bw/2;
+    s+=`<line x1="${x}" x2="${x}" y1="${T}" y2="${H-B}" stroke="var(--sub)" stroke-dasharray="3 3" opacity=".5"/><circle cx="${x}" cy="${T-12}" r="9" fill="var(--ink)"/><text x="${x}" y="${T-8}" font-size="11" text-anchor="middle" style="fill:var(--bg);font-weight:600">${j+1}</text>`;});
+  dc.months.forEach((m,i)=>{let base=0; const last=i===n-1;
+    dc.cats.forEach((c,ci)=>{const v=dc.byCat[c][i]; if(!v) return; const y0=H-B-(H-B-T)*base/mx, y1=H-B-(H-B-T)*(base+v)/mx;
+      s+=`<rect x="${L+bw*i+bw*.14}" y="${y1}" width="${bw*.72}" height="${Math.max(.5,y0-y1)}" fill="${last?"url(#hz)":CC[ci]}"/>`; base+=v;});
+    const tipTxt = `${m}${last?" (진행 중)":""}\n비방 의심 ${fmt(dc.sus[i])}건 / 전체 ${fmt(dc.n[i])}건\n`+dc.cats.map(c=>`${c} ${fmt(dc.byCat[c][i])}`).join("\n");
+    s+=`<rect x="${L+bw*i}" y="${T}" width="${bw}" height="${H-B-T}" fill="transparent" data-tip="${esc(tipTxt)}"/>`;});
+  s+=xlabs(W,H,L,R,B,n);
+  $("#chMonthly").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="월별 비방 의심 글 누적 막대">${s}</svg>`;
+  $("#lgCats").innerHTML=dc.cats.map((c,i)=>`<span><i style="background:${CC[i]}"></i>${esc(c)} ${fmt(dc.byCat[c].reduce((a,b)=>a+b,0))}건</span>`).join("");
+  $("#evLabels").textContent = dc.events.map((e,j)=>`${j+1} ${e.m} ${e.label}`).join("   ");
+})();
+
+/* 종류 비중 */
+(function(){
+  const tot = dc.cats.map(c=>dc.byCat[c].reduce((a,b)=>a+b,0)); const mx=Math.max(...tot);
+  const order=[...dc.cats.keys()].sort((a,b)=>tot[b]-tot[a]); const W=480,rowH=44,H=order.length*rowH;
+  let s=""; order.forEach((ci,r)=>{const y=r*rowH+6, w=(W-120-140)*tot[ci]/mx;
+    s+=`<text x="0" y="${y+17}" font-size="13" style="fill:var(--ink)">${esc(dc.cats[ci])}</text><rect x="120" y="${y}" width="${w}" height="24" rx="4" fill="${CC[ci]}"/><text x="${128+w}" y="${y+17}" font-size="12.5" style="fill:var(--ink);font-weight:600">${Math.round(tot[ci]*100/dc.susTotal)}% · ${fmt(tot[ci])}건</text>`;});
+  $("#chCats").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="종류 비중">${s}</svg>`;
+})();
+
+/* 직접 겨냥 */
+(function(){
+  const W=480,H=230,L=44,T=14,R=6,B=24,n=dc.months.length,bw=(W-L-R)/n,mx=nice(Math.max(...dc.direct));
+  let s=hatch+axis(W,H,L,T,R,B,mx);
+  dc.direct.forEach((v,i)=>{const y=H-B-(H-B-T)*v/mx; const last=i===n-1;
+    if(v) s+=`<rect x="${L+bw*i+bw*.12}" y="${y}" width="${bw*.76}" height="${H-B-y}" fill="${last?"url(#hz)":"var(--red)"}"/>`;
+    s+=`<rect x="${L+bw*i}" y="${T}" width="${bw}" height="${H-B-T}" fill="transparent" data-tip="${dc.months[i]}${last?" (진행 중)":""}\n직접 겨냥 후보 ${fmt(v)}건"/>`;});
+  s+=xlabs(W,H,L,R,B,n);
+  $("#chDirect").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="직접 겨냥 후보 월별">${s}</svg>`;
+})();
+
+/* 함께 나온 이름 */
+(function(){
+  const W=480,H=230,L=44,T=14,R=6,B=24,n=dc.months.length,bw=(W-L-R)/n,mx=nice(Math.max(...dc.hy,...dc.iu));
+  let s=axis(W,H,L,T,R,B,mx);
+  [["hy","var(--k1)"],["iu","var(--k2)"]].forEach(([k,c])=>{
+    const pts=dc[k].map((v,i)=>`${L+bw*i+bw/2},${H-B-(H-B-T)*v/mx}`).join(" ");
+    s+=`<polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2.2" stroke-linejoin="round"/>`;});
+  dc.months.forEach((m,i)=>{s+=`<rect x="${L+bw*i}" y="${T}" width="${bw}" height="${H-B-T}" fill="transparent" data-tip="${m}\n김혜윤 ${fmt(dc.hy[i])}건\n아이유·대군부인 ${fmt(dc.iu[i])}건"/>`;});
+  s+=xlabs(W,H,L,R,B,n);
+  $("#chNames").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="함께 나온 이름 월별">${s}</svg>`;
+})();
+
+/* 시간대 */
+(function(){
+  const tot=dc.hours.reduce((a,b)=>a+b,0), p=dc.hours.map(h=>h*100/tot);
+  const W=480,H=230,L=34,T=14,R=6,B=24,bw=(W-L-R)/24,mx=Math.ceil(Math.max(...p)+1);
+  let s=""; for(let k=0;k<=4;k++){const y=H-B-(H-B-T)*k/4; s+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="var(${k?"--grid":"--line"})"/><text x="${L-6}" y="${y+4}" font-size="11" text-anchor="end">${(mx*k/4).toFixed(1)}%</text>`;}
+  const top=[...p.keys()].sort((a,b)=>p[b]-p[a]).slice(0,3);
+  p.forEach((v,h)=>{const y=H-B-(H-B-T)*v/mx;
+    s+=`<rect x="${L+bw*h+bw*.12}" y="${y}" width="${bw*.76}" height="${H-B-y}" fill="${top.includes(h)?"var(--k2)":"var(--k1)"}" data-tip="${h}시\n${v.toFixed(1)}% · ${fmt(dc.hours[h])}건"/>`;
+    if(h%3===0) s+=`<text x="${L+bw*h+bw/2}" y="${H-B+16}" font-size="11" text-anchor="middle">${h}시</text>`;});
+  $("#chHours").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="시간대별 비중">${s}</svg><div class="meta">가장 많은 시간: ${top.map(h=>h+"시").join(", ")}</div>`;
+})();
+
+/* 소문 히트맵 */
+(function(){
+  const n=dc.months.length,W=1000,L=110,R=60,rowH=30,T=4,H=T+dc.rumors.length*rowH+22,bw=(W-L-R)/n;
+  const mx=Math.max(...dc.rumors.flatMap(r=>r.v));
+  let s="";
+  dc.rumors.forEach((r,ri)=>{const y=T+ri*rowH; const tot=r.v.reduce((a,b)=>a+b,0);
+    s+=`<text x="${L-8}" y="${y+19}" font-size="12.5" text-anchor="end" style="fill:var(--ink)">${esc(r.name)}</text>`;
+    r.v.forEach((v,i)=>{const op = v? .12+.88*Math.sqrt(v/mx) : 0;
+      s+=`<rect x="${L+bw*i+1}" y="${y+1}" width="${Math.max(1,bw-2)}" height="${rowH-2}" rx="3" fill="${v?"var(--k2)":"var(--grid)"}" fill-opacity="${v?op.toFixed(2):1}" data-tip="${dc.months[i]} ${esc(r.name)}\n${fmt(v)}건"/>`;});
+    s+=`<text x="${W-R+8}" y="${y+19}" font-size="12">${fmt(tot)}</text>`;});
+  let prev=-1e9; dc.months.forEach((m,i)=>{const mo=+m.slice(5); if(!(mo===1||mo===7||i===0)) return; const x=L+bw*i+bw/2; if(x-prev<44) return; prev=x;
+    s+=`<text x="${x}" y="${H-4}" font-size="11" text-anchor="middle">${mo===1||i===0?m.slice(0,4)+"."+mo:mo+"월"}</text>`;});
+  $("#chRumor").innerHTML=`<div class="tablewrap"><svg viewBox="0 0 ${W} ${H}" style="min-width:640px" role="img" aria-label="소문 종류별 히트맵">${s}</svg></div>`;
+})();
+bindTips(document);
+
+/* ---------- 연구와 사례 ---------- */
+$("#questions").innerHTML = D.questions.map(q=>`
+  <div class="card" id="${q.id}">
+    <h2>${esc(q.title)}</h2>
+    <div style="margin-bottom:8px">${rich(q.lead)}</div>
+    <div class="tablewrap"><table class="rs">
+      <thead><tr><th style="width:20%">자료</th><th>내용</th><th style="width:9%">근거</th><th style="width:22%">주의할 점</th></tr></thead>
+      <tbody>${q.rows.map(r=>`<tr><td class="who">${esc(r[0])}</td><td>${esc(r[1])} ${refs(r[4])}</td><td><span class="tag ${r[2]}">${D.tags[r[2]]}</span></td><td class="lim">${esc(r[3])}</td></tr>`).join("")}</tbody>
+    </table></div>
+    <div class="apply"><b>이 사안에 적용하면.</b> ${rich(q.apply)}</div>
+  </div>`).join("");
+
+/* ---------- 출처 ---------- */
+$("#srcIntro").innerHTML = `세 보고서의 출처 ${D.sourceCount}건과 인용 ${D.quoteCount}건입니다. 인용은 모두 검증기에서 원문과 일치했습니다. 계정 이름이 들어간 인용 원문은 싣지 않고 요약만 남겼습니다. 번호 앞 글자는 보고서를 뜻합니다(${D.reports.map(r=>r.key+" "+esc(r.label)).join(", ")}).`;
+$("#sources").innerHTML = D.reports.map(r=>`
+  <div class="card"><details${r.key==="A"?" open":""}><summary>${r.key}. ${esc(r.label)} · 출처 ${r.sources.length}건 · <span class="mono">${esc(r.file)}</span></summary>
+  ${r.sources.map(s=>`<div class="src"><div class="t"><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)}</a></div>
+    <div class="l">발행 ${esc(s.date)}${s.limit && s.limit!=="none stated"?" · 한계: "+esc(s.limit):""}</div>
+    ${s.ev.map(e=>`<div class="ev" id="ev-${e.id}"><span class="id">${e.id}</span>${esc(e.claim)}${e.quote?`<q>${esc(e.quote)}</q>`:`<q>(계정 이름이 든 인용이라 원문은 싣지 않음)</q>`} <span class="ok">원문 일치</span></div>`).join("")}
+  </div>`).join("")}
+  </details></div>`).join("");
+
+/* ---------- 한계 ---------- */
+$("#limits").innerHTML = D.limits.map(s=>`<li>${esc(s)}</li>`).join("");
+$("#next").innerHTML = D.next.map(s=>`<li>${esc(s)}</li>`).join("");
+$("#files").innerHTML = D.reports.map(r=>`<li><span class="mono">${esc(r.file)}</span> ${esc(r.label)}</li>`).join("") +
+  `<li><span class="mono">변우석_비방의심글_인포그래픽.png</span> 비방 의심 글 인포그래픽(매일 07:00 갱신 예약)</li>`;
+$("#foot").textContent = "작성: 변우석이 미래다 · 참고용 정리이며 법률 자문이 아닙니다.";
+
+/* 첫 화면 */
+const h = location.hash.slice(1);
+if(h.startsWith("ev-")){ showTab("p-src"); const el=document.getElementById(h); if(el){const d=el.closest("details"); if(d) d.open=true; el.scrollIntoView({block:"center"});} }
+else { showTab(tabs.some(t=>t.getAttribute("aria-controls")===h)?h:"p-sum"); window.scrollTo(0,0); setTimeout(()=>window.scrollTo(0,0),0); }
+</script>
+</body>
+</html>
